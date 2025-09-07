@@ -1,0 +1,68 @@
+name: Flutter Build and Deploy Web
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: ${{ secrets.FLUTTER_VERSION }}
+  GH_PAGES_DEPLOY_TOKEN: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
+  WEB_URL: ${{ secrets.WEB_URL }}
+  BASE_URL: ${{ secrets.BASE_URL }}
+  REGISTER_ID: ${{ secrets.REGISTER_ID }}
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # ====== TẠO FILE env/.env.dev (đúng path Envied đang dùng) ======
+      - name: Create env/.env.dev file
+        run: |
+          mkdir -p env
+          cat > env/.env.dev << 'EOF'
+          BASE_URL=${{ secrets.BASE_URL }}
+          REGISTER_ID=${{ secrets.REGISTER_ID }}
+          EOF
+
+      - name: Verify env/.env.dev existence (no secret leak)
+        run: |
+          test -f env/.env.dev && echo "env/.env.dev exists ✅"
+          wc -c env/.env.dev
+
+      # ====== SINH CODE *.g.dart TRƯỚC KHI BUILD WEB ======
+      - name: Generate code (build_runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build Web with base href set to root
+        run: flutter build web --release --base-href="/GenZ-Money-Mate/" -t lib/main_preview.dart
+
+      - name: Upload Web Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web
+
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GH_PAGES_DEPLOY_TOKEN }}
+          publish_dir: build/web
+          publish_branch: gh-pages
+          force_orphan: true
