@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
@@ -20,17 +21,10 @@ class Alerts {
       isScrollControlled: true,
       clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(32),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            child,
-          ],
-        );
+        return Column(mainAxisSize: MainAxisSize.min, children: [child]);
       },
     );
   }
@@ -55,13 +49,11 @@ class Alerts {
     });
   }
 
-  static Future<void> showLoaderDialog(
-    BuildContext context,
-  ) =>
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => PopScope(
+  static Future<void> showLoaderDialog(BuildContext context) => showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder:
+        (context) => PopScope(
           canPop: false,
           child: Align(
             child: ConstrainedBox(
@@ -80,7 +72,7 @@ class Alerts {
             ),
           ),
         ),
-      );
+  );
 
   static void hideLoaderDialog(BuildContext context) {
     Navigator.of(context).pop();
@@ -88,11 +80,9 @@ class Alerts {
 
   static void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   static void showToastMsg(BuildContext context, String message) {
@@ -129,7 +119,7 @@ class Alerts {
                 onOk();
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: Text('common.ok'.tr()),
             ),
             if (onCancel != null)
               TextButton(
@@ -137,7 +127,7 @@ class Alerts {
                   onCancel();
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel'),
+                child: Text('common.cancel'.tr()),
               ),
           ],
         );

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../core/extension/extension.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +18,10 @@ class VersionSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
-            const Text('Version 1.0.0', style: AppTextStyle.title),
+            Text('version.title'.tr(), style: AppTextStyle.title),
             const SizedBox(height: 25),
             Text(
-              'CopyRight © 2024 Daily Expense Tracker App. All rights reserved.',
+              'version.copyright'.tr(),
               style: AppTextStyle.body.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -28,13 +29,10 @@ class VersionSheet extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 25),
-            const Text(
-              'Developed by: ',
-              style: AppTextStyle.body,
-            ),
+            Text('version.developed_by'.tr(), style: AppTextStyle.body),
             const SizedBox(height: 10),
             Text(
-              'Haithem Nini',
+              'version.developer'.tr(),
               style: AppTextStyle.title2.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,

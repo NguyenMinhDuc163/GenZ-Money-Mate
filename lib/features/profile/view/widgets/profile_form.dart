@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,15 +39,13 @@ class _ProfileFormState extends State<ProfileForm> {
           const SizedBox(height: 20),
           Text(
             user.fullName,
-            style: AppTextStyle.title.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyle.title.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 20),
           CustomTextFormField(
             maxLines: 1,
             fontSize: 16,
-            hintText: 'exp: John Doe',
+            hintText: 'profile.full_name_hint'.tr(),
             controller: context.read<ProfileCubit>().fullNameController,
             textAlign: TextAlign.start,
             fontWeight: FontWeight.w400,
@@ -83,7 +82,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Full name cannot be empty';
+                return 'profile.full_name_required'.tr();
               }
               return null;
             },

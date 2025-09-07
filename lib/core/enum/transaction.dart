@@ -1,10 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-enum TransactionAction {
-  add,
-  edit,
-}
+enum TransactionAction { add, edit }
 
 enum Category {
   expense(
@@ -27,6 +25,15 @@ enum Category {
     required this.icon,
     required this.backgroundIcon,
   });
+
+  String getLocalizedName() {
+    switch (this) {
+      case Category.expense:
+        return 'home.expense'.tr();
+      case Category.income:
+        return 'home.income'.tr();
+    }
+  }
 
   // static TransactionCategory fromIndex(int categoryIndex) {
   //   return TransactionCategory.values.firstWhere(

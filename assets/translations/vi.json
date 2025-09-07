@@ -1,0 +1,94 @@
+{
+  "setting": {
+    "version": "Phiên bản",
+    "sign_out": "Đăng xuất",
+    "sign_in": "Đăng nhập",
+    "dark_mode": "Chế độ tối",
+    "light_mode": "Chế độ sáng"
+  },
+  "home": {
+    "all_transaction": "Tất cả giao dịch",
+    "transaction": "Giao dịch",
+    "view_all": "Xem tất cả",
+    "income": "Thu nhập",
+    "expense": "Chi tiêu",
+    "total_balance": "Tổng số dư",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "done": "Hoàn thành",
+    "welcome": "Chào mừng!",
+    "no_transactions": "Chưa có giao dịch nào"
+  },
+  "profile": {
+    "full_name_required": "Họ và tên không được để trống",
+    "full_name_hint": "vd: Nguyễn Văn A",
+    "title": "Hồ sơ",
+    "save": "Lưu"
+  },
+  "category": {
+    "food": "Ăn uống",
+    "transport": "Di chuyển",
+    "shopping": "Mua sắm",
+    "others": "Khác",
+    "personal": "Cá nhân",
+    "online": "Trực tuyến",
+    "entertainment": "Giải trí",
+    "travel": "Du lịch",
+    "investment": "Đầu tư",
+    "payment": "Thanh toán",
+    "quick": "Nhanh",
+    "bills": "Hóa đơn",
+    "vehicle": "Phương tiện",
+    "xchange": "Đổi ngoại tệ",
+    "withdraw": "Rút tiền",
+    "transfer": "Chuyển tiền",
+    "fees": "Phí",
+    "apparel": "Quần áo",
+    "beauty": "Làm đẹp",
+    "education": "Giáo dục",
+    "health": "Sức khỏe",
+    "home": "Nhà cửa",
+    "technology": "Công nghệ",
+    "work": "Công việc",
+    "gifts": "Quà tặng",
+    "sports": "Thể thao",
+    "music": "Âm nhạc",
+    "books": "Sách",
+    "pets": "Thú cưng",
+    "social": "Xã hội",
+    "events": "Sự kiện",
+    "party": "Tiệc tùng",
+    "baby": "Em bé",
+    "fitness": "Thể hình",
+    "gardening": "Làm vườn",
+    "art": "Nghệ thuật",
+    "finance": "Tài chính",
+    "photography": "Nhiếp ảnh",
+    "gaming": "Trò chơi"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "done": "Hoàn thành",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc"
+  },
+  "app": {
+    "title": "Daily Tracker",
+    "settings": "Cài đặt"
+  },
+  "version": {
+    "title": "Phiên bản 1.0.0",
+    "copyright": "Bản quyền © 2025 Daily GenZ money mate. Tất cả quyền được bảo lưu.",
+    "developed_by": "Phát triển bởi:",
+    "developer": "Nguyen Duc"
+  },
+  "transaction": {
+    "amount_hint": "0.00",
+    "delete_title": "Xóa giao dịch"
+  }
+
+}

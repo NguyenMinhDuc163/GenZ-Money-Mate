@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../../core/utils/alerts/alerts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +13,7 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Settings'),
+      appBar: CustomAppBar(title: 'app.settings'.tr()),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: _buildBody(context),
@@ -30,15 +32,18 @@ class SettingsView extends StatelessWidget {
             const SizedBox(height: 10),
             const DarkModeSwitch(),
             const SizedBox(height: 10),
+            const LanguageSwitch(),
+            const SizedBox(height: 10),
             ItemSettings(
-              title: 'Version',
+              title: 'setting.version'.tr(),
               iconData: FontAwesomeIcons.circleInfo,
               backgroundIcon: Colors.blueAccent,
               trailing: const FaIcon(FontAwesomeIcons.chevronRight, size: 16),
-              onTap: () => Alerts.showSheet(
-                context: context,
-                child: const VersionSheet(),
-              ),
+              onTap:
+                  () => Alerts.showSheet(
+                    context: context,
+                    child: const VersionSheet(),
+                  ),
             ),
           ],
         ),

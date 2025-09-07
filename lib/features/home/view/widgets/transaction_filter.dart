@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -102,7 +103,7 @@ class _TransactionFilterState extends State<TransactionFilter> {
             return allTransactions!.isEmpty
                 ? Center(
                     child: Text(
-                      'No transactions yet',
+                      'home.no_transactions'.tr(),
                       style: AppTextStyle.subtitle.copyWith(
                         color: context.colorScheme.onSurface,
                       ),

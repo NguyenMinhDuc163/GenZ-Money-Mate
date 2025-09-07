@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,10 +14,7 @@ class TransactionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      body: _buildBody(context),
-    );
+    return Scaffold(appBar: const CustomAppBar(), body: _buildBody(context));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -50,10 +48,12 @@ class TransactionView extends StatelessWidget {
                   const TransactionForm(),
                   const Spacer(),
                   CustomMaterialButton(
-                    text: 'SAVE',
-                    onPressed: () => context
-                        .read<TransactionCubit>()
-                        .addOrUpdateTransaction(),
+                    text: 'common.save'.tr(),
+                    onPressed:
+                        () =>
+                            context
+                                .read<TransactionCubit>()
+                                .addOrUpdateTransaction(),
                   ),
                 ],
               ),

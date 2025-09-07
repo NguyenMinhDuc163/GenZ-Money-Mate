@@ -1,3 +1,94 @@
 {
+  "setting": {
+    "version": "Version",
+    "sign_out": "Sign Out",
+    "sign_in": "Sign In",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode"
+  },
+  "home": {
+    "all_transaction": "All Transaction",
+    "transaction": "Transaction",
+    "view_all": "View All",
+    "income": "Income",
+    "expense": "Expense",
+    "total_balance": "Total Balance",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "done": "Done",
+    "welcome": "Welcome!",
+    "no_transactions": "No transactions yet"
+  },
+  "profile": {
+    "full_name_required": "Full name cannot be empty",
+    "full_name_hint": "exp: John Doe",
+    "title": "Profile",
+    "save": "Save"
+  },
+  "category": {
+    "food": "Food",
+    "transport": "Transport",
+    "shopping": "Shopping",
+    "others": "Others",
+    "personal": "Personal",
+    "online": "Online",
+    "entertainment": "Entertainment",
+    "travel": "Travel",
+    "investment": "Investment",
+    "payment": "Payment",
+    "quick": "Quick",
+    "bills": "Bills",
+    "vehicle": "Vehicle",
+    "xchange": "Xchange",
+    "withdraw": "Withdraw",
+    "transfer": "Transfer",
+    "fees": "Fees",
+    "apparel": "Apparel",
+    "beauty": "Beauty",
+    "education": "Education",
+    "health": "Health",
+    "home": "Home",
+    "technology": "Technology",
+    "work": "Work",
+    "gifts": "Gifts",
+    "sports": "Sports",
+    "music": "Music",
+    "books": "Books",
+    "pets": "Pets",
+    "social": "Social",
+    "events": "Events",
+    "party": "Party",
+    "baby": "Baby",
+    "fitness": "Fitness",
+    "gardening": "Gardening",
+    "art": "Art",
+    "finance": "Finance",
+    "photography": "Photography",
+    "gaming": "Gaming"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "done": "Done",
+    "start_date": "Start Date",
+    "end_date": "End Date"
+  },
+  "app": {
+    "title": "Daily Tracker",
+    "settings": "Settings"
+  },
+  "version": {
+    "title": "Version 1.0.0",
+    "copyright": "CopyRight © 2025 Daily GenZ money mate. All rights reserved.",
+    "developed_by": "Developed by: ",
+    "developer": "Nguyen Duc"
+  },
+  "transaction": {
+    "amount_hint": "0.00",
+    "delete_title": "Delete Transaction"
+  }
 
 }

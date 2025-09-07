@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +28,7 @@ class _DarkModeSwitchState extends State<DarkModeSwitch> {
   @override
   Widget build(BuildContext context) {
     return ItemSettings(
-      title: isSwitched ? 'Dark Mode' : 'Light Mode',
+      title: isSwitched ? 'setting.dark_mode'.tr() : 'setting.light_mode'.tr(),
       iconData: isSwitched ? FontAwesomeIcons.moon : FontAwesomeIcons.solidSun,
       backgroundIcon: Colors.grey.shade800,
       trailing: BlocBuilder<ThemesCubit, ThemesState>(

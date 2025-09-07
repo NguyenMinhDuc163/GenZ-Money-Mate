@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -213,6 +214,89 @@ enum Categorys {
       (category) => category.index == categoryIndex,
       orElse: () => Categorys.others,
     );
+  }
+
+  String getLocalizedName() {
+    switch (this) {
+      case Categorys.food:
+        return 'category.food'.tr();
+      case Categorys.transport:
+        return 'category.transport'.tr();
+      case Categorys.shopping:
+        return 'category.shopping'.tr();
+      case Categorys.others:
+        return 'category.others'.tr();
+      case Categorys.personal:
+        return 'category.personal'.tr();
+      case Categorys.online:
+        return 'category.online'.tr();
+      case Categorys.entertainment:
+        return 'category.entertainment'.tr();
+      case Categorys.travel:
+        return 'category.travel'.tr();
+      case Categorys.investment:
+        return 'category.investment'.tr();
+      case Categorys.payment:
+        return 'category.payment'.tr();
+      case Categorys.quick:
+        return 'category.quick'.tr();
+      case Categorys.bills:
+        return 'category.bills'.tr();
+      case Categorys.vehicle:
+        return 'category.vehicle'.tr();
+      case Categorys.xchange:
+        return 'category.xchange'.tr();
+      case Categorys.withdraw:
+        return 'category.withdraw'.tr();
+      case Categorys.transfer:
+        return 'category.transfer'.tr();
+      case Categorys.fees:
+        return 'category.fees'.tr();
+      case Categorys.apparel:
+        return 'category.apparel'.tr();
+      case Categorys.beauty:
+        return 'category.beauty'.tr();
+      case Categorys.education:
+        return 'category.education'.tr();
+      case Categorys.health:
+        return 'category.health'.tr();
+      case Categorys.home:
+        return 'category.home'.tr();
+      case Categorys.technology:
+        return 'category.technology'.tr();
+      case Categorys.work:
+        return 'category.work'.tr();
+      case Categorys.gifts:
+        return 'category.gifts'.tr();
+      case Categorys.sports:
+        return 'category.sports'.tr();
+      case Categorys.music:
+        return 'category.music'.tr();
+      case Categorys.books:
+        return 'category.books'.tr();
+      case Categorys.pets:
+        return 'category.pets'.tr();
+      case Categorys.social:
+        return 'category.social'.tr();
+      case Categorys.events:
+        return 'category.events'.tr();
+      case Categorys.party:
+        return 'category.party'.tr();
+      case Categorys.baby:
+        return 'category.baby'.tr();
+      case Categorys.fitness:
+        return 'category.fitness'.tr();
+      case Categorys.gardening:
+        return 'category.gardening'.tr();
+      case Categorys.art:
+        return 'category.art'.tr();
+      case Categorys.finance:
+        return 'category.finance'.tr();
+      case Categorys.photography:
+        return 'category.photography'.tr();
+      case Categorys.gaming:
+        return 'category.gaming'.tr();
+    }
   }
 }
 

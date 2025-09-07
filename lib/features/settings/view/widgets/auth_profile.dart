@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -108,8 +109,8 @@ class _AuthProfileState extends State<AuthProfile> {
                 icon: const FaIcon(FontAwesomeIcons.google, size: 16),
                 label: Text(
                   authStatus == AuthStatus.authenticated
-                      ? 'Sign Out'
-                      : 'Sign In',
+                      ? 'setting.sign_out'.tr()
+                      : 'setting.sign_in'.tr(),
                   style: AppTextStyle.caption,
                 ),
                 onPressed: authStatus == AuthStatus.authenticated

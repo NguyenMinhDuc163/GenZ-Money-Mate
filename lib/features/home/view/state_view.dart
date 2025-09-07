@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/enum/enum.dart';
@@ -11,34 +12,28 @@ class StateView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Scaffold(
-        body: _buidBody(),
-      ),
+      child: Scaffold(body: _buidBody()),
     );
   }
 
   Widget _buidBody() {
-    return const SafeArea(
+    return SafeArea(
       bottom: false,
       child: Center(
         child: Column(
           children: [
-            HeaderAppBarFilter(),
-            SizedBox(height: 12),
+            const HeaderAppBarFilter(),
+            const SizedBox(height: 12),
             Expanded(
               child: CustomTabBar(
                 tabControllerCount: 2,
                 tabs: [
-                  Tab(text: 'Income'),
-                  Tab(text: 'Expense'),
+                  Tab(text: 'home.income'.tr()),
+                  Tab(text: 'home.expense'.tr()),
                 ],
                 children: [
-                  TransactionFilter(
-                    category: Category.income,
-                  ),
-                  TransactionFilter(
-                    category: Category.expense,
-                  ),
+                  TransactionFilter(category: Category.income),
+                  TransactionFilter(category: Category.expense),
                 ],
               ),
             ),

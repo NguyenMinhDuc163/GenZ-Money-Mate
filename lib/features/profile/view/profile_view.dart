@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -68,10 +69,8 @@ class _ProfileViewState extends State<ProfileView> {
         onPressed: () => context.pop(),
       ),
       title: Text(
-        'Profile',
-        style: AppTextStyle.title.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
+        'profile.title'.tr(),
+        style: AppTextStyle.title.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -90,7 +89,7 @@ class _ProfileViewState extends State<ProfileView> {
                   const ProfileForm(),
                   const Spacer(),
                   CustomMaterialButton(
-                    text: 'Save',
+                    text: 'profile.save'.tr(),
                     onPressed: () {
                       context.read<ProfileCubit>().updateProfile();
                     },

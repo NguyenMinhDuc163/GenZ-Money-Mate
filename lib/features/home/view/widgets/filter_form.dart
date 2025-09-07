@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,7 +37,7 @@ class _FilterFormState extends State<FilterForm> {
 
     return Column(
       children: [
-        _buidlHeaderText('Start Date'),
+        _buidlHeaderText('common.start_date'.tr()),
         const SizedBox(height: 10),
         CustomItemButton(
           text: startDate.formattedDateOnly,
@@ -51,7 +52,7 @@ class _FilterFormState extends State<FilterForm> {
           onPressed: () => _showPickeDate(context, startDate, true),
         ),
         const SizedBox(height: 15),
-        _buidlHeaderText('End Date'),
+        _buidlHeaderText('common.end_date'.tr()),
         const SizedBox(height: 10),
         CustomItemButton(
           text: endDate.formattedDateOnly,
@@ -71,10 +72,12 @@ class _FilterFormState extends State<FilterForm> {
   }
 
   Widget _buidlHeaderText(String title) {
-    return Row(children: [
-      const SizedBox(width: 8),
-      Text(title, style: AppTextStyle.body)
-    ]);
+    return Row(
+      children: [
+        const SizedBox(width: 8),
+        Text(title, style: AppTextStyle.body),
+      ],
+    );
   }
 
   Future<DateTime?> _showPickeDate(

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +26,7 @@ class _AllViewTransactionState extends State<AllViewTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'All Transaction',
+        title: 'home.all_transaction'.tr(),
         onPressed: () => _onRefresh(),
       ),
       body: _buidBody(),
@@ -35,10 +36,11 @@ class _AllViewTransactionState extends State<AllViewTransaction> {
   Widget _buidBody() {
     return PopScope(
       canPop: true,
-      onPopInvoked: (_) => {
-        context.read<MainCubit>().getAll(TypeShow.limit),
-        context.read<MainCubit>().getTotals(),
-      },
+      onPopInvoked:
+          (_) => {
+            context.read<MainCubit>().getAll(TypeShow.limit),
+            context.read<MainCubit>().getTotals(),
+          },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: SafeArea(
@@ -49,21 +51,24 @@ class _AllViewTransactionState extends State<AllViewTransaction> {
             children: [
               BlocListener<TransactionCubit, TransactionState>(
                 listenWhen: (previous, current) => current is Success,
-                listener: (_, state) => state.maybeWhen(
-                  success: (_) => _success(context),
-                  orElse: () => {},
-                ),
+                listener:
+                    (_, state) => state.maybeWhen(
+                      success: (_) => _success(context),
+                      orElse: () => {},
+                    ),
                 child: const SizedBox.shrink(),
               ),
               BlocBuilder<MainCubit, MainState>(
                 buildWhen: (previous, current) => current is Loaded,
-                builder: (_, state) => state.maybeWhen(
-                  loadedAll: (transactions) => TransactionList(
-                    allTransactions: transactions,
-                  ),
-                  orElse: () =>
-                      const Center(child: CircularProgressIndicator()),
-                ),
+                builder:
+                    (_, state) => state.maybeWhen(
+                      loadedAll:
+                          (transactions) =>
+                              TransactionList(allTransactions: transactions),
+                      orElse:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                    ),
               ),
             ],
           ),

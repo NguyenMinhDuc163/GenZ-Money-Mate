@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,31 +46,34 @@ class _MainViewState extends State<MainView> {
               const ExpenseCard(),
               _buildHeaderTransaction(),
               BlocListener<TransactionCubit, TransactionState>(
-                listener: (_, state) => state.maybeWhen(
-                  success: (message) => _success(context, message),
-                  error: (message) => Alerts.showToastMsg(context, message),
-                  orElse: () => {},
-                ),
+                listener:
+                    (_, state) => state.maybeWhen(
+                      success: (message) => _success(context, message),
+                      error: (message) => Alerts.showToastMsg(context, message),
+                      orElse: () => {},
+                    ),
                 child: const SizedBox.shrink(),
               ),
               BlocBuilder<MainCubit, MainState>(
-                buildWhen: (previous, current) => current.maybeWhen(
-                  loadedAll: (_) => true,
-                  loadedLimit: (_) => true,
-                  loading: () => true,
-                  orElse: () => false,
-                ),
-                builder: (_, state) => state.maybeWhen(
-                  loadedLimit: (transactions) => TransactionList(
-                    allTransactions: transactions,
-                  ),
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  orElse: () => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+                buildWhen:
+                    (previous, current) => current.maybeWhen(
+                      loadedAll: (_) => true,
+                      loadedLimit: (_) => true,
+                      loading: () => true,
+                      orElse: () => false,
+                    ),
+                builder:
+                    (_, state) => state.maybeWhen(
+                      loadedLimit:
+                          (transactions) =>
+                              TransactionList(allTransactions: transactions),
+                      loading:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                      orElse:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                    ),
               ),
             ],
           ),
@@ -81,20 +85,15 @@ class _MainViewState extends State<MainView> {
   _buildHeaderTransaction() {
     return Row(
       children: [
-        const Text(
-          'Transaction',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        Text(
+          'home.transaction'.tr(),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const Spacer(),
         TextButton(
           child: Text(
-            'View All',
-            style: AppTextStyle.caption.copyWith(
-              fontWeight: FontWeight.w400,
-            ),
+            'home.view_all'.tr(),
+            style: AppTextStyle.caption.copyWith(fontWeight: FontWeight.w400),
           ),
           onPressed: () => context.pushNamed(RoutesName.allViewTransaction),
         ),

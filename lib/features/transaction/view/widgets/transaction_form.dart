@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -56,7 +57,7 @@ class _TransactionFormState extends State<TransactionForm> {
             Column(
               children: [
                 CustomItemButton(
-                  text: categorys!.name,
+                  text: categorys!.getLocalizedName(),
                   padding: padding,
                   iconSize: iconSize,
                   iconColor: Colors.white,
@@ -68,7 +69,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   onPressed: () => _showModalSheetCategory(context),
                 ),
                 CustomItemButton(
-                  text: transactionCategory!.name,
+                  text: transactionCategory!.getLocalizedName(),
                   padding: padding,
                   iconSize: iconSize,
                   iconColor: Colors.white,
@@ -92,7 +93,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   onPressed: () => _showPickeDate(context, transactionDate),
                 ),
               ],
-            )
+            ),
           ],
         );
       },
@@ -117,19 +118,18 @@ class _TransactionFormState extends State<TransactionForm> {
             child: CustomTextFormField(
               fontSize: 30,
               maxLines: 1,
-              hintText: '0.00',
+              hintText: 'transaction.amount_hint'.tr(),
               textAlign: TextAlign.center,
               fontWeight: FontWeight.w800,
               keyboardType: TextInputType.number,
-              contentPadding: const EdgeInsets.only(
-                right: 15,
-                left: 0,
-              ),
+              contentPadding: const EdgeInsets.only(right: 15, left: 0),
               controller: context.read<TransactionCubit>().amountController,
-              prefixText: NumberFormat.compactSimpleCurrency(locale: 'en')
-                  .currencySymbol,
+              prefixText:
+                  NumberFormat.compactSimpleCurrency(
+                    locale: 'en',
+                  ).currencySymbol,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -147,7 +147,7 @@ class _TransactionFormState extends State<TransactionForm> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: CustomItemButton(
-                text: category.name,
+                text: category.getLocalizedName(),
                 icon: category.icon,
                 iconColor: Colors.white,
                 backgroundItem: Colors.transparent,
@@ -174,38 +174,36 @@ class _TransactionFormState extends State<TransactionForm> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25.0),
         child: Column(
-          children: Category.values.map((transactionCategory) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: CustomItemButton(
-                text: transactionCategory.name,
-                iconColor: Colors.white,
-                icon: transactionCategory.icon,
-                backgroundIcon: transactionCategory.backgroundIcon,
-                backgroundItem: Colors.transparent,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10,
-                ),
-                onPressed: () {
-                  context
-                      .read<TransactionCubit>()
-                      .onTransactionCategoryChanged(transactionCategory);
+          children:
+              Category.values.map((transactionCategory) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: CustomItemButton(
+                    text: transactionCategory.getLocalizedName(),
+                    iconColor: Colors.white,
+                    icon: transactionCategory.icon,
+                    backgroundIcon: transactionCategory.backgroundIcon,
+                    backgroundItem: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    onPressed: () {
+                      context
+                          .read<TransactionCubit>()
+                          .onTransactionCategoryChanged(transactionCategory);
 
-                  context.pop();
-                },
-              ),
-            );
-          }).toList(),
+                      context.pop();
+                    },
+                  ),
+                );
+              }).toList(),
         ),
       ),
     );
   }
 
-  Future<DateTime?> _showPickeDate(
-    BuildContext context,
-    DateTime initialDate,
-  ) {
+  Future<DateTime?> _showPickeDate(BuildContext context, DateTime initialDate) {
     return Alerts.showPickeTransactionDate(
       context: context,
       initialDate: initialDate,

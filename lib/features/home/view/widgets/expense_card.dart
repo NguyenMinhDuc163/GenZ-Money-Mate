@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,9 +10,7 @@ import '../../../../core/styles/app_text_style.dart';
 import '../../../blocs/main_bloc/main_cubit.dart';
 
 class ExpenseCard extends StatelessWidget {
-  const ExpenseCard({
-    super.key,
-  });
+  const ExpenseCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +37,22 @@ class ExpenseCard extends StatelessWidget {
             orElse: () => false,
           );
         },
-        builder: (context, state) => state.maybeWhen(
-          loadedTotals: (totals) => _buildLoadedTotals(totals),
-          loading: () => const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        builder:
+            (context, state) => state.maybeWhen(
+              loadedTotals: (totals) => _buildLoadedTotals(totals),
+              loading:
+                  () => const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+              orElse:
+                  () => const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
             ),
-          ),
-          orElse: () => const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -62,7 +64,7 @@ class ExpenseCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Total Balance',
+            'home.total_balance'.tr(),
             style: AppTextStyle.caption.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -71,31 +73,27 @@ class ExpenseCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             totals.totalBalance.toCurrencyWithSymbol(),
-            style: AppTextStyle.title2.copyWith(
-              color: Colors.white,
-            ),
+            style: AppTextStyle.title2.copyWith(color: Colors.white),
           ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildExpenseItem(
-                'Income',
-                totals.totalIncome,
-              ),
+              _buildExpenseItem('Income', totals.totalIncome, isIncome: true),
               _buildExpenseItem(
                 'Expense',
                 totals.totalExpense,
+                isIncome: false,
               ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
-  _buildExpenseItem(String title, double amount) {
+  _buildExpenseItem(String title, double amount, {required bool isIncome}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Row(
@@ -110,17 +108,18 @@ class ExpenseCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: title == 'Income'
-                  ? const FaIcon(
-                      FontAwesomeIcons.arrowDown,
-                      color: Colors.greenAccent,
-                      size: 12,
-                    )
-                  : const FaIcon(
-                      FontAwesomeIcons.arrowUp,
-                      color: Colors.redAccent,
-                      size: 12,
-                    ),
+              child:
+                  isIncome
+                      ? const FaIcon(
+                        FontAwesomeIcons.arrowDown,
+                        color: Colors.greenAccent,
+                        size: 12,
+                      )
+                      : const FaIcon(
+                        FontAwesomeIcons.arrowUp,
+                        color: Colors.redAccent,
+                        size: 12,
+                      ),
             ),
           ),
           const SizedBox(width: 8),
@@ -129,7 +128,7 @@ class ExpenseCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                isIncome ? 'home.income'.tr() : 'home.expense'.tr(),
                 style: AppTextStyle.caption.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w400,
@@ -143,7 +142,7 @@ class ExpenseCard extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

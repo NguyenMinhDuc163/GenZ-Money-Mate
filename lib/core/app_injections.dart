@@ -30,6 +30,9 @@ import '../features/transaction/data/repository/transaction_repository.dart';
 import 'firebase_options.dart';
 import 'models/transaction_hive_model.dart';
 import 'service/network_info.dart';
+import '../features/blocs/language_bloc/language_cubit.dart';
+import '../features/settings/data/language_repository/language_base_repository.dart';
+import '../features/settings/data/language_repository/language_repository.dart';
 
 final getIt = GetIt.I;
 
@@ -104,10 +107,7 @@ Future<void> initAppConfig() async {
   getIt.registerLazySingleton(() => authProfileRepository);
   //AuthProfileCubit
   getIt.registerFactory(
-    () => AuthCubit(
-      authRepository: getIt(),
-      userService: getIt(),
-    ),
+    () => AuthCubit(authRepository: getIt(), userService: getIt()),
   );
 
   //=>
@@ -119,10 +119,7 @@ Future<void> initAppConfig() async {
   //ProfileBloc && ProfileRepository
   getIt.registerLazySingleton(() => profileBaseRepository);
   getIt.registerFactory(
-    () => ProfileCubit(
-      profileRepository: getIt(),
-      networkInfo: getIt(),
-    ),
+    () => ProfileCubit(profileRepository: getIt(), networkInfo: getIt()),
   );
 
   //=>
@@ -146,6 +143,16 @@ Future<void> initAppConfig() async {
   //ThemesCubit && ThemesRepository
   getIt.registerLazySingleton(() => themesBaseRepository);
   getIt.registerFactory(() => ThemesCubit(themesRepository: getIt()));
+
+  //=>
+  // LanguageBaseRepository (LanguageRepository)
+  final LanguageBaseRepository languageBaseRepository = LanguageRepository(
+    sharedPreferences: getIt(),
+  );
+
+  // LanguageCubit && LanguageRepository
+  getIt.registerLazySingleton(() => languageBaseRepository);
+  getIt.registerFactory(() => LanguageCubit(languageRepository: getIt()));
 
   //Hive
   await getIt<DbHiveClientBase>().initDb<TransactionHive>(

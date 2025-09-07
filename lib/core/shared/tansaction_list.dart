@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,25 +26,26 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: allTransactions.isEmpty
-          ? Center(
-              child: Text(
-                'No transactions yet',
-                style: AppTextStyle.subtitle.copyWith(
-                  color: context.colorScheme.onSurface,
+      child:
+          allTransactions.isEmpty
+              ? Center(
+                child: Text(
+                  'home.no_transactions'.tr(),
+                  style: AppTextStyle.subtitle.copyWith(
+                    color: context.colorScheme.onSurface,
+                  ),
                 ),
+              )
+              : ListView.builder(
+                itemCount: allTransactions.length,
+                itemBuilder: (_, index) {
+                  final transaction = allTransactions[index];
+                  final category = Categorys.fromIndex(
+                    transaction.categorysIndex,
+                  );
+                  return _buildTransactionItem(context, transaction, category);
+                },
               ),
-            )
-          : ListView.builder(
-              itemCount: allTransactions.length,
-              itemBuilder: (_, index) {
-                final transaction = allTransactions[index];
-                final category = Categorys.fromIndex(
-                  transaction.categorysIndex,
-                );
-                return _buildTransactionItem(context, transaction, category);
-              },
-            ),
     );
   }
 
@@ -58,17 +60,18 @@ class TransactionList extends StatelessWidget {
       iconColor: Colors.white,
       backgroundItem: context.colorScheme.surface,
       backgroundIcon: category.backgroundIcon,
-      onLongPress: () =>
-          isViewOnly ? null : _showModalSheet(context, transaction),
+      onLongPress:
+          () => isViewOnly ? null : _showModalSheet(context, transaction),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
             transaction.amount.toCurrencyWithSymbol(),
             style: AppTextStyle.subtitle.copyWith(
-              color: transaction.category == Category.expense
-                  ? Colors.redAccent
-                  : Colors.greenAccent,
+              color:
+                  transaction.category == Category.expense
+                      ? Colors.redAccent
+                      : Colors.greenAccent,
             ),
           ),
           const SizedBox(height: 4),
@@ -94,7 +97,7 @@ class TransactionList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: CustomItemButton(
-                text: 'Edit',
+                text: 'common.edit'.tr(),
                 icon: FontAwesomeIcons.penToSquare,
                 iconColor: Colors.white,
                 backgroundIcon: Colors.blueAccent,
@@ -109,7 +112,7 @@ class TransactionList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: CustomItemButton(
-                text: 'Delete',
+                text: 'common.delete'.tr(),
                 icon: FontAwesomeIcons.trashCan,
                 iconColor: Colors.white,
                 backgroundIcon: Colors.redAccent,
@@ -138,7 +141,7 @@ class TransactionList extends StatelessWidget {
     context.pop();
     Alerts.showAlertDialog(
       context: context,
-      title: 'Delete Transaction',
+      title: 'transaction.delete_title'.tr(),
       message: 'Are you sure you want to delete this transaction?',
       onOk: () {
         debugPrint('transaction.uuid: ${transaction.uuid}');
