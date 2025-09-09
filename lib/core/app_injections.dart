@@ -38,7 +38,18 @@ final getIt = GetIt.I;
 
 Future<void> initAppConfig() async {
   // Initialize [FirebaseApp].
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    // Firebase already initialized, ignore the error
+    if (e.toString().contains('duplicate-app')) {
+      // Firebase already initialized, continue
+    } else {
+      rethrow;
+    }
+  }
 
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,

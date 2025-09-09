@@ -8,6 +8,7 @@ import '../../../../core/models/transaction_model.dart';
 import '../../../../core/shared/shared.dart';
 import '../../../../core/styles/app_text_style.dart';
 import '../../../blocs/state_bloc/state_cubit.dart';
+import '../../../blocs/language_bloc/language_cubit.dart';
 import 'widgets.dart';
 
 class TransactionFilter extends StatefulWidget {
@@ -49,73 +50,84 @@ class _TransactionFilterState extends State<TransactionFilter> {
   }
 
   _buidlHeaderText(BuildContext context) {
-    return BlocBuilder<StateCubit, StateState>(
-      builder: (context, state) {
-        final List<Transaction>? allTransactions = state.mapOrNull(
-          loaded: (state) => state.transactions,
-        );
-        final endDate = state.maybeMap(
-          initial: (state) => context.read<StateCubit>().endDate,
-          dateChanged: (state) => state.endDate,
-          orElse: () => context.read<StateCubit>().endDate,
-        );
-        return Row(
-          children: [
-            Text(
-              endDate.formattedDateOnly,
-              style: AppTextStyle.caption.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              allTransactions?.toCalcTotals().amount.toCurrencyWithSymbol() ??
-                  '0.00',
-              style: AppTextStyle.caption.copyWith(
-                fontWeight: FontWeight.w600,
-                color: widget.category == Category.expense
-                    ? Colors.redAccent
-                    : Colors.greenAccent,
-              ),
-            ),
-          ],
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return BlocBuilder<StateCubit, StateState>(
+          builder: (context, state) {
+            final List<Transaction>? allTransactions = state.mapOrNull(
+              loaded: (state) => state.transactions,
+            );
+            final endDate = state.maybeMap(
+              initial: (state) => context.read<StateCubit>().endDate,
+              dateChanged: (state) => state.endDate,
+              orElse: () => context.read<StateCubit>().endDate,
+            );
+            return Row(
+              children: [
+                Text(
+                  endDate.formattedDateOnly,
+                  style: AppTextStyle.caption.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  allTransactions
+                          ?.toCalcTotalsWithCurrencyConversion()
+                          .toCurrencyWithSymbol() ??
+                      '0.00',
+                  style: AppTextStyle.caption.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color:
+                        widget.category == Category.expense
+                            ? Colors.redAccent
+                            : Colors.greenAccent,
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
   _buildTransactionList(BuildContext context) {
-    return BlocBuilder<StateCubit, StateState>(
-      buildWhen: (previous, current) {
-        return current.maybeWhen(
-          loaded: (transactions, _) => true,
-          loading: () => true,
-          orElse: () => false,
-        );
-      },
-      builder: (context, state) {
-        final List<Transaction>? allTransactions = state.mapOrNull(
-          loaded: (state) => state.transactions,
-        );
-
-        return state.maybeWhen(
-          loaded: (transactions, _) {
-            return allTransactions!.isEmpty
-                ? Center(
-                    child: Text(
-                      'home.no_transactions'.tr(),
-                      style: AppTextStyle.subtitle.copyWith(
-                        color: context.colorScheme.onSurface,
-                      ),
-                    ),
-                  )
-                : TransactionList(
-                    allTransactions: allTransactions,
-                    isViewOnly: true,
-                  );
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return BlocBuilder<StateCubit, StateState>(
+          buildWhen: (previous, current) {
+            return current.maybeWhen(
+              loaded: (transactions, _) => true,
+              loading: () => true,
+              orElse: () => false,
+            );
           },
-          orElse: () => const Center(child: CircularProgressIndicator()),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          builder: (context, state) {
+            final List<Transaction>? allTransactions = state.mapOrNull(
+              loaded: (state) => state.transactions,
+            );
+
+            return state.maybeWhen(
+              loaded: (transactions, _) {
+                return allTransactions!.isEmpty
+                    ? Center(
+                      child: Text(
+                        'home.no_transactions'.tr(),
+                        style: AppTextStyle.subtitle.copyWith(
+                          color: context.colorScheme.onSurface,
+                        ),
+                      ),
+                    )
+                    : TransactionList(
+                      allTransactions: allTransactions,
+                      isViewOnly: true,
+                    );
+              },
+              orElse: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
+            );
+          },
         );
       },
     );

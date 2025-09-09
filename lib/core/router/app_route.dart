@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:user_service/user_service.dart';
@@ -43,9 +44,7 @@ class AppRouter {
       case RoutesName.profile:
         return _getPageRoute(
           routeName: settings.name,
-          viewToShow: ProfileView(
-            user: arguments as User,
-          ),
+          viewToShow: ProfileView(user: arguments as User),
         );
 
       case RoutesName.allViewTransaction:
@@ -59,7 +58,7 @@ class AppRouter {
           routeName: settings.name,
           viewToShow: Scaffold(
             body: Center(
-              child: Text('No route defined for ${settings.name}'),
+              child: Text('router.no_route'.tr(args: [settings.name ?? ''])),
             ),
           ),
         );

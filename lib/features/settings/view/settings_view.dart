@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
-
-import '../../../core/utils/alerts/alerts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/utils/alerts/alerts.dart';
 import '../../../core/shared/shared.dart';
+import '../../blocs/language_bloc/language_cubit.dart';
 import 'widgets/widgets.dart';
 
 class SettingsView extends StatelessWidget {
@@ -12,12 +13,16 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: 'app.settings'.tr()),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: _buildBody(context),
-      ),
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Scaffold(
+          appBar: CustomAppBar(title: 'app.settings'.tr()),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: _buildBody(context),
+          ),
+        );
+      },
     );
   }
 

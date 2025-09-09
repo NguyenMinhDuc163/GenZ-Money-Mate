@@ -15,9 +15,7 @@ import '../../../../core/utils/alerts/alerts.dart';
 import '../../../blocs/auth_bloc/auth_cubit.dart';
 
 class AuthProfile extends StatefulWidget {
-  const AuthProfile({
-    super.key,
-  });
+  const AuthProfile({super.key});
 
   @override
   State<AuthProfile> createState() => _AuthProfileState();
@@ -33,9 +31,10 @@ class _AuthProfileState extends State<AuthProfile> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) => state.mapOrNull(
-        error: (state) => Alerts.showToastMsg(context, state.message),
-      ),
+      listener:
+          (context, state) => state.mapOrNull(
+            error: (state) => Alerts.showToastMsg(context, state.message),
+          ),
       builder: (context, state) {
         return Material(
           color: context.colorScheme.surface,
@@ -44,16 +43,18 @@ class _AuthProfileState extends State<AuthProfile> {
           child: SizedBox(
             height: 120,
             child: state.maybeMap(
-              authChanged: (state) => _buildProfile(
-                context,
-                authStatus: state.authStatus,
-                user: state.user ?? User.guest(),
-              ),
-              error: (state) => _buildProfile(
-                context,
-                authStatus: AuthStatus.unauthenticated,
-                user: User.guest(),
-              ),
+              authChanged:
+                  (state) => _buildProfile(
+                    context,
+                    authStatus: state.authStatus,
+                    user: state.user ?? User.guest(),
+                  ),
+              error:
+                  (state) => _buildProfile(
+                    context,
+                    authStatus: AuthStatus.unauthenticated,
+                    user: User.guest(),
+                  ),
               loading: (_) => const Center(child: CircularProgressIndicator()),
               orElse: () => const SizedBox.shrink(),
             ),
@@ -69,9 +70,10 @@ class _AuthProfileState extends State<AuthProfile> {
     required User user,
   }) {
     return InkWell(
-      onTap: authStatus == AuthStatus.authenticated
-          ? () => context.pushNamed(RoutesName.profile, arguments: user)
-          : null, // Perform Sign-in action
+      onTap:
+          authStatus == AuthStatus.authenticated
+              ? () => context.pushNamed(RoutesName.profile, arguments: user)
+              : null, // Perform Sign-in action
       child: Row(
         children: [
           Container(
@@ -87,13 +89,16 @@ class _AuthProfileState extends State<AuthProfile> {
               margin: const EdgeInsets.all(3),
               child: CircleAvatar(
                 backgroundColor: Colors.white,
-                backgroundImage: authStatus == AuthStatus.authenticated
-                    ? CachedNetworkImageProvider(
-                        user.photoUrl!.replaceFirst('s96', 's400'),
-                      )
-                    : AssetImage(
-                        Helper.getAssetImage('guest.png'),
-                      ) as ImageProvider,
+                backgroundImage:
+                    authStatus == AuthStatus.authenticated &&
+                            user.photoUrl != null &&
+                            user.photoUrl!.isNotEmpty &&
+                            user.photoUrl!.startsWith('http')
+                        ? CachedNetworkImageProvider(
+                          user.photoUrl!.replaceFirst('s96', 's400'),
+                        )
+                        : AssetImage(Helper.getAssetImage('guest.png'))
+                            as ImageProvider,
               ),
             ),
           ),
@@ -113,20 +118,19 @@ class _AuthProfileState extends State<AuthProfile> {
                       : 'setting.sign_in'.tr(),
                   style: AppTextStyle.caption,
                 ),
-                onPressed: authStatus == AuthStatus.authenticated
-                    ? () {
-                        // Perform Sign-out action
-                        context.read<AuthCubit>().signOut();
-                      }
-                    : () {
-                        // Perform Sign-in action
-                        context.read<AuthCubit>().signInWithGoogle();
-                      },
+                onPressed:
+                    authStatus == AuthStatus.authenticated
+                        ? () {
+                          // Perform Sign-out action
+                          context.read<AuthCubit>().signOut();
+                        }
+                        : () {
+                          // Perform Sign-in action
+                          context.read<AuthCubit>().signInWithGoogle();
+                        },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: context.colorScheme.onSurface,
-                  side: BorderSide(
-                    color: context.colorScheme.onSurface,
-                  ),
+                  side: BorderSide(color: context.colorScheme.onSurface),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),

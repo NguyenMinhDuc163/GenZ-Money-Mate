@@ -12,8 +12,9 @@ _$TransactionImpl _$$TransactionImplFromJson(Map<String, dynamic> json) =>
       userId: json['userId'] as String?,
       amount: (json['amount'] as num).toDouble(),
       date: const TimestampConverter().fromJson(json['date'] as Timestamp),
-      categorysIndex: json['categorysIndex'] as int,
+      categorysIndex: (json['categorysIndex'] as num).toInt(),
       category: $enumDecode(_$CategoryEnumMap, json['category']),
+      originalCurrency: json['originalCurrency'] as String? ?? 'USD',
     );
 
 Map<String, dynamic> _$$TransactionImplToJson(_$TransactionImpl instance) =>
@@ -24,6 +25,7 @@ Map<String, dynamic> _$$TransactionImplToJson(_$TransactionImpl instance) =>
       'date': const TimestampConverter().toJson(instance.date),
       'categorysIndex': instance.categorysIndex,
       'category': _$CategoryEnumMap[instance.category]!,
+      'originalCurrency': instance.originalCurrency,
     };
 
 const _$CategoryEnumMap = {

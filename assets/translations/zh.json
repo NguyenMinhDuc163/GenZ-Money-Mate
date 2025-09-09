@@ -1,0 +1,108 @@
+{
+  "setting": {
+    "version": "版本",
+    "sign_out": "登出",
+    "sign_in": "登录",
+    "dark_mode": "深色模式",
+    "light_mode": "浅色模式"
+  },
+  "home": {
+    "all_transaction": "所有交易",
+    "transaction": "交易",
+    "view_all": "查看全部",
+    "income": "收入",
+    "expense": "支出",
+    "total_balance": "总余额",
+    "start_date": "开始日期",
+    "end_date": "结束日期",
+    "done": "完成",
+    "welcome": "欢迎！",
+    "no_transactions": "暂无交易"
+  },
+  "profile": {
+    "full_name_required": "姓名不能为空",
+    "full_name_hint": "例如：Nguyễn Văn A",
+    "title": "个人资料",
+    "save": "保存"
+  },
+  "category": {
+    "food": "饮食",
+    "transport": "出行",
+    "shopping": "购物",
+    "others": "其他",
+    "personal": "个人",
+    "online": "在线",
+    "entertainment": "娱乐",
+    "travel": "旅行",
+    "investment": "投资",
+    "payment": "支付",
+    "quick": "快速",
+    "bills": "账单",
+    "vehicle": "车辆",
+    "xchange": "外汇兑换",
+    "withdraw": "取款",
+    "transfer": "转账",
+    "fees": "费用",
+    "apparel": "服饰",
+    "beauty": "美妆",
+    "education": "教育",
+    "health": "健康",
+    "home": "住宅",
+    "technology": "科技",
+    "work": "工作",
+    "gifts": "礼物",
+    "sports": "体育",
+    "music": "音乐",
+    "books": "书籍",
+    "pets": "宠物",
+    "social": "社交",
+    "events": "活动",
+    "party": "派对",
+    "baby": "婴儿",
+    "fitness": "健身",
+    "gardening": "园艺",
+    "art": "艺术",
+    "finance": "财务",
+    "photography": "摄影",
+    "gaming": "游戏"
+  },
+  "common": {
+    "ok": "确定",
+    "cancel": "取消",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "done": "完成",
+    "start_date": "开始日期",
+    "end_date": "结束日期"
+  },
+  "app": {
+    "title": "每日追踪",
+    "settings": "设置"
+  },
+  "version": {
+    "title": "版本 1.0.0",
+    "copyright": "版权 © 2025 Daily GenZ money mate。保留所有权利。",
+    "developed_by": "开发者：",
+    "developer": "Nguyen Duc"
+  },
+  "transaction": {
+    "amount_hint": "0.00",
+    "delete_title": "删除交易",
+    "updated_success": "更新交易成功",
+    "added_success": "新增交易成功",
+    "deleted_success": "删除交易成功"
+  },
+  "router": {
+    "no_route": "没有适用于 {{}} 的路由"
+  },
+  "date": {
+    "today_at": "今天，{{time}}",
+    "yesterday_at": "昨天，{{time}}",
+    "mmm_d_at": "{{date}}，{{time}}",
+    "y_mmm_d_at": "{{date}} {{time}}"
+  },
+  "user": {
+    "guest": "访客"
+  }
+}

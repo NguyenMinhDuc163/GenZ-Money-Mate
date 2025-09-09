@@ -88,7 +88,22 @@
   },
   "transaction": {
     "amount_hint": "0.00",
-    "delete_title": "Delete Transaction"
+    "delete_title": "Delete Transaction",
+    "updated_success": "Transaction updated successfully",
+    "added_success": "Transaction added successfully",
+    "deleted_success": "Transaction deleted successfully"
+  },
+  "router": {
+    "no_route": "No route defined for {{}}"
+  },
+  "date": {
+    "today_at": "Today, {{time}}",
+    "yesterday_at": "Yesterday, {{time}}",
+    "mmm_d_at": "{{date}}, {{time}}",
+    "y_mmm_d_at": "{{date}} at {{time}}"
+  },
+  "user": {
+    "guest": "Guest"
   }
 
 }

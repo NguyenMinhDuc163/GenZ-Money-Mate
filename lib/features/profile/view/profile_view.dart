@@ -11,6 +11,7 @@ import '../../../core/shared/custom_material_button.dart';
 import '../../../core/styles/app_text_style.dart';
 import '../../../core/utils/alerts/alerts.dart';
 import '../../blocs/profile_bloc/profile_cubit.dart';
+import '../../blocs/language_bloc/language_cubit.dart';
 import 'widgets/widgets.dart';
 
 class ProfileView extends StatefulWidget {
@@ -31,30 +32,34 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: BlocListener<ProfileCubit, ProfileState>(
-        listener: (context, state) {
-          state.maybeMap(
-            loading: (_) => Alerts.showLoaderDialog(context),
-            success: (state) {
-              context.pop();
-              context.pop();
-              Alerts.showToastMsg(context, state.message);
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Scaffold(
+          appBar: _buildAppBar(context),
+          body: BlocListener<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              state.maybeMap(
+                loading: (_) => Alerts.showLoaderDialog(context),
+                success: (state) {
+                  context.pop();
+                  context.pop();
+                  Alerts.showToastMsg(context, state.message);
+                },
+                error: (state) {
+                  context.pop();
+                  context.pop();
+                  Alerts.showToastMsg(context, state.message);
+                },
+                orElse: () {},
+              );
             },
-            error: (state) {
-              context.pop();
-              context.pop();
-              Alerts.showToastMsg(context, state.message);
-            },
-            orElse: () {},
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: _buildBody(context),
-        ),
-      ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: _buildBody(context),
+            ),
+          ),
+        );
+      },
     );
   }
 

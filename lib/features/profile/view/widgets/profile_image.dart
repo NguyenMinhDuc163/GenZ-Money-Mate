@@ -22,6 +22,7 @@ class ProfileImage extends StatefulWidget {
 
 class _ProfileImageState extends State<ProfileImage> {
   bool _isUpdateProfile = false;
+  bool _isPickingImage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +34,7 @@ class _ProfileImageState extends State<ProfileImage> {
         color: Colors.red,
         gradient: AppColors.primaryGradient,
       ),
-      child: Stack(
-        children: [
-          _buildImage(),
-          _buildCameraIcon(context),
-        ],
-      ),
+      child: Stack(children: [_buildImage(), _buildCameraIcon(context)]),
     );
   }
 
@@ -50,19 +46,20 @@ class _ProfileImageState extends State<ProfileImage> {
         color: Colors.white,
       ),
       child: ClipOval(
-        child: _isUpdateProfile
-            ? Image.file(
-                context.read<ProfileCubit>().selectedImage!,
-                height: 150,
-                width: 150,
-                fit: BoxFit.cover,
-              )
-            : CachedNetworkImage(
-                imageUrl: widget.user.photoUrl!,
-                height: 150,
-                width: 150,
-                fit: BoxFit.cover,
-              ),
+        child:
+            _isUpdateProfile
+                ? Image.file(
+                  context.read<ProfileCubit>().selectedImage!,
+                  height: 150,
+                  width: 150,
+                  fit: BoxFit.cover,
+                )
+                : CachedNetworkImage(
+                  imageUrl: widget.user.photoUrl!,
+                  height: 150,
+                  width: 150,
+                  fit: BoxFit.cover,
+                ),
       ),
     );
   }
@@ -76,10 +73,7 @@ class _ProfileImageState extends State<ProfileImage> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
-          border: Border.all(
-            width: 3,
-            color: context.colorScheme.background,
-          ),
+          border: Border.all(width: 3, color: context.colorScheme.background),
           gradient: AppColors.primaryGradient,
         ),
         child: Material(
@@ -87,12 +81,24 @@ class _ProfileImageState extends State<ProfileImage> {
           borderRadius: BorderRadius.circular(16),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () => _onChooseImage(),
-            child: Icon(
-              FontAwesomeIcons.cameraRetro,
-              color: context.colorScheme.background,
-              size: 15,
-            ),
+            onTap: _isPickingImage ? null : () => _onChooseImage(),
+            child:
+                _isPickingImage
+                    ? SizedBox(
+                      width: 15,
+                      height: 15,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          context.colorScheme.background,
+                        ),
+                      ),
+                    )
+                    : Icon(
+                      FontAwesomeIcons.cameraRetro,
+                      color: context.colorScheme.background,
+                      size: 15,
+                    ),
           ),
         ),
       ),
@@ -100,12 +106,26 @@ class _ProfileImageState extends State<ProfileImage> {
   }
 
   _onChooseImage() async {
-    final picker = ImagePicker();
-    XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    if (_isPickingImage) return; // Prevent multiple calls
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    try {
+      final picker = ImagePicker();
+      XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        setState(() {
+          context.read<ProfileCubit>().selectedImage = File(image.path);
+          _isUpdateProfile = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error picking image: $e');
+    } finally {
       setState(() {
-        context.read<ProfileCubit>().selectedImage = File(image.path);
-        _isUpdateProfile = true;
+        _isPickingImage = false;
       });
     }
   }

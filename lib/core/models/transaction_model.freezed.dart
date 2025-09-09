@@ -12,7 +12,7 @@ part of 'transaction_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Transaction _$TransactionFromJson(Map<String, dynamic> json) {
   return _Transaction.fromJson(json);
@@ -27,9 +27,14 @@ mixin _$Transaction {
   DateTime get date => throw _privateConstructorUsedError;
   int get categorysIndex => throw _privateConstructorUsedError;
   Category get category => throw _privateConstructorUsedError;
+  String get originalCurrency => throw _privateConstructorUsedError;
 
+  /// Serializes this Transaction to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TransactionCopyWith<Transaction> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -46,7 +51,8 @@ abstract class $TransactionCopyWith<$Res> {
       double amount,
       @TimestampConverter() DateTime date,
       int categorysIndex,
-      Category category});
+      Category category,
+      String originalCurrency});
 }
 
 /// @nodoc
@@ -59,6 +65,8 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -68,6 +76,7 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? date = null,
     Object? categorysIndex = null,
     Object? category = null,
+    Object? originalCurrency = null,
   }) {
     return _then(_value.copyWith(
       uuid: freezed == uuid
@@ -94,6 +103,10 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as Category,
+      originalCurrency: null == originalCurrency
+          ? _value.originalCurrency
+          : originalCurrency // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -112,7 +125,8 @@ abstract class _$$TransactionImplCopyWith<$Res>
       double amount,
       @TimestampConverter() DateTime date,
       int categorysIndex,
-      Category category});
+      Category category,
+      String originalCurrency});
 }
 
 /// @nodoc
@@ -123,6 +137,8 @@ class __$$TransactionImplCopyWithImpl<$Res>
       _$TransactionImpl _value, $Res Function(_$TransactionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -132,6 +148,7 @@ class __$$TransactionImplCopyWithImpl<$Res>
     Object? date = null,
     Object? categorysIndex = null,
     Object? category = null,
+    Object? originalCurrency = null,
   }) {
     return _then(_$TransactionImpl(
       uuid: freezed == uuid
@@ -158,6 +175,10 @@ class __$$TransactionImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as Category,
+      originalCurrency: null == originalCurrency
+          ? _value.originalCurrency
+          : originalCurrency // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -171,7 +192,8 @@ class _$TransactionImpl implements _Transaction {
       required this.amount,
       @TimestampConverter() required this.date,
       required this.categorysIndex,
-      required this.category});
+      required this.category,
+      this.originalCurrency = 'USD'});
 
   factory _$TransactionImpl.fromJson(Map<String, dynamic> json) =>
       _$$TransactionImplFromJson(json);
@@ -189,10 +211,13 @@ class _$TransactionImpl implements _Transaction {
   final int categorysIndex;
   @override
   final Category category;
+  @override
+  @JsonKey()
+  final String originalCurrency;
 
   @override
   String toString() {
-    return 'Transaction(uuid: $uuid, userId: $userId, amount: $amount, date: $date, categorysIndex: $categorysIndex, category: $category)';
+    return 'Transaction(uuid: $uuid, userId: $userId, amount: $amount, date: $date, categorysIndex: $categorysIndex, category: $category, originalCurrency: $originalCurrency)';
   }
 
   @override
@@ -207,15 +232,19 @@ class _$TransactionImpl implements _Transaction {
             (identical(other.categorysIndex, categorysIndex) ||
                 other.categorysIndex == categorysIndex) &&
             (identical(other.category, category) ||
-                other.category == category));
+                other.category == category) &&
+            (identical(other.originalCurrency, originalCurrency) ||
+                other.originalCurrency == originalCurrency));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, uuid, userId, amount, date, categorysIndex, category);
+  int get hashCode => Object.hash(runtimeType, uuid, userId, amount, date,
+      categorysIndex, category, originalCurrency);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransactionImplCopyWith<_$TransactionImpl> get copyWith =>
@@ -236,7 +265,8 @@ abstract class _Transaction implements Transaction {
       required final double amount,
       @TimestampConverter() required final DateTime date,
       required final int categorysIndex,
-      required final Category category}) = _$TransactionImpl;
+      required final Category category,
+      final String originalCurrency}) = _$TransactionImpl;
 
   factory _Transaction.fromJson(Map<String, dynamic> json) =
       _$TransactionImpl.fromJson;
@@ -255,7 +285,12 @@ abstract class _Transaction implements Transaction {
   @override
   Category get category;
   @override
-  @JsonKey(ignore: true)
+  String get originalCurrency;
+
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransactionImplCopyWith<_$TransactionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

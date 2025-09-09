@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../enum/enum.dart';
 import '../models/transaction_hive_model.dart';
+import '../service/currency_service.dart';
 
 /// Extension on [BuildContext] build context to provide easy access Context Extension.
 extension DevicesOsContextExtension on BuildContext {
@@ -52,8 +54,9 @@ extension TransactionTypeHiveExtension on CategoryHive {
 
 extension DateExtension on DateTime {
   String get formattedDate {
-    //e.g. 12th Jan 2021 at 12:00 PM
-    return '${DateFormat.yMMMd().format(this)} at ${DateFormat.jm().format(this)}';
+    final dateStr = DateFormat.yMMMd().format(this);
+    final timeStr = DateFormat.jm().format(this);
+    return 'date.y_mmm_d_at'.tr(namedArgs: {'date': dateStr, 'time': timeStr});
   }
 
   String get formattedDateOnly {
@@ -76,22 +79,24 @@ extension DateExtension on DateTime {
     final updatedDate = DateTime(year, month, day);
 
     if (today.isAtSameMomentAs(updatedDate)) {
-      // If the date is today, return "Today at <time>"
-      //e.g. Today, 12:00 PM
-      return 'Today, ${DateFormat.jm().format(this)}';
+      final timeStr = DateFormat.jm().format(this);
+      return 'date.today_at'.tr(namedArgs: {'time': timeStr});
     } else if (yesterday.isAtSameMomentAs(updatedDate)) {
-      // If the date is yesterday, return "Yesterday at <time>"
-      //e.g. Yesterday, 12:00 PM
-      return 'Yesterday, ${DateFormat.jm().format(this)}';
+      final timeStr = DateFormat.jm().format(this);
+      return 'date.yesterday_at'.tr(namedArgs: {'time': timeStr});
     } else {
       if (year == now.year) {
-        // If the date is in the current year, return "MMM d at <time>"
-        //e.g. Jan 12, 12:00 PM
-        return '${DateFormat.MMMd().format(this)}, ${DateFormat.jm().format(this)}';
+        final dateStr = DateFormat.MMMd().format(this);
+        final timeStr = DateFormat.jm().format(this);
+        return 'date.mmm_d_at'.tr(
+          namedArgs: {'date': dateStr, 'time': timeStr},
+        );
       } else {
-        // Otherwise, return "MMM d, yyyy at <time>"
-        //e.g. Jan 12, 2021 at 12:00 PM
-        return '${DateFormat.yMMMd().format(this)} at ${DateFormat.jm().format(this)}';
+        final dateStr = DateFormat.yMMMd().format(this);
+        final timeStr = DateFormat.jm().format(this);
+        return 'date.y_mmm_d_at'.tr(
+          namedArgs: {'date': dateStr, 'time': timeStr},
+        );
       }
     }
   }
@@ -99,18 +104,64 @@ extension DateExtension on DateTime {
 
 extension DoubleFormatting on double {
   String toCurrencyWithSymbol() {
-    final formatter = NumberFormat.currency(symbol: '\$ ', decimalDigits: 2);
-    return formatter.format(this);
+    final locale = Intl.getCurrentLocale();
+    final currencyType = CurrencyService.getCurrencyType(locale);
+    return CurrencyService.formatCurrency(
+      amount: this,
+      currencyType: currencyType,
+      showSymbol: true,
+    );
   }
 
   String toCurrencyString() {
-    final formatter = NumberFormat.currency(symbol: '', decimalDigits: 2);
-    return formatter.format(this);
+    final locale = Intl.getCurrentLocale();
+    final currencyType = CurrencyService.getCurrencyType(locale);
+    return CurrencyService.formatCurrency(
+      amount: this,
+      currencyType: currencyType,
+      showSymbol: false,
+    );
+  }
+}
+
+extension TransactionHiveExtension on TransactionHive {
+  /// Convert và hiển thị tiền theo loại tiền hiện tại
+  String get displayAmount {
+    final locale = Intl.getCurrentLocale();
+    final currentCurrencyType = CurrencyService.getCurrencyType(locale);
+
+    // Nếu originalCurrency là null (dữ liệu cũ), mặc định là USD
+    final originalCurrencyType = _getCurrencyTypeFromString(
+      originalCurrency ?? 'USD',
+    );
+
+    return CurrencyService.convertAndFormatCurrency(
+      originalAmount: amount,
+      originalCurrency: originalCurrencyType,
+      targetCurrency: currentCurrencyType,
+      showSymbol: true,
+    );
+  }
+
+  /// Lấy CurrencyType từ string
+  CurrencyType _getCurrencyTypeFromString(String currencyString) {
+    switch (currencyString.toUpperCase()) {
+      case 'VND':
+        return CurrencyType.vnd;
+      case 'CNY':
+        return CurrencyType.cny;
+      case 'USD':
+      default:
+        return CurrencyType.usd;
+    }
   }
 }
 
 extension StringFormatting on String {
   double toUnFormattedString() {
-    return double.parse(replaceAll(',', ''));
+    // Remove tất cả dấu phân cách (dấu phẩy và dấu chấm)
+    // Vì trong tiền Việt, dấu chấm là separator hàng nghìn, không phải decimal
+    final cleanString = replaceAll(',', '').replaceAll('.', '');
+    return double.parse(cleanString);
   }
 }

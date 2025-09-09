@@ -10,6 +10,7 @@ import '../../../core/styles/app_text_style.dart';
 import '../../../core/utils/alerts/alerts.dart';
 import '../../blocs/main_bloc/main_cubit.dart';
 import '../../blocs/transaction_bloc/transaction_cubit.dart';
+import '../../blocs/language_bloc/language_cubit.dart';
 import 'widgets/widgets.dart';
 
 class MainView extends StatefulWidget {
@@ -32,53 +33,62 @@ class _MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: SafeArea(
-        bottom: false,
-        child: Center(
-          child: Column(
-            children: [
-              const BlocListenerAuth(),
-              const SizedBox(height: 10.0),
-              const HeaderAppBarProfile(),
-              const SizedBox(height: 10.0),
-              const ExpenseCard(),
-              _buildHeaderTransaction(),
-              BlocListener<TransactionCubit, TransactionState>(
-                listener:
-                    (_, state) => state.maybeWhen(
-                      success: (message) => _success(context, message),
-                      error: (message) => Alerts.showToastMsg(context, message),
-                      orElse: () => {},
-                    ),
-                child: const SizedBox.shrink(),
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: SafeArea(
+            bottom: false,
+            child: Center(
+              child: Column(
+                children: [
+                  const BlocListenerAuth(),
+                  const SizedBox(height: 10.0),
+                  HeaderAppBarProfile(),
+                  const SizedBox(height: 10.0),
+                  ExpenseCard(),
+                  _buildHeaderTransaction(),
+                  BlocListener<TransactionCubit, TransactionState>(
+                    listener:
+                        (_, state) => state.maybeWhen(
+                          success: (message) => _success(context, message),
+                          error:
+                              (message) =>
+                                  Alerts.showToastMsg(context, message),
+                          orElse: () => {},
+                        ),
+                    child: const SizedBox.shrink(),
+                  ),
+                  BlocBuilder<MainCubit, MainState>(
+                    buildWhen:
+                        (previous, current) => current.maybeWhen(
+                          loadedAll: (_) => true,
+                          loadedLimit: (_) => true,
+                          loading: () => true,
+                          orElse: () => false,
+                        ),
+                    builder:
+                        (_, state) => state.maybeWhen(
+                          loadedLimit:
+                              (transactions) => TransactionList(
+                                allTransactions: transactions,
+                              ),
+                          loading:
+                              () => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                          orElse:
+                              () => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                        ),
+                  ),
+                ],
               ),
-              BlocBuilder<MainCubit, MainState>(
-                buildWhen:
-                    (previous, current) => current.maybeWhen(
-                      loadedAll: (_) => true,
-                      loadedLimit: (_) => true,
-                      loading: () => true,
-                      orElse: () => false,
-                    ),
-                builder:
-                    (_, state) => state.maybeWhen(
-                      loadedLimit:
-                          (transactions) =>
-                              TransactionList(allTransactions: transactions),
-                      loading:
-                          () =>
-                              const Center(child: CircularProgressIndicator()),
-                      orElse:
-                          () =>
-                              const Center(child: CircularProgressIndicator()),
-                    ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -102,7 +112,7 @@ class _MainViewState extends State<MainView> {
   }
 
   _success(BuildContext context, String message) {
-    Alerts.showToastMsg(context, message);
+    Alerts.showToastMsg(context, message.tr());
     context
         .read<MainCubit>()
         .getAll(TypeShow.limit)

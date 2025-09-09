@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../blocs/themes_bloc/themes_cubit.dart';
+import '../../../blocs/language_bloc/language_cubit.dart';
 import 'widgets.dart';
 
 class DarkModeSwitch extends StatefulWidget {
@@ -19,31 +20,37 @@ class _DarkModeSwitchState extends State<DarkModeSwitch> {
   @override
   void initState() {
     isSwitched = context.read<ThemesCubit>().state.maybeMap(
-          orElse: () => false,
-          loadedThemeMode: (state) => state.themeMode == ThemeMode.dark,
-        );
+      orElse: () => false,
+      loadedThemeMode: (state) => state.themeMode == ThemeMode.dark,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ItemSettings(
-      title: isSwitched ? 'setting.dark_mode'.tr() : 'setting.light_mode'.tr(),
-      iconData: isSwitched ? FontAwesomeIcons.moon : FontAwesomeIcons.solidSun,
-      backgroundIcon: Colors.grey.shade800,
-      trailing: BlocBuilder<ThemesCubit, ThemesState>(
-        builder: (context, state) {
-          return Switch(
-            value: isSwitched,
-            onChanged: (themeMode) {
-              setState(() {
-                isSwitched = themeMode;
-                context.read<ThemesCubit>().toggleTheme();
-              });
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return ItemSettings(
+          title:
+              isSwitched ? 'setting.dark_mode'.tr() : 'setting.light_mode'.tr(),
+          iconData:
+              isSwitched ? FontAwesomeIcons.moon : FontAwesomeIcons.solidSun,
+          backgroundIcon: Colors.grey.shade800,
+          trailing: BlocBuilder<ThemesCubit, ThemesState>(
+            builder: (context, state) {
+              return Switch(
+                value: isSwitched,
+                onChanged: (themeMode) {
+                  setState(() {
+                    isSwitched = themeMode;
+                    context.read<ThemesCubit>().toggleTheme();
+                  });
+                },
+              );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

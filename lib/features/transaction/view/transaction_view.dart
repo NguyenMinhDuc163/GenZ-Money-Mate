@@ -7,6 +7,7 @@ import '../../../core/shared/custom_material_button.dart';
 import '../../../core/shared/shared.dart';
 import '../../../core/utils/alerts/alerts.dart';
 import '../../blocs/transaction_bloc/transaction_cubit.dart';
+import '../../blocs/language_bloc/language_cubit.dart';
 import 'widgets/widgets.dart';
 
 class TransactionView extends StatelessWidget {
@@ -14,7 +15,14 @@ class TransactionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: const CustomAppBar(), body: _buildBody(context));
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Scaffold(
+          appBar: const CustomAppBar(),
+          body: _buildBody(context),
+        );
+      },
+    );
   }
 
   Widget _buildBody(BuildContext context) {
@@ -66,7 +74,7 @@ class TransactionView extends StatelessWidget {
 
   _success(BuildContext context, String message) {
     Alerts.hideLoaderDialog(context);
-    Alerts.showToastMsg(context, message);
+    Alerts.showToastMsg(context, message.tr());
     context.pop();
   }
 }

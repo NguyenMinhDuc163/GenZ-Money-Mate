@@ -7,6 +7,7 @@ import '../../../core/router/router.dart';
 import '../../../core/shared/shared.dart';
 import '../../blocs/main_bloc/main_cubit.dart';
 import '../../blocs/transaction_bloc/transaction_cubit.dart';
+import '../../blocs/language_bloc/language_cubit.dart';
 
 class AllViewTransaction extends StatefulWidget {
   const AllViewTransaction({super.key});
@@ -24,12 +25,16 @@ class _AllViewTransactionState extends State<AllViewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'home.all_transaction'.tr(),
-        onPressed: () => _onRefresh(),
-      ),
-      body: _buidBody(),
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Scaffold(
+          appBar: CustomAppBar(
+            title: 'home.all_transaction'.tr(),
+            onPressed: () => _onRefresh(),
+          ),
+          body: _buidBody(),
+        );
+      },
     );
   }
 

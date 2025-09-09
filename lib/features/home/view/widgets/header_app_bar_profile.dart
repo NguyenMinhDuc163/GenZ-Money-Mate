@@ -17,7 +17,7 @@ class HeaderAppBarProfile extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const ProfileIcon(),
+        ProfileIcon(),
         Row(
           children: [
             CustomIconBottom(
@@ -34,7 +34,7 @@ class HeaderAppBarProfile extends StatelessWidget {
               onPressed: () => context.pushNamed(RoutesName.settings),
             ),
           ],
-        )
+        ),
       ],
     );
   }

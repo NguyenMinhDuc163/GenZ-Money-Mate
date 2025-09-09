@@ -55,7 +55,7 @@ class TransactionList extends StatelessWidget {
     Categorys category,
   ) {
     return CustomItemButton(
-      text: category.name,
+      text: category.getLocalizedName(),
       icon: category.icon,
       iconColor: Colors.white,
       backgroundItem: context.colorScheme.surface,
@@ -66,7 +66,7 @@ class TransactionList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            transaction.amount.toCurrencyWithSymbol(),
+            transaction.toHiveModel().displayAmount,
             style: AppTextStyle.subtitle.copyWith(
               color:
                   transaction.category == Category.expense
