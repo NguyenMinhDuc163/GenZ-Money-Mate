@@ -54,11 +54,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDC7TRqG_rifjnlAh1UHPrcB3tmVt979WQ',
-    appId: '1:800188863112:android:fe4ed12bb40ba62b5f053d',
-    messagingSenderId: '800188863112',
-    projectId: 'daily-expense-tracker-123e1',
-    storageBucket: 'daily-expense-tracker-123e1.appspot.com',
+    apiKey: 'AIzaSyD-nwv9GPVKOpbh0UpZ2hBag0F4oAHt9kg',
+    appId: '1:439861103082:android:8a69398e754e6b4a994a93',
+    messagingSenderId: '439861103082',
+    projectId: 'genz-money-mate',
+    storageBucket: 'genz-money-mate.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

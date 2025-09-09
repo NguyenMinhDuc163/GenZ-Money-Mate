@@ -36,7 +36,10 @@ class UserService implements UserServiceBase {
         }
         return User.fromSnapshot(snapshot);
       },
-    );
+    ).handleError((error) {
+      debugPrint('Error getting user: $error');
+      return null;
+    });
   }
 
   @override

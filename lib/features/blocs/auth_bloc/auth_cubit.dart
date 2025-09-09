@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:user_service/user_service.dart';
 
@@ -16,28 +17,34 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({
     required AuthBaseRepository authRepository,
     required UserServiceBase userService,
-  })  : _authRepository = authRepository,
-        _userService = userService,
-        super(const AuthState.authChanged(
-          authStatus: AuthStatus.unknown,
-        )) {
+  }) : _authRepository = authRepository,
+       _userService = userService,
+       super(const AuthState.authChanged(authStatus: AuthStatus.unknown)) {
     initAuth();
   }
 
   void initAuth() {
     if (_authRepository.currentUser != null) {
-      _userService.getUser(_authRepository.currentUser!.uid).listen(
+      _userService
+          .getUser(_authRepository.currentUser!.uid)
+          .listen(
             (user) => emit(
               AuthState.authChanged(
                 authStatus: AuthStatus.authenticated,
                 user: user,
               ),
             ),
+            onError: (error) {
+              debugPrint('Error in initAuth: $error');
+              emit(
+                const AuthState.authChanged(
+                  authStatus: AuthStatus.unauthenticated,
+                ),
+              );
+            },
           );
     } else {
-      emit(const AuthState.authChanged(
-        authStatus: AuthStatus.unauthenticated,
-      ));
+      emit(const AuthState.authChanged(authStatus: AuthStatus.unauthenticated));
     }
   }
 
@@ -45,16 +52,19 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState.loading());
     final result = await _authRepository.signInWithGoogle();
     result.when(
-      success: (user) => {
-        _userService.getUser(user.uuid!).listen(
-              (user) => emit(
-                AuthState.authChanged(
-                  user: user,
-                  authStatus: AuthStatus.authenticated,
+      success:
+          (user) => {
+            _userService
+                .getUser(user.uuid!)
+                .listen(
+                  (user) => emit(
+                    AuthState.authChanged(
+                      user: user,
+                      authStatus: AuthStatus.authenticated,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-      },
+          },
       failure: (message) => emit(AuthState.error(message)),
     );
   }
@@ -63,9 +73,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState.loading());
     final result = await _authRepository.signOut();
     result.when(
-      success: (_) => emit(const AuthState.authChanged(
-        authStatus: AuthStatus.unauthenticated,
-      )),
+      success:
+          (_) => emit(
+            const AuthState.authChanged(authStatus: AuthStatus.unauthenticated),
+          ),
       failure: (message) => emit(AuthState.error(message)),
     );
   }

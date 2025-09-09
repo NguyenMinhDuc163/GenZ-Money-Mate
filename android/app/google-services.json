@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "439861103082",
+    "project_id": "genz-money-mate",
+    "storage_bucket": "genz-money-mate.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439861103082:android:8a69398e754e6b4a994a93",
+        "android_client_info": {
+          "package_name": "com.nguyenduc.genz_money_mate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439861103082-0an3keo2u8437691k06b5ttidirdpn4c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nguyenduc.genz_money_mate",
+            "certificate_hash": "688fa4bd9e2ad29aef4cbb665cb7549fb8fde101"
+          }
+        },
+        {
+          "client_id": "439861103082-ml8jnisis99gjoqbf897fiq187km1pp8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-nwv9GPVKOpbh0UpZ2hBag0F4oAHt9kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439861103082-ml8jnisis99gjoqbf897fiq187km1pp8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

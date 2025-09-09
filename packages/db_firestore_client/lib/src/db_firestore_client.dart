@@ -196,15 +196,39 @@ class DbFirestoreClient implements DbFirestoreClientBase {
     bool descending = false,
     int? limit,
   }) async {
-    return _firestore
+    // Query đơn giản không cần index - chỉ lấy data và sắp xếp trong code
+    final snapshot = await _firestore
         .collection(collectionPath)
         .where(field, isEqualTo: isEqualTo)
-        .orderBy(orderByField, descending: descending)
-        .get()
-        .then((snapshot) => snapshot.docs
-            .map((doc) => mapper(doc.data(), doc.id))
-            .toList(growable: false))
-        .then((value) => limit != null ? value.take(limit).toList() : value);
+        .get();
+
+    // Chuyển đổi thành list
+    final docs = snapshot.docs;
+
+    // Sắp xếp trong code
+    docs.sort((a, b) {
+      final aValue = a.data()[orderByField];
+      final bValue = b.data()[orderByField];
+
+      if (aValue == null || bValue == null) return 0;
+
+      int comparison = 0;
+      if (aValue is num && bValue is num) {
+        comparison = aValue.compareTo(bValue);
+      } else if (aValue is String && bValue is String) {
+        comparison = aValue.compareTo(bValue);
+      } else if (aValue is DateTime && bValue is DateTime) {
+        comparison = aValue.compareTo(bValue);
+      }
+
+      return descending ? -comparison : comparison;
+    });
+
+    // Map thành List<T>
+    final result =
+        docs.map((doc) => mapper(doc.data(), doc.id)).toList(growable: false);
+
+    return limit != null ? result.take(limit).toList() : result;
   }
 
   @override
