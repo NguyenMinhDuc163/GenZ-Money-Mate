@@ -8,52 +8,61 @@ import '../../../../core/models/totals_transaction_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_style.dart';
 import '../../../blocs/main_bloc/main_cubit.dart';
+import '../../../blocs/language_bloc/language_cubit.dart';
 
 class ExpenseCard extends StatelessWidget {
   const ExpenseCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: context.screenHeight(3),
-      height: context.screenHeight(0.24),
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(2, 2),
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Container(
+          width: context.screenHeight(3),
+          height: context.screenHeight(0.24),
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(2, 2),
+              ),
+            ],
+            gradient: AppColors.primaryGradient,
           ),
-        ],
-        gradient: AppColors.primaryGradient,
-      ),
-      child: BlocBuilder<MainCubit, MainState>(
-        buildWhen: (previous, current) {
-          return current.maybeWhen(
-            loadedTotals: (_) => true,
-            loading: () => true,
-            orElse: () => false,
-          );
-        },
-        builder:
-            (context, state) => state.maybeWhen(
-              loadedTotals: (totals) => _buildLoadedTotals(totals),
-              loading:
-                  () => const Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-              orElse:
-                  () => const Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-            ),
-      ),
+          child: BlocBuilder<MainCubit, MainState>(
+            buildWhen: (previous, current) {
+              return current.maybeWhen(
+                loadedTotals: (_) => true,
+                loading: () => true,
+                orElse: () => false,
+              );
+            },
+            builder:
+                (context, state) => state.maybeWhen(
+                  loadedTotals: (totals) => _buildLoadedTotals(totals),
+                  loading:
+                      () => const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                  orElse:
+                      () => const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      ),
+                ),
+          ),
+        );
+      },
     );
   }
 

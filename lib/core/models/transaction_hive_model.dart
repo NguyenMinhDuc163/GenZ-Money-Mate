@@ -22,6 +22,9 @@ class TransactionHive extends HiveObject {
   @HiveField(5)
   CategoryHive category;
 
+  @HiveField(6)
+  String? originalCurrency; // Lưu loại tiền gốc (USD, VND, CNY)
+
   TransactionHive({
     required this.uuid,
     required this.userId,
@@ -29,6 +32,7 @@ class TransactionHive extends HiveObject {
     required this.amount,
     required this.categorysIndex,
     required this.category,
+    this.originalCurrency, // Có thể null cho dữ liệu cũ
   });
 }
 

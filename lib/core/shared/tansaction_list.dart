@@ -66,7 +66,7 @@ class TransactionList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            transaction.amount.toCurrencyWithSymbol(),
+            transaction.toHiveModel().displayAmount,
             style: AppTextStyle.subtitle.copyWith(
               color:
                   transaction.category == Category.expense

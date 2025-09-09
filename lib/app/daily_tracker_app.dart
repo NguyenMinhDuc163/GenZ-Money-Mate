@@ -34,28 +34,44 @@ class DailyTrackerApp extends StatelessWidget {
         BlocProvider(create: (_) => getIt<ThemesCubit>()),
         BlocProvider(create: (_) => getIt<LanguageCubit>()),
       ],
-      child: BlocBuilder<ThemesCubit, ThemesState>(
-        buildWhen: (previous, current) => current is LoadedThemeMode,
-        builder: (context, state) {
-          final themeMode = context.read<ThemesCubit>().state.maybeMap(
-            orElse: () => ThemeMode.system,
-            loadedThemeMode: (state) => state.themeMode,
-          );
-          Intl.defaultLocale = context.locale.toLanguageTag();
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'app.title'.tr(),
-            theme: appTheme,
-            darkTheme: appThemeDark,
-            themeMode: themeMode,
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            initialRoute: RoutesName.home,
-            onGenerateRoute: _appRouter.generateRoute,
-          );
-        },
-      ),
+      child: _CubitConnector(appRouter: _appRouter),
+    );
+  }
+}
+
+class _CubitConnector extends StatelessWidget {
+  const _CubitConnector({required this.appRouter});
+
+  final AppRouter appRouter;
+
+  @override
+  Widget build(BuildContext context) {
+    // Set MainCubit vào LanguageCubit để có thể trigger getTotals
+    final mainCubit = context.read<MainCubit>();
+    final languageCubit = context.read<LanguageCubit>();
+    languageCubit.setMainCubit(mainCubit);
+
+    return BlocBuilder<ThemesCubit, ThemesState>(
+      buildWhen: (previous, current) => current is LoadedThemeMode,
+      builder: (context, state) {
+        final themeMode = context.read<ThemesCubit>().state.maybeMap(
+          orElse: () => ThemeMode.system,
+          loadedThemeMode: (state) => state.themeMode,
+        );
+        Intl.defaultLocale = context.locale.toLanguageTag();
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'app.title'.tr(),
+          theme: appTheme,
+          darkTheme: appThemeDark,
+          themeMode: themeMode,
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          initialRoute: RoutesName.home,
+          onGenerateRoute: appRouter.generateRoute,
+        );
+      },
     );
   }
 }

@@ -12,7 +12,7 @@ part of 'totals_transaction_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$TotalsTransaction {
@@ -20,7 +20,9 @@ mixin _$TotalsTransaction {
   double get totalExpense => throw _privateConstructorUsedError;
   double get totalBalance => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TotalsTransaction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TotalsTransactionCopyWith<TotalsTransaction> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,6 +46,8 @@ class _$TotalsTransactionCopyWithImpl<$Res, $Val extends TotalsTransaction>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TotalsTransaction
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -89,6 +93,8 @@ class __$$TotalsTransactionModelImplCopyWithImpl<$Res>
       $Res Function(_$TotalsTransactionModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TotalsTransaction
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -150,7 +156,9 @@ class _$TotalsTransactionModelImpl implements _TotalsTransactionModel {
   int get hashCode =>
       Object.hash(runtimeType, totalIncome, totalExpense, totalBalance);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TotalsTransaction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TotalsTransactionModelImplCopyWith<_$TotalsTransactionModelImpl>
@@ -170,8 +178,11 @@ abstract class _TotalsTransactionModel implements TotalsTransaction {
   double get totalExpense;
   @override
   double get totalBalance;
+
+  /// Create a copy of TotalsTransaction
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TotalsTransactionModelImplCopyWith<_$TotalsTransactionModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

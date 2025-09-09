@@ -126,7 +126,7 @@ class _TransactionFormState extends State<TransactionForm> {
               controller: context.read<TransactionCubit>().amountController,
               prefixText:
                   NumberFormat.compactSimpleCurrency(
-                    locale: 'en',
+                    locale: Intl.getCurrentLocale(),
                   ).currencySymbol,
             ),
           ),

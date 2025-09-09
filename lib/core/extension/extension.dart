@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../enum/enum.dart';
 import '../models/transaction_hive_model.dart';
+import '../service/currency_service.dart';
 
 /// Extension on [BuildContext] build context to provide easy access Context Extension.
 extension DevicesOsContextExtension on BuildContext {
@@ -103,18 +104,64 @@ extension DateExtension on DateTime {
 
 extension DoubleFormatting on double {
   String toCurrencyWithSymbol() {
-    final formatter = NumberFormat.currency(symbol: '\$ ', decimalDigits: 2);
-    return formatter.format(this);
+    final locale = Intl.getCurrentLocale();
+    final currencyType = CurrencyService.getCurrencyType(locale);
+    return CurrencyService.formatCurrency(
+      amount: this,
+      currencyType: currencyType,
+      showSymbol: true,
+    );
   }
 
   String toCurrencyString() {
-    final formatter = NumberFormat.currency(symbol: '', decimalDigits: 2);
-    return formatter.format(this);
+    final locale = Intl.getCurrentLocale();
+    final currencyType = CurrencyService.getCurrencyType(locale);
+    return CurrencyService.formatCurrency(
+      amount: this,
+      currencyType: currencyType,
+      showSymbol: false,
+    );
+  }
+}
+
+extension TransactionHiveExtension on TransactionHive {
+  /// Convert và hiển thị tiền theo loại tiền hiện tại
+  String get displayAmount {
+    final locale = Intl.getCurrentLocale();
+    final currentCurrencyType = CurrencyService.getCurrencyType(locale);
+
+    // Nếu originalCurrency là null (dữ liệu cũ), mặc định là USD
+    final originalCurrencyType = _getCurrencyTypeFromString(
+      originalCurrency ?? 'USD',
+    );
+
+    return CurrencyService.convertAndFormatCurrency(
+      originalAmount: amount,
+      originalCurrency: originalCurrencyType,
+      targetCurrency: currentCurrencyType,
+      showSymbol: true,
+    );
+  }
+
+  /// Lấy CurrencyType từ string
+  CurrencyType _getCurrencyTypeFromString(String currencyString) {
+    switch (currencyString.toUpperCase()) {
+      case 'VND':
+        return CurrencyType.vnd;
+      case 'CNY':
+        return CurrencyType.cny;
+      case 'USD':
+      default:
+        return CurrencyType.usd;
+    }
   }
 }
 
 extension StringFormatting on String {
   double toUnFormattedString() {
-    return double.parse(replaceAll(',', ''));
+    // Remove tất cả dấu phân cách (dấu phẩy và dấu chấm)
+    // Vì trong tiền Việt, dấu chấm là separator hàng nghìn, không phải decimal
+    final cleanString = replaceAll(',', '').replaceAll('.', '');
+    return double.parse(cleanString);
   }
 }

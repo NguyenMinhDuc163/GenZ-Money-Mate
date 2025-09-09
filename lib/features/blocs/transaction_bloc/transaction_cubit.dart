@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/enum/enum.dart';
 import '../../../../core/extension/extension.dart';
 import '../../../../core/models/transaction_model.dart';
+import '../../../../core/service/currency_service.dart';
 import '../../transaction/data/repository/transaction_base_repository.dart';
 
 part 'transaction_cubit.freezed.dart';
@@ -61,7 +63,17 @@ class TransactionCubit extends Cubit<TransactionState> {
             ? _amountController.text.toUnFormattedString().toDouble()
             : null;
 
-    final transactionUpdated = _transaction.copyWith(amount: amount ?? 0.0);
+    // Lấy loại tiền hiện tại dựa trên locale
+    final currentLocale = Intl.getCurrentLocale();
+    final currentCurrencyType = CurrencyService.getCurrencyType(currentLocale);
+    final currentCurrencyString = CurrencyService.getCurrencyName(
+      currentCurrencyType,
+    );
+
+    final transactionUpdated = _transaction.copyWith(
+      amount: amount ?? 0.0,
+      originalCurrency: currentCurrencyString, // Lưu loại tiền gốc
+    );
 
     Future.delayed(const Duration(milliseconds: 300)).then((_) {
       try {
