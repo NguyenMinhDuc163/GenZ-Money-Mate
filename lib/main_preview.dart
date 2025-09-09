@@ -1,9 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/helper/helper.dart';
-import '../core/styles/app_theme.dart';
 import '../features/blocs/auth_bloc/auth_cubit.dart';
 import '../features/blocs/main_bloc/main_cubit.dart';
 import '../features/blocs/profile_bloc/profile_cubit.dart';
@@ -20,21 +21,24 @@ void main() async {
   await Future.wait([initAppConfig()]);
   Bloc.observer = AppBlocObserver();
 
+  await EasyLocalization.ensureInitialized();
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => DailyTrackerApp(
-        appRoute: AppRouter(),
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('vi'), Locale('zh')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      saveLocale: true,
+      child: DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => DailyTrackerApp(appRoute: AppRouter()),
       ),
     ),
   );
 }
 
 class DailyTrackerApp extends StatelessWidget {
-  const DailyTrackerApp({
-    super.key,
-    required AppRouter appRoute,
-  }) : _appRouter = appRoute;
+  const DailyTrackerApp({super.key, required AppRouter appRoute})
+    : _appRouter = appRoute;
 
   final AppRouter _appRouter;
 
@@ -48,7 +52,7 @@ class DailyTrackerApp extends StatelessWidget {
         BlocProvider(create: (_) => getIt<ProfileCubit>()),
         BlocProvider(create: (_) => getIt<StateCubit>()),
         BlocProvider(create: (_) => getIt<AuthCubit>()),
-        BlocProvider(create: (_) => getIt<ThemesCubit>())
+        BlocProvider(create: (_) => getIt<ThemesCubit>()),
       ],
       child: BlocBuilder<ThemesCubit, ThemesState>(
         buildWhen: (previous, current) => current is LoadedThemeMode,
@@ -57,11 +61,12 @@ class DailyTrackerApp extends StatelessWidget {
             orElse: () => ThemeMode.system,
             loadedThemeMode: (state) => state.themeMode,
           );
+          Intl.defaultLocale = context.locale.toLanguageTag();
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Daily Tracker',
+            title: 'app.title'.tr(),
             useInheritedMediaQuery: true,
-            locale: DevicePreview.locale(context),
+            locale: context.locale,
             builder: DevicePreview.appBuilder,
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),

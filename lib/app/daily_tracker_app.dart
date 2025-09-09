@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:intl/intl.dart';
 
 import '../core/app_injections.dart';
 import '../core/helper/helper.dart';
@@ -40,6 +41,7 @@ class DailyTrackerApp extends StatelessWidget {
             orElse: () => ThemeMode.system,
             loadedThemeMode: (state) => state.themeMode,
           );
+          Intl.defaultLocale = context.locale.toLanguageTag();
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'app.title'.tr(),

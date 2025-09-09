@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -52,8 +53,9 @@ extension TransactionTypeHiveExtension on CategoryHive {
 
 extension DateExtension on DateTime {
   String get formattedDate {
-    //e.g. 12th Jan 2021 at 12:00 PM
-    return '${DateFormat.yMMMd().format(this)} at ${DateFormat.jm().format(this)}';
+    final dateStr = DateFormat.yMMMd().format(this);
+    final timeStr = DateFormat.jm().format(this);
+    return 'date.y_mmm_d_at'.tr(namedArgs: {'date': dateStr, 'time': timeStr});
   }
 
   String get formattedDateOnly {
@@ -76,22 +78,24 @@ extension DateExtension on DateTime {
     final updatedDate = DateTime(year, month, day);
 
     if (today.isAtSameMomentAs(updatedDate)) {
-      // If the date is today, return "Today at <time>"
-      //e.g. Today, 12:00 PM
-      return 'Today, ${DateFormat.jm().format(this)}';
+      final timeStr = DateFormat.jm().format(this);
+      return 'date.today_at'.tr(namedArgs: {'time': timeStr});
     } else if (yesterday.isAtSameMomentAs(updatedDate)) {
-      // If the date is yesterday, return "Yesterday at <time>"
-      //e.g. Yesterday, 12:00 PM
-      return 'Yesterday, ${DateFormat.jm().format(this)}';
+      final timeStr = DateFormat.jm().format(this);
+      return 'date.yesterday_at'.tr(namedArgs: {'time': timeStr});
     } else {
       if (year == now.year) {
-        // If the date is in the current year, return "MMM d at <time>"
-        //e.g. Jan 12, 12:00 PM
-        return '${DateFormat.MMMd().format(this)}, ${DateFormat.jm().format(this)}';
+        final dateStr = DateFormat.MMMd().format(this);
+        final timeStr = DateFormat.jm().format(this);
+        return 'date.mmm_d_at'.tr(
+          namedArgs: {'date': dateStr, 'time': timeStr},
+        );
       } else {
-        // Otherwise, return "MMM d, yyyy at <time>"
-        //e.g. Jan 12, 2021 at 12:00 PM
-        return '${DateFormat.yMMMd().format(this)} at ${DateFormat.jm().format(this)}';
+        final dateStr = DateFormat.yMMMd().format(this);
+        final timeStr = DateFormat.jm().format(this);
+        return 'date.y_mmm_d_at'.tr(
+          namedArgs: {'date': dateStr, 'time': timeStr},
+        );
       }
     }
   }

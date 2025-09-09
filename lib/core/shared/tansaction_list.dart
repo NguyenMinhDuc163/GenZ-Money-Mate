@@ -55,7 +55,7 @@ class TransactionList extends StatelessWidget {
     Categorys category,
   ) {
     return CustomItemButton(
-      text: category.name,
+      text: category.getLocalizedName(),
       icon: category.icon,
       iconColor: Colors.white,
       backgroundItem: context.colorScheme.surface,

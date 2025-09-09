@@ -13,17 +13,33 @@ class LanguageSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LanguageCubit, LanguageState>(
       builder: (context, state) {
-        final currentLocale = context.locale;
-        final isVi = currentLocale.languageCode == 'vi';
+        final current = context.locale;
+        String title;
+        switch (current.languageCode) {
+          case 'vi':
+            title = 'Tiếng Việt';
+            break;
+          case 'zh':
+            title = '中文';
+            break;
+          default:
+            title = 'English';
+        }
         return ItemSettings(
-          title: isVi ? 'Tiếng Việt' : 'English',
+          title: title,
           iconData: FontAwesomeIcons.language,
           backgroundIcon: Colors.indigo,
-          trailing: Switch(
-            value: isVi,
-            onChanged: (toVi) async {
-              final next = toVi ? const Locale('vi') : const Locale('en');
-              await context.read<LanguageCubit>().setLocale(context, next);
+          trailing: DropdownButton<Locale>(
+            value: current,
+            underline: const SizedBox.shrink(),
+            items: const [
+              DropdownMenuItem(value: Locale('en'), child: Text('English')),
+              DropdownMenuItem(value: Locale('vi'), child: Text('Tiếng Việt')),
+              DropdownMenuItem(value: Locale('zh'), child: Text('中文')),
+            ],
+            onChanged: (locale) async {
+              if (locale == null) return;
+              await context.read<LanguageCubit>().setLocale(context, locale);
             },
           ),
         );

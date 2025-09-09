@@ -88,7 +88,22 @@
   },
   "transaction": {
     "amount_hint": "0.00",
-    "delete_title": "Xóa giao dịch"
+    "delete_title": "Xóa giao dịch",
+    "updated_success": "Cập nhật giao dịch thành công",
+    "added_success": "Thêm giao dịch thành công",
+    "deleted_success": "Xóa giao dịch thành công"
+  },
+  "router": {
+    "no_route": "Không có route cho {{}}"
+  },
+  "date": {
+    "today_at": "Hôm nay, {time}",
+    "yesterday_at": "Hôm qua, {time}",
+    "mmm_d_at": "{date}, {time}",
+    "y_mmm_d_at": "{date} lúc {time}"
+  },
+  "user": {
+    "guest": "Khách"
   }
 
 }

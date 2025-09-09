@@ -19,7 +19,7 @@ class HeaderAppBarFilter extends StatelessWidget {
     return Row(
       children: [
         Text(
-          'Transaction',
+          'home.transaction'.tr(),
           style: AppTextStyle.title.copyWith(fontWeight: FontWeight.w600),
         ),
         const Spacer(),

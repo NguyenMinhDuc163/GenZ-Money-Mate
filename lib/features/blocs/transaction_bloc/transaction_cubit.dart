@@ -14,8 +14,8 @@ class TransactionCubit extends Cubit<TransactionState> {
   final TransactionBaseRepository _transactionRepository;
 
   TransactionCubit({required TransactionBaseRepository transactionRepository})
-      : _transactionRepository = transactionRepository,
-        super(const TransactionState.initial());
+    : _transactionRepository = transactionRepository,
+      super(const TransactionState.initial());
 
   Transaction _transaction = Transaction.empty();
   set transaction(Transaction value) => _transaction = value;
@@ -56,9 +56,10 @@ class TransactionCubit extends Cubit<TransactionState> {
 
     emit(const TransactionState.loading());
 
-    final amount = _amountController.text.isNotEmpty
-        ? _amountController.text.toUnFormattedString().toDouble()
-        : null;
+    final amount =
+        _amountController.text.isNotEmpty
+            ? _amountController.text.toUnFormattedString().toDouble()
+            : null;
 
     final transactionUpdated = _transaction.copyWith(amount: amount ?? 0.0);
 
@@ -66,10 +67,10 @@ class TransactionCubit extends Cubit<TransactionState> {
       try {
         if (_isEditing) {
           _transactionRepository.updateTransaction(transactionUpdated);
-          emit(const TransactionState.success('Transaction updated success'));
+          emit(const TransactionState.success('transaction.updated_success'));
         } else {
           _transactionRepository.addTransaction(transactionUpdated);
-          emit(const TransactionState.success('Transaction added success'));
+          emit(const TransactionState.success('transaction.added_success'));
         }
       } catch (error) {
         debugPrint('error: $error');
@@ -84,7 +85,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     Future.delayed(const Duration(milliseconds: 300)).then((_) {
       try {
         _transactionRepository.deleteTransaction(transactionId);
-        emit(const TransactionState.success('Transaction deleted success'));
+        emit(const TransactionState.success('transaction.deleted_success'));
       } catch (error) {
         debugPrint('error: $error');
         emit(TransactionState.error(error.toString()));
