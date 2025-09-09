@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/enum/enum.dart';
 import '../../../core/shared/shared.dart';
+import '../../blocs/language_bloc/language_cubit.dart';
 import 'widgets/widgets.dart';
 
 class StateView extends StatelessWidget {
@@ -10,9 +12,13 @@ class StateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Scaffold(body: _buidBody()),
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, languageState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Scaffold(body: _buidBody()),
+        );
+      },
     );
   }
 

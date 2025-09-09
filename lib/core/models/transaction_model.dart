@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
 import '../enum/enum.dart';
+import '../service/currency_service.dart';
 import 'transaction_hive_model.dart';
 
 part 'transaction_model.freezed.dart';
@@ -92,9 +94,32 @@ extension TransactionTotalsExtension on List<Transaction> {
   }
 
   double _convertToCurrentCurrency(Transaction transaction) {
-    // Import CurrencyService để sử dụng
-    // Tạm thời return amount gốc, sẽ implement sau
-    return transaction.amount;
+    // Convert từ originalCurrency sang currency hiện tại
+    final originalCurrencyType = _getCurrencyTypeFromString(
+      transaction.originalCurrency,
+    );
+    final currentCurrencyType = CurrencyService.getCurrencyType(
+      Intl.getCurrentLocale(),
+    );
+
+    return CurrencyService.convertCurrency(
+      amount: transaction.amount,
+      fromCurrency: originalCurrencyType,
+      toCurrency: currentCurrencyType,
+    );
+  }
+
+  CurrencyType _getCurrencyTypeFromString(String currencyString) {
+    switch (currencyString.toUpperCase()) {
+      case 'USD':
+        return CurrencyType.usd;
+      case 'VND':
+        return CurrencyType.vnd;
+      case 'CNY':
+        return CurrencyType.cny;
+      default:
+        return CurrencyType.usd; // Default fallback
+    }
   }
 }
 
