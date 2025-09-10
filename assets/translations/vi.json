@@ -67,7 +67,7 @@
     "gaming": "Trò chơi"
   },
   "common": {
-    "ok": "OK",
+    "ok": "Đồng ý",
     "cancel": "Hủy",
     "save": "Lưu",
     "edit": "Sửa",
@@ -91,7 +91,8 @@
     "delete_title": "Xóa giao dịch",
     "updated_success": "Cập nhật giao dịch thành công",
     "added_success": "Thêm giao dịch thành công",
-    "deleted_success": "Xóa giao dịch thành công"
+    "deleted_success": "Xóa giao dịch thành công",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa giao dịch này không?"
   },
   "router": {
     "no_route": "Không có route cho {{}}"

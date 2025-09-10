@@ -91,7 +91,8 @@
     "delete_title": "Delete Transaction",
     "updated_success": "Transaction updated successfully",
     "added_success": "Transaction added successfully",
-    "deleted_success": "Transaction deleted successfully"
+    "deleted_success": "Transaction deleted successfully",
+    "delete_confirm": "Are you sure you want to delete this transaction?"
   },
   "router": {
     "no_route": "No route defined for {{}}"

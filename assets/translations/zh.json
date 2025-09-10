@@ -91,7 +91,8 @@
     "delete_title": "删除交易",
     "updated_success": "更新交易成功",
     "added_success": "新增交易成功",
-    "deleted_success": "删除交易成功"
+    "deleted_success": "删除交易成功",
+    "delete_confirm": "您确定要删除此交易吗？"
   },
   "router": {
     "no_route": "没有适用于 {{}} 的路由"
