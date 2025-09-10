@@ -97,10 +97,10 @@
     "no_route": "No route defined for {{}}"
   },
   "date": {
-    "today_at": "Today, {{time}}",
-    "yesterday_at": "Yesterday, {{time}}",
-    "mmm_d_at": "{{date}}, {{time}}",
-    "y_mmm_d_at": "{{date}} at {{time}}"
+    "today_at": "Today, {time}",
+    "yesterday_at": "Yesterday, {time}",
+    "mmm_d_at": "{date}, {time}",
+    "y_mmm_d_at": "{date} at {time}"
   },
   "user": {
     "guest": "Guest"

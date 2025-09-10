@@ -97,10 +97,10 @@
     "no_route": "没有适用于 {{}} 的路由"
   },
   "date": {
-    "today_at": "今天，{{time}}",
-    "yesterday_at": "昨天，{{time}}",
-    "mmm_d_at": "{{date}}，{{time}}",
-    "y_mmm_d_at": "{{date}} {{time}}"
+    "today_at": "今天，{time}",
+    "yesterday_at": "昨天，{time}",
+    "mmm_d_at": "{date}，{time}",
+    "y_mmm_d_at": "{date} {time}"
   },
   "user": {
     "guest": "访客"
