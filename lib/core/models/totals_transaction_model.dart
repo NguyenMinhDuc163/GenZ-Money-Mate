@@ -34,23 +34,26 @@ class TotalsTransaction with _$TotalsTransaction {
           return transaction.copyWith(amount: convertedAmount);
         }).toList();
 
-    return TotalsTransaction(
-      // totalExpense = totalExpense
-      totalExpense: convertedTransactions
-          .where((transaction) => transaction.category == Category.expense)
-          .map((transaction) => transaction.amount)
-          .fold(0.0, (prev, amount) => prev + amount),
+    // Tính riêng tổng thu và tổng chi (đều là số dương)
+    final totalExpense = convertedTransactions
+        .where((transaction) => transaction.category == Category.expense)
+        .map((transaction) => transaction.amount)
+        .fold(0.0, (prev, amount) => prev + amount);
 
-      // totalIncome = totalIncome
-      totalIncome: convertedTransactions
-          .where((transaction) => transaction.category == Category.income)
-          .map((transaction) => transaction.amount)
-          .fold(0.0, (prev, amount) => prev + amount),
+    final totalIncome = convertedTransactions
+        .where((transaction) => transaction.category == Category.income)
+        .map((transaction) => transaction.amount)
+        .fold(0.0, (prev, amount) => prev + amount);
+
+    return TotalsTransaction(
+      // totalExpense = tổng chi (dương)
+      totalExpense: totalExpense,
+
+      // totalIncome = tổng thu (dương)
+      totalIncome: totalIncome,
 
       // totalBalance = totalIncome - totalExpense
-      totalBalance: convertedTransactions
-          .map((transaction) => transaction.amount)
-          .fold(0.0, (prev, amount) => prev + amount),
+      totalBalance: totalIncome - totalExpense,
     );
   }
 
