@@ -91,16 +91,17 @@
     "delete_title": "Delete Transaction",
     "updated_success": "Transaction updated successfully",
     "added_success": "Transaction added successfully",
-    "deleted_success": "Transaction deleted successfully"
+    "deleted_success": "Transaction deleted successfully",
+    "delete_confirm": "Are you sure you want to delete this transaction?"
   },
   "router": {
     "no_route": "No route defined for {{}}"
   },
   "date": {
-    "today_at": "Today, {{time}}",
-    "yesterday_at": "Yesterday, {{time}}",
-    "mmm_d_at": "{{date}}, {{time}}",
-    "y_mmm_d_at": "{{date}} at {{time}}"
+    "today_at": "Today, {time}",
+    "yesterday_at": "Yesterday, {time}",
+    "mmm_d_at": "{date}, {time}",
+    "y_mmm_d_at": "{date} at {time}"
   },
   "user": {
     "guest": "Guest"
