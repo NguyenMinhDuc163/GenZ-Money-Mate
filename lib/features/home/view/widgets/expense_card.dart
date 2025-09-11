@@ -2,11 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/extension/extension.dart';
 import '../../../../core/models/totals_transaction_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/styles/app_text_style.dart';
+import '../../../../core/service/currency_service.dart';
 import '../../../blocs/main_bloc/main_cubit.dart';
 import '../../../blocs/language_bloc/language_cubit.dart';
 
@@ -80,9 +82,14 @@ class ExpenseCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            totals.totalBalance.toCurrencyWithSymbol(),
-            style: AppTextStyle.title2.copyWith(color: Colors.white),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              totals.totalBalance.toCurrencyWithSymbol(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyle.title2.copyWith(color: Colors.white),
+            ),
           ),
           const SizedBox(height: 20),
           Row(
@@ -158,8 +165,20 @@ class ExpenseCard extends StatelessWidget {
   }
 
   String _getAmount(double amount) {
-    return amount.toCurrencyWithSymbol().length > 9
-        ? '${amount.toCurrencyWithSymbol().substring(0, 9).trim()}..'
-        : amount.toCurrencyWithSymbol();
+    final currentCurrency = CurrencyService.getCurrencyType(
+      Intl.getCurrentLocale(),
+    );
+    final decimalDigits = CurrencyService.getDecimalDigits(currentCurrency);
+    final compact = NumberFormat.compactCurrency(
+      locale: Intl.getCurrentLocale(),
+      symbol:
+          NumberFormat.compactSimpleCurrency(
+            locale: Intl.getCurrentLocale(),
+          ).currencySymbol,
+      decimalDigits: decimalDigits,
+    ).format(amount);
+
+    if (compact.length <= 10) return compact;
+    return amount.toCurrencyWithSymbol();
   }
 }
