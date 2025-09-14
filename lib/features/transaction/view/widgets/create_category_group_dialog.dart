@@ -17,8 +17,11 @@ class CreateCategoryGroupDialog extends StatefulWidget {
 
 class _CreateCategoryGroupDialogState extends State<CreateCategoryGroupDialog> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _spendingLimitController =
+      TextEditingController();
   IconData _selectedIcon = FontAwesomeIcons.folder;
   Color _selectedColor = Colors.blue;
+  bool _hasSpendingLimit = false;
 
   // Danh sách các icon phổ biến cho groups
   final List<IconData> _availableIcons = [
@@ -93,6 +96,7 @@ class _CreateCategoryGroupDialogState extends State<CreateCategoryGroupDialog> {
   @override
   void dispose() {
     _nameController.dispose();
+    _spendingLimitController.dispose();
     super.dispose();
   }
 
@@ -139,6 +143,41 @@ class _CreateCategoryGroupDialogState extends State<CreateCategoryGroupDialog> {
                 fontWeight: FontWeight.normal,
                 keyboardType: TextInputType.text,
               ),
+              const SizedBox(height: 20),
+
+              // Hạn mức chi tiêu
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'category_group.set_spending_limit'.tr(),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  Switch(
+                    value: _hasSpendingLimit,
+                    onChanged: (value) {
+                      setState(() {
+                        _hasSpendingLimit = value;
+                        if (!_hasSpendingLimit) {
+                          _spendingLimitController.clear();
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              if (_hasSpendingLimit) ...[
+                const SizedBox(height: 10),
+                CustomTextFormField(
+                  controller: _spendingLimitController,
+                  hintText: 'category_group.spending_limit_hint'.tr(),
+                  fontSize: 16,
+                  textAlign: TextAlign.start,
+                  fontWeight: FontWeight.normal,
+                  keyboardType: TextInputType.number,
+                ),
+              ],
               const SizedBox(height: 20),
 
               // Chọn icon
@@ -270,10 +309,34 @@ class _CreateCategoryGroupDialogState extends State<CreateCategoryGroupDialog> {
       return;
     }
 
+    double spendingLimit = 0.0;
+    if (_hasSpendingLimit && _spendingLimitController.text.trim().isNotEmpty) {
+      // Xử lý format tiền tệ: loại bỏ dấu phẩy và dấu chấm phân cách hàng nghìn
+      String cleanText = _spendingLimitController.text
+          .trim()
+          .replaceAll(',', '') // Loại bỏ dấu phẩy
+          .replaceAll('.', ''); // Loại bỏ dấu chấm phân cách hàng nghìn
+
+      spendingLimit = double.tryParse(cleanText) ?? 0.0;
+    }
+
+    // Debug log
+    print('Creating group with spending limit: $spendingLimit');
+    print('Has spending limit: $_hasSpendingLimit');
+    print('Spending limit text: ${_spendingLimitController.text}');
+    if (_hasSpendingLimit && _spendingLimitController.text.trim().isNotEmpty) {
+      String cleanText = _spendingLimitController.text
+          .trim()
+          .replaceAll(',', '')
+          .replaceAll('.', '');
+      print('Clean text after removing separators: $cleanText');
+    }
+
     context.read<CategoryGroupCubit>().addCategoryGroup(
       name: _nameController.text.trim(),
       icon: _selectedIcon,
       color: _selectedColor,
+      spendingLimit: spendingLimit,
     );
   }
 }

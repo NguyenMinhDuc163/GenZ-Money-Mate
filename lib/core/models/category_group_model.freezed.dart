@@ -29,7 +29,9 @@ mixin _$CategoryGroup {
       throw _privateConstructorUsedError; // Màu sắc dưới dạng int
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-  bool get isDefault => throw _privateConstructorUsedError;
+  bool get isDefault =>
+      throw _privateConstructorUsedError; // Đánh dấu group mặc định
+  double get spendingLimit => throw _privateConstructorUsedError;
 
   /// Serializes this CategoryGroup to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +57,8 @@ abstract class $CategoryGroupCopyWith<$Res> {
       int colorValue,
       DateTime createdAt,
       DateTime updatedAt,
-      bool isDefault});
+      bool isDefault,
+      double spendingLimit});
 }
 
 /// @nodoc
@@ -81,6 +84,7 @@ class _$CategoryGroupCopyWithImpl<$Res, $Val extends CategoryGroup>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? isDefault = null,
+    Object? spendingLimit = null,
   }) {
     return _then(_value.copyWith(
       uuid: freezed == uuid
@@ -115,6 +119,10 @@ class _$CategoryGroupCopyWithImpl<$Res, $Val extends CategoryGroup>
           ? _value.isDefault
           : isDefault // ignore: cast_nullable_to_non_nullable
               as bool,
+      spendingLimit: null == spendingLimit
+          ? _value.spendingLimit
+          : spendingLimit // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -135,7 +143,8 @@ abstract class _$$CategoryGroupImplCopyWith<$Res>
       int colorValue,
       DateTime createdAt,
       DateTime updatedAt,
-      bool isDefault});
+      bool isDefault,
+      double spendingLimit});
 }
 
 /// @nodoc
@@ -159,6 +168,7 @@ class __$$CategoryGroupImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? isDefault = null,
+    Object? spendingLimit = null,
   }) {
     return _then(_$CategoryGroupImpl(
       uuid: freezed == uuid
@@ -193,6 +203,10 @@ class __$$CategoryGroupImplCopyWithImpl<$Res>
           ? _value.isDefault
           : isDefault // ignore: cast_nullable_to_non_nullable
               as bool,
+      spendingLimit: null == spendingLimit
+          ? _value.spendingLimit
+          : spendingLimit // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -208,7 +222,8 @@ class _$CategoryGroupImpl implements _CategoryGroup {
       required this.colorValue,
       required this.createdAt,
       required this.updatedAt,
-      this.isDefault = false});
+      this.isDefault = false,
+      this.spendingLimit = 0.0});
 
   factory _$CategoryGroupImpl.fromJson(Map<String, dynamic> json) =>
       _$$CategoryGroupImplFromJson(json);
@@ -232,10 +247,14 @@ class _$CategoryGroupImpl implements _CategoryGroup {
   @override
   @JsonKey()
   final bool isDefault;
+// Đánh dấu group mặc định
+  @override
+  @JsonKey()
+  final double spendingLimit;
 
   @override
   String toString() {
-    return 'CategoryGroup(uuid: $uuid, userId: $userId, name: $name, iconName: $iconName, colorValue: $colorValue, createdAt: $createdAt, updatedAt: $updatedAt, isDefault: $isDefault)';
+    return 'CategoryGroup(uuid: $uuid, userId: $userId, name: $name, iconName: $iconName, colorValue: $colorValue, createdAt: $createdAt, updatedAt: $updatedAt, isDefault: $isDefault, spendingLimit: $spendingLimit)';
   }
 
   @override
@@ -255,13 +274,15 @@ class _$CategoryGroupImpl implements _CategoryGroup {
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.isDefault, isDefault) ||
-                other.isDefault == isDefault));
+                other.isDefault == isDefault) &&
+            (identical(other.spendingLimit, spendingLimit) ||
+                other.spendingLimit == spendingLimit));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, uuid, userId, name, iconName,
-      colorValue, createdAt, updatedAt, isDefault);
+      colorValue, createdAt, updatedAt, isDefault, spendingLimit);
 
   /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.
@@ -288,7 +309,8 @@ abstract class _CategoryGroup implements CategoryGroup {
       required final int colorValue,
       required final DateTime createdAt,
       required final DateTime updatedAt,
-      final bool isDefault}) = _$CategoryGroupImpl;
+      final bool isDefault,
+      final double spendingLimit}) = _$CategoryGroupImpl;
 
   factory _CategoryGroup.fromJson(Map<String, dynamic> json) =
       _$CategoryGroupImpl.fromJson;
@@ -308,7 +330,9 @@ abstract class _CategoryGroup implements CategoryGroup {
   @override
   DateTime get updatedAt;
   @override
-  bool get isDefault;
+  bool get isDefault; // Đánh dấu group mặc định
+  @override
+  double get spendingLimit;
 
   /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.

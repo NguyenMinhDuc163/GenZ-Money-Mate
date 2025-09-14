@@ -61,11 +61,19 @@ class CategoryGroupRepository implements CategoryGroupBaseRepository {
   @override
   Future<AppResult<void>> addCategoryGroup(CategoryGroup categoryGroup) async {
     try {
+      // Debug log
+      print(
+        'CategoryGroupRepository: Adding group with spending limit: ${categoryGroup.spendingLimit}',
+      );
+
       final generUUID = Helper.generateUUID();
       final groupWithId = categoryGroup.copyWith(
         uuid: generUUID,
         userId: _authUser.currentUser?.uid,
       );
+
+      // Debug log
+      print('CategoryGroupRepository: Group with ID: $groupWithId');
 
       if (!isUserLoggedIn) {
         await _dbHiveClient.add<CategoryGroupHive>(
@@ -186,43 +194,43 @@ class CategoryGroupRepository implements CategoryGroupBaseRepository {
       // Tạo groups mặc định
       final defaultGroups = [
         CategoryGroup.createDefault(
-          name: 'Mua sắm',
+          name: 'default_groups.shopping',
           icon: FontAwesomeIcons.cartShopping,
           color: Colors.blue,
           userId: _authUser.currentUser?.uid,
         ),
         CategoryGroup.createDefault(
-          name: 'Ăn uống',
+          name: 'default_groups.food',
           icon: FontAwesomeIcons.utensils,
           color: Colors.orange,
           userId: _authUser.currentUser?.uid,
         ),
         CategoryGroup.createDefault(
-          name: 'Giải trí',
+          name: 'default_groups.entertainment',
           icon: FontAwesomeIcons.film,
           color: Colors.purple,
           userId: _authUser.currentUser?.uid,
         ),
         CategoryGroup.createDefault(
-          name: 'Giao thông',
+          name: 'default_groups.transport',
           icon: FontAwesomeIcons.car,
           color: Colors.green,
           userId: _authUser.currentUser?.uid,
         ),
         CategoryGroup.createDefault(
-          name: 'Y tế',
+          name: 'default_groups.health',
           icon: FontAwesomeIcons.heartPulse,
           color: Colors.red,
           userId: _authUser.currentUser?.uid,
         ),
         CategoryGroup.createDefault(
-          name: 'Giáo dục',
+          name: 'default_groups.education',
           icon: FontAwesomeIcons.graduationCap,
           color: Colors.indigo,
           userId: _authUser.currentUser?.uid,
         ),
         CategoryGroup.createDefault(
-          name: 'Khác',
+          name: 'default_groups.others',
           icon: FontAwesomeIcons.ellipsis,
           color: Colors.grey,
           userId: _authUser.currentUser?.uid,

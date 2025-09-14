@@ -25,13 +25,14 @@ class CategoryGroupHiveAdapter extends TypeAdapter<CategoryGroupHive> {
       createdAt: fields[5] as DateTime,
       updatedAt: fields[6] as DateTime,
       isDefault: fields[7] as bool,
+      spendingLimit: fields[8] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, CategoryGroupHive obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.uuid)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class CategoryGroupHiveAdapter extends TypeAdapter<CategoryGroupHive> {
       ..writeByte(6)
       ..write(obj.updatedAt)
       ..writeByte(7)
-      ..write(obj.isDefault);
+      ..write(obj.isDefault)
+      ..writeByte(8)
+      ..write(obj.spendingLimit);
   }
 
   @override

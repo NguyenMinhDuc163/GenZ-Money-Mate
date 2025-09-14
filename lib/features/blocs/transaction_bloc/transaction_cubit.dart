@@ -172,7 +172,9 @@ class TransactionCubit extends Cubit<TransactionState> {
   TransactionState _buildState() {
     debugPrint('_buildState called');
     debugPrint('_selectedCustomCategory: ${_selectedCustomCategory?.name}');
-    debugPrint('_selectedCategoryGroup: ${_selectedCategoryGroup?.name}');
+    debugPrint(
+      '_selectedCategoryGroup: ${_selectedCategoryGroup?.getLocalizedName()}',
+    );
     debugPrint(
       '_transaction.customCategoryId: ${_transaction.customCategoryId}',
     );

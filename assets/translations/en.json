@@ -124,9 +124,19 @@
     "name_required": "Please enter group name",
     "select_icon": "Select Icon",
     "select_color": "Select Color",
+    "set_spending_limit": "Set spending limit",
+    "spending_limit_hint": "Enter spending limit ($)",
     "created_success": "Group created successfully",
     "updated_success": "Group updated successfully",
-    "deleted_success": "Group deleted successfully"
+    "deleted_success": "Group deleted successfully",
+    "delete_title": "Delete Group",
+    "delete_confirm": "Are you sure you want to delete this group? This action cannot be undone.",
+    "delete_success": "Group deleted successfully",
+    "delete_error": "Error deleting group",
+    "delete_with_transactions_title": "Delete Group",
+    "delete_with_transactions_confirm": "Are you sure you want to delete this group and all {count} transactions inside? This action cannot be undone.",
+    "delete_with_transactions_success": "Group deleted. {count} transactions have been moved to \"Ungrouped\"",
+    "delete_with_transactions_error": "Error deleting group"
   },
   "router": {
     "no_route": "No route defined for {{}}"
@@ -144,6 +154,15 @@
     "english": "English",
     "vietnamese": "Tiếng Việt",
     "chinese": "中文"
+  },
+  "default_groups": {
+    "shopping": "Shopping",
+    "food": "Food",
+    "entertainment": "Entertainment",
+    "transport": "Transport",
+    "health": "Health",
+    "education": "Education",
+    "others": "Others"
   }
 
 }

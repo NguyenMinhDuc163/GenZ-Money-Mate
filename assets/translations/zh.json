@@ -140,9 +140,39 @@
     "delete": "删除",
     "cancel": "取消"
   },
+  "category_group": {
+    "create_new": "创建新组",
+    "name": "组名",
+    "name_hint": "输入组名",
+    "name_required": "请输入组名",
+    "select_icon": "选择图标",
+    "select_color": "选择颜色",
+    "set_spending_limit": "设置支出限额",
+    "spending_limit_hint": "输入支出限额（¥）",
+    "created_success": "组创建成功",
+    "updated_success": "组更新成功",
+    "deleted_success": "组删除成功",
+    "delete_title": "删除组",
+    "delete_confirm": "您确定要删除此组吗？此操作无法撤销。",
+    "delete_success": "组删除成功",
+    "delete_error": "删除组时出错",
+    "delete_with_transactions_title": "删除组",
+    "delete_with_transactions_confirm": "您确定要删除此组以及其中的所有 {count} 笔交易吗？此操作无法撤销。",
+    "delete_with_transactions_success": "组已删除。{count} 笔交易已移至\"未分组\"",
+    "delete_with_transactions_error": "删除组时出错"
+  },
   "language": {
     "english": "English",
     "vietnamese": "Tiếng Việt",
     "chinese": "中文"
+  },
+  "default_groups": {
+    "shopping": "购物",
+    "food": "饮食",
+    "entertainment": "娱乐",
+    "transport": "出行",
+    "health": "健康",
+    "education": "教育",
+    "others": "其他"
   }
 }

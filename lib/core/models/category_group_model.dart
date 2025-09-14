@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'category_group_hive_model.dart';
 import '../utils/icon_helper.dart';
@@ -18,6 +19,7 @@ class CategoryGroup with _$CategoryGroup {
     required DateTime createdAt,
     required DateTime updatedAt,
     @Default(false) bool isDefault, // Đánh dấu group mặc định
+    @Default(0.0) double spendingLimit, // Hạn mức chi tiêu (0 = vô hạn)
   }) = _CategoryGroup;
 
   factory CategoryGroup.fromJson(Map<String, dynamic> json) =>
@@ -32,6 +34,7 @@ class CategoryGroup with _$CategoryGroup {
       colorValue: Colors.grey.value,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      spendingLimit: 0.0,
     );
   }
 
@@ -45,6 +48,7 @@ class CategoryGroup with _$CategoryGroup {
       createdAt: categoryGroupHive.createdAt,
       updatedAt: categoryGroupHive.updatedAt,
       isDefault: categoryGroupHive.isDefault,
+      spendingLimit: categoryGroupHive.spendingLimit,
     );
   }
 
@@ -54,6 +58,7 @@ class CategoryGroup with _$CategoryGroup {
     required IconData icon,
     required Color color,
     String? userId,
+    double spendingLimit = 0.0,
   }) {
     return CategoryGroup(
       uuid: '',
@@ -64,6 +69,7 @@ class CategoryGroup with _$CategoryGroup {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       isDefault: true,
+      spendingLimit: spendingLimit,
     );
   }
 }
@@ -79,6 +85,7 @@ extension CategoryGroupExtension on CategoryGroup {
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDefault: isDefault,
+      spendingLimit: spendingLimit,
     );
   }
 
@@ -90,5 +97,15 @@ extension CategoryGroupExtension on CategoryGroup {
   /// Chuyển đổi colorValue thành Color
   Color get color {
     return Color(colorValue);
+  }
+
+  /// Hiển thị tên đã được dịch
+  String getLocalizedName() {
+    // Nếu tên bắt đầu với "default_groups.", đó là key translation
+    if (name.startsWith('default_groups.')) {
+      return name.tr();
+    }
+    // Nếu không, trả về tên gốc (cho custom groups)
+    return name;
   }
 }

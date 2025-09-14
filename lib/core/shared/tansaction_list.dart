@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+
+import '../service/currency_service.dart';
 
 import '../../features/blocs/transaction_bloc/transaction_cubit.dart';
 import '../../features/blocs/custom_category_bloc/custom_category_cubit.dart';
@@ -48,11 +51,21 @@ class _TransactionListState extends State<TransactionList> {
                   ),
                 ),
               )
-              : BlocBuilder<CategoryGroupCubit, CategoryGroupState>(
+              : BlocConsumer<CategoryGroupCubit, CategoryGroupState>(
+                listener: (context, state) {
+                  print('CategoryGroupCubit state changed: $state');
+                },
                 builder: (context, groupState) {
+                  print('CategoryGroupCubit builder called: $groupState');
                   final categoryGroups = groupState.maybeWhen(
-                    loaded: (groups) => groups,
-                    orElse: () => <CategoryGroup>[],
+                    loaded: (groups) {
+                      print('Loaded ${groups.length} category groups');
+                      return groups;
+                    },
+                    orElse: () {
+                      print('CategoryGroupCubit state: $groupState');
+                      return <CategoryGroup>[];
+                    },
                   );
 
                   return BlocBuilder<CustomCategoryCubit, CustomCategoryState>(
@@ -69,16 +82,27 @@ class _TransactionListState extends State<TransactionList> {
 
                       for (final transaction in widget.allTransactions) {
                         if (transaction.groupId.isNotEmpty) {
-                          if (groupedTransactions.containsKey(
-                            transaction.groupId,
-                          )) {
-                            groupedTransactions[transaction.groupId]!.add(
-                              transaction,
-                            );
+                          // Kiểm tra xem nhóm có tồn tại không
+                          final groupExists = categoryGroups.any(
+                            (g) => g.uuid == transaction.groupId,
+                          );
+
+                          if (groupExists) {
+                            // Nhóm tồn tại, thêm vào grouped
+                            if (groupedTransactions.containsKey(
+                              transaction.groupId,
+                            )) {
+                              groupedTransactions[transaction.groupId]!.add(
+                                transaction,
+                              );
+                            } else {
+                              groupedTransactions[transaction.groupId] = [
+                                transaction,
+                              ];
+                            }
                           } else {
-                            groupedTransactions[transaction.groupId] = [
-                              transaction,
-                            ];
+                            // Nhóm không tồn tại, chuyển vào ungrouped
+                            ungroupedTransactions.add(transaction);
                           }
                         } else {
                           ungroupedTransactions.add(transaction);
@@ -93,7 +117,6 @@ class _TransactionListState extends State<TransactionList> {
                             final transactions = entry.value;
                             final group = categoryGroups.firstWhere(
                               (g) => g.uuid == groupId,
-                              orElse: () => CategoryGroup.empty(),
                             );
 
                             return _buildGroupSection(
@@ -127,7 +150,12 @@ class _TransactionListState extends State<TransactionList> {
     List<CustomCategory> customCategories,
   ) {
     final groupId = group.uuid ?? '';
-    final isExpanded = _expandedGroups[groupId] ?? true; // Mặc định mở
+    final isExpanded = _expandedGroups[groupId] ?? false; // Mặc định đóng
+
+    // Debug log
+    print(
+      'Building group section: ${group.getLocalizedName()}, spendingLimit: ${group.spendingLimit}',
+    );
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -159,12 +187,22 @@ class _TransactionListState extends State<TransactionList> {
             ),
             child: Icon(group.icon, size: 14, color: Colors.white),
           ),
-          title: Text(
-            group.name,
-            style: AppTextStyle.subtitle.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colorScheme.onSurface,
-            ),
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  group.getLocalizedName(),
+                  style: AppTextStyle.subtitle.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+              if (group.spendingLimit > 0) ...[
+                const SizedBox(width: 8),
+                _buildSpendingLimitIndicator(context, group, transactions),
+              ],
+            ],
           ),
           subtitle: Text(
             '${transactions.length} ${'transaction.items'.tr()}',
@@ -206,7 +244,7 @@ class _TransactionListState extends State<TransactionList> {
     List<CustomCategory> customCategories,
   ) {
     const ungroupedId = 'ungrouped';
-    final isExpanded = _expandedGroups[ungroupedId] ?? true; // Mặc định mở
+    final isExpanded = _expandedGroups[ungroupedId] ?? false; // Mặc định đóng
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -402,6 +440,77 @@ class _TransactionListState extends State<TransactionList> {
     }
   }
 
+  CurrencyType _getCurrencyTypeFromString(String currencyString) {
+    switch (currencyString.toUpperCase()) {
+      case 'VND':
+        return CurrencyType.vnd;
+      case 'CNY':
+        return CurrencyType.cny;
+      case 'USD':
+      default:
+        return CurrencyType.usd;
+    }
+  }
+
+  Widget _buildSpendingLimitIndicator(
+    BuildContext context,
+    CategoryGroup group,
+    List<Transaction> transactions,
+  ) {
+    // Tính tổng chi tiêu trong nhóm (chỉ tính expense)
+    // Cần convert về loại tiền hiện tại để tính toán chính xác
+    final locale = Intl.getCurrentLocale();
+    final currentCurrencyType = CurrencyService.getCurrencyType(locale);
+
+    double totalSpent = 0.0;
+    for (final transaction in transactions) {
+      if (transaction.category == Category.expense) {
+        // Convert amount về loại tiền hiện tại
+        final originalCurrencyType = _getCurrencyTypeFromString(
+          transaction.originalCurrency,
+        );
+        final convertedAmount = CurrencyService.convertCurrency(
+          amount: transaction.amount,
+          fromCurrency: originalCurrencyType,
+          toCurrency: currentCurrencyType,
+        );
+        totalSpent += convertedAmount;
+      }
+    }
+
+    // Convert spending limit về loại tiền hiện tại (giả sử spending limit được lưu bằng VND)
+    final spendingLimitInCurrentCurrency = CurrencyService.convertCurrency(
+      amount: group.spendingLimit,
+      fromCurrency: CurrencyType.vnd, // Giả sử spending limit được lưu bằng VND
+      toCurrency: currentCurrencyType,
+    );
+
+    final remaining = spendingLimitInCurrentCurrency - totalSpent;
+    final isOverLimit = remaining < 0;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color:
+            isOverLimit
+                ? Colors.red.withOpacity(0.1)
+                : Colors.green.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isOverLimit ? Colors.red : Colors.green,
+          width: 1,
+        ),
+      ),
+      child: Text(
+        '${CurrencyService.formatCurrency(amount: remaining, currencyType: currentCurrencyType, showSymbol: true)}',
+        style: AppTextStyle.caption.copyWith(
+          color: isOverLimit ? Colors.red : Colors.green,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
   void _showDeleteGroupDialog(
     BuildContext context,
     CategoryGroup group,
@@ -409,9 +518,10 @@ class _TransactionListState extends State<TransactionList> {
   ) {
     Alerts.showAlertDialog(
       context: context,
-      title: 'Xóa nhóm "${group.name}"',
-      message:
-          'Bạn có chắc chắn muốn xóa nhóm này và tất cả ${transactions.length} giao dịch bên trong? Hành động này không thể hoàn tác.',
+      title: 'category_group.delete_with_transactions_title'.tr(),
+      message: 'category_group.delete_with_transactions_confirm'.tr(
+        namedArgs: {'count': transactions.length.toString()},
+      ),
       onOk: () {
         _deleteGroupAndTransactions(context, group, transactions);
       },
@@ -425,28 +535,31 @@ class _TransactionListState extends State<TransactionList> {
     List<Transaction> transactions,
   ) async {
     try {
-      // Xóa tất cả transactions trong nhóm
-      for (final transaction in transactions) {
-        context.read<TransactionCubit>().deleteTransaction(transaction.uuid!);
-      }
+      print(
+        'Deleting group: ${group.getLocalizedName()} with ${transactions.length} transactions',
+      );
 
-      // Xóa nhóm
+      // Chỉ xóa nhóm trước, transactions sẽ tự động chuyển vào ungrouped
+      print('Deleting group: ${group.uuid}');
       context.read<CategoryGroupCubit>().deleteCategoryGroup(group.uuid!);
 
       // Hiển thị thông báo thành công
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Đã xóa nhóm "${group.name}" và ${transactions.length} giao dịch',
+            'category_group.delete_with_transactions_success'.tr(
+              namedArgs: {'count': transactions.length.toString()},
+            ),
           ),
           backgroundColor: Colors.green,
         ),
       );
     } catch (e) {
+      print('Error deleting group: $e');
       // Hiển thị thông báo lỗi
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Lỗi khi xóa nhóm: $e'),
+          content: Text('category_group.delete_with_transactions_error'.tr()),
           backgroundColor: Colors.red,
         ),
       );

@@ -107,7 +107,9 @@ class _TransactionFormState extends State<TransactionForm> {
               children: [
                 // Chọn nhóm
                 CustomItemButton(
-                  text: categoryGroup?.name ?? 'transaction.select_group'.tr(),
+                  text:
+                      categoryGroup?.getLocalizedName() ??
+                      'transaction.select_group'.tr(),
                   padding: padding,
                   iconSize: iconSize,
                   iconColor: Colors.white,
@@ -268,22 +270,26 @@ class _TransactionFormState extends State<TransactionForm> {
                       ...categoryGroups.map((group) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: CustomItemButton(
-                            text: group.name,
-                            icon: group.icon,
-                            iconColor: Colors.white,
-                            backgroundItem: Colors.transparent,
-                            backgroundIcon: group.color,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
+                          child: GestureDetector(
+                            onLongPress:
+                                () => _showDeleteGroupDialog(context, group),
+                            child: CustomItemButton(
+                              text: group.getLocalizedName(),
+                              icon: group.icon,
+                              iconColor: Colors.white,
+                              backgroundItem: Colors.transparent,
+                              backgroundIcon: group.color,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 10,
+                              ),
+                              onPressed: () {
+                                context
+                                    .read<TransactionCubit>()
+                                    .onCategoryGroupChanged(group);
+                                context.pop();
+                              },
                             ),
-                            onPressed: () {
-                              context
-                                  .read<TransactionCubit>()
-                                  .onCategoryGroupChanged(group);
-                              context.pop();
-                            },
                           ),
                         );
                       }).toList(),
@@ -474,5 +480,43 @@ class _TransactionFormState extends State<TransactionForm> {
         context.read<TransactionCubit>().onTransactionDateChanged(dateTime);
       },
     );
+  }
+
+  void _showDeleteGroupDialog(BuildContext context, CategoryGroup group) {
+    Alerts.showAlertDialog(
+      context: context,
+      title: 'category_group.delete_title'.tr(),
+      message: 'category_group.delete_confirm'.tr(),
+      onOk: () {
+        _deleteGroup(context, group);
+      },
+      onCancel: () {},
+    );
+  }
+
+  void _deleteGroup(BuildContext context, CategoryGroup group) async {
+    try {
+      // Xóa nhóm
+      context.read<CategoryGroupCubit>().deleteCategoryGroup(group.uuid!);
+
+      // Đóng bottom sheet trước khi hiển thị thông báo
+      context.pop();
+
+      // Hiển thị thông báo thành công
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('category_group.delete_success'.tr()),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      // Hiển thị thông báo lỗi
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('category_group.delete_error'.tr()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

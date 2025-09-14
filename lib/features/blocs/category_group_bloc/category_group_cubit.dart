@@ -35,8 +35,14 @@ class CategoryGroupCubit extends Cubit<CategoryGroupState> {
     required String name,
     required IconData icon,
     required Color color,
+    double spendingLimit = 0.0,
   }) async {
     emit(const CategoryGroupState.loading());
+
+    // Debug log
+    print(
+      'CategoryGroupCubit: Creating group with spending limit: $spendingLimit',
+    );
 
     final categoryGroup = CategoryGroup(
       uuid: '',
@@ -46,7 +52,11 @@ class CategoryGroupCubit extends Cubit<CategoryGroupState> {
       colorValue: color.value,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      spendingLimit: spendingLimit,
     );
+
+    // Debug log
+    print('CategoryGroupCubit: Created group: $categoryGroup');
 
     final result = await _categoryGroupRepository.addCategoryGroup(
       categoryGroup,
@@ -85,9 +95,8 @@ class CategoryGroupCubit extends Cubit<CategoryGroupState> {
     final result = await _categoryGroupRepository.deleteCategoryGroup(groupId);
     result.when(
       success: (_) {
-        emit(
-          const CategoryGroupState.success('category_group.deleted_success'),
-        );
+        // Reload danh sách groups sau khi xóa thành công
+        getAllCategoryGroups();
       },
       failure: (message) => emit(CategoryGroupState.error(message)),
     );

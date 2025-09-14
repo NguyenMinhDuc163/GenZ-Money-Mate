@@ -124,9 +124,19 @@
     "name_required": "Vui lòng nhập tên nhóm",
     "select_icon": "Chọn biểu tượng",
     "select_color": "Chọn màu sắc",
+    "set_spending_limit": "Đặt hạn mức chi tiêu",
+    "spending_limit_hint": "Nhập hạn mức chi tiêu (₫)",
     "created_success": "Tạo nhóm thành công",
     "updated_success": "Cập nhật nhóm thành công",
-    "deleted_success": "Xóa nhóm thành công"
+    "deleted_success": "Xóa nhóm thành công",
+    "delete_title": "Xóa nhóm",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa nhóm này? Hành động này không thể hoàn tác.",
+    "delete_success": "Đã xóa nhóm thành công",
+    "delete_error": "Lỗi khi xóa nhóm",
+    "delete_with_transactions_title": "Xóa nhóm",
+    "delete_with_transactions_confirm": "Bạn có chắc chắn muốn xóa nhóm này và tất cả {count} giao dịch bên trong? Hành động này không thể hoàn tác.",
+    "delete_with_transactions_success": "Đã xóa nhóm. {count} giao dịch đã được chuyển vào \"Không có nhóm\"",
+    "delete_with_transactions_error": "Lỗi khi xóa nhóm"
   },
   "router": {
     "no_route": "Không có route cho {{}}"
@@ -144,6 +154,15 @@
     "english": "English",
     "vietnamese": "Tiếng Việt",
     "chinese": "中文"
+  },
+  "default_groups": {
+    "shopping": "Mua sắm",
+    "food": "Ăn uống",
+    "entertainment": "Giải trí",
+    "transport": "Giao thông",
+    "health": "Y tế",
+    "education": "Giáo dục",
+    "others": "Khác"
   }
 
 }

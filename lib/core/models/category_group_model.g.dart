@@ -16,6 +16,7 @@ _$CategoryGroupImpl _$$CategoryGroupImplFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       isDefault: json['isDefault'] as bool? ?? false,
+      spendingLimit: (json['spendingLimit'] as num?)?.toDouble() ?? 0.0,
     );
 
 Map<String, dynamic> _$$CategoryGroupImplToJson(_$CategoryGroupImpl instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$$CategoryGroupImplToJson(_$CategoryGroupImpl instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'isDefault': instance.isDefault,
+      'spendingLimit': instance.spendingLimit,
     };

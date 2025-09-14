@@ -28,6 +28,9 @@ class CategoryGroupHive extends HiveObject {
   @HiveField(7)
   bool isDefault; // Đánh dấu group mặc định
 
+  @HiveField(8)
+  double spendingLimit; // Hạn mức chi tiêu (0 = vô hạn)
+
   CategoryGroupHive({
     required this.uuid,
     required this.userId,
@@ -37,5 +40,6 @@ class CategoryGroupHive extends HiveObject {
     required this.createdAt,
     required this.updatedAt,
     required this.isDefault,
+    required this.spendingLimit,
   });
 }
