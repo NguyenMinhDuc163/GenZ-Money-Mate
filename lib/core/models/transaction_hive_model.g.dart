@@ -25,13 +25,14 @@ class TransactionHiveAdapter extends TypeAdapter<TransactionHive> {
       category: fields[5] as CategoryHive,
       originalCurrency: fields[6] as String?,
       customCategoryId: fields[7] as String?,
+      groupId: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, TransactionHive obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.uuid)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class TransactionHiveAdapter extends TypeAdapter<TransactionHive> {
       ..writeByte(6)
       ..write(obj.originalCurrency)
       ..writeByte(7)
-      ..write(obj.customCategoryId);
+      ..write(obj.customCategoryId)
+      ..writeByte(8)
+      ..write(obj.groupId);
   }
 
   @override

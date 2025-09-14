@@ -8,7 +8,6 @@ import '../../../core/shared/shared.dart';
 import '../../../core/utils/alerts/alerts.dart';
 import '../../blocs/transaction_bloc/transaction_cubit.dart';
 import '../../blocs/language_bloc/language_cubit.dart';
-import '../../blocs/custom_category_bloc/custom_category_cubit.dart';
 import 'widgets/widgets.dart';
 
 class TransactionView extends StatelessWidget {

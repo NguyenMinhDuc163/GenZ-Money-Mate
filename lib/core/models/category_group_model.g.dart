@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'custom_category_model.dart';
+part of 'category_group_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CustomCategoryImpl _$$CustomCategoryImplFromJson(Map<String, dynamic> json) =>
-    _$CustomCategoryImpl(
+_$CategoryGroupImpl _$$CategoryGroupImplFromJson(Map<String, dynamic> json) =>
+    _$CategoryGroupImpl(
       uuid: json['uuid'] as String?,
       userId: json['userId'] as String?,
       name: json['name'] as String,
@@ -16,11 +16,9 @@ _$CustomCategoryImpl _$$CustomCategoryImplFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       isDefault: json['isDefault'] as bool? ?? false,
-      groupId: json['groupId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$CustomCategoryImplToJson(
-        _$CustomCategoryImpl instance) =>
+Map<String, dynamic> _$$CategoryGroupImplToJson(_$CategoryGroupImpl instance) =>
     <String, dynamic>{
       'uuid': instance.uuid,
       'userId': instance.userId,
@@ -30,5 +28,4 @@ Map<String, dynamic> _$$CustomCategoryImplToJson(
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'isDefault': instance.isDefault,
-      'groupId': instance.groupId,
     };

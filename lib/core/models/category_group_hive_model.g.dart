@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'custom_category_hive_model.dart';
+part of 'category_group_hive_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CustomCategoryHiveAdapter extends TypeAdapter<CustomCategoryHive> {
+class CategoryGroupHiveAdapter extends TypeAdapter<CategoryGroupHive> {
   @override
-  final int typeId = 3;
+  final int typeId = 4;
 
   @override
-  CustomCategoryHive read(BinaryReader reader) {
+  CategoryGroupHive read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CustomCategoryHive(
+    return CategoryGroupHive(
       uuid: fields[0] as String,
       userId: fields[1] as String?,
       name: fields[2] as String,
@@ -25,14 +25,13 @@ class CustomCategoryHiveAdapter extends TypeAdapter<CustomCategoryHive> {
       createdAt: fields[5] as DateTime,
       updatedAt: fields[6] as DateTime,
       isDefault: fields[7] as bool,
-      groupId: fields[8] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CustomCategoryHive obj) {
+  void write(BinaryWriter writer, CategoryGroupHive obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.uuid)
       ..writeByte(1)
@@ -48,9 +47,7 @@ class CustomCategoryHiveAdapter extends TypeAdapter<CustomCategoryHive> {
       ..writeByte(6)
       ..write(obj.updatedAt)
       ..writeByte(7)
-      ..write(obj.isDefault)
-      ..writeByte(8)
-      ..write(obj.groupId);
+      ..write(obj.isDefault);
   }
 
   @override
@@ -59,7 +56,7 @@ class CustomCategoryHiveAdapter extends TypeAdapter<CustomCategoryHive> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CustomCategoryHiveAdapter &&
+      other is CategoryGroupHiveAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

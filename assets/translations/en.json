@@ -95,7 +95,10 @@
     "updated_success": "Transaction updated successfully",
     "added_success": "Transaction added successfully",
     "deleted_success": "Transaction deleted successfully",
-    "select_category": "Select Category"
+    "select_category": "Select Category",
+    "select_group": "Select Group",
+    "items": "items",
+    "ungrouped": "Ungrouped"
   },
   "custom_category": {
     "create_new": "Create New Category",
@@ -113,6 +116,17 @@
     "delete_confirm_title": "Confirm Delete",
     "delete": "Delete",
     "cancel": "Cancel"
+  },
+  "category_group": {
+    "create_new": "Create New Group",
+    "name": "Group Name",
+    "name_hint": "Enter group name",
+    "name_required": "Please enter group name",
+    "select_icon": "Select Icon",
+    "select_color": "Select Color",
+    "created_success": "Group created successfully",
+    "updated_success": "Group updated successfully",
+    "deleted_success": "Group deleted successfully"
   },
   "router": {
     "no_route": "No route defined for {{}}"

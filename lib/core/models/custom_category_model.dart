@@ -18,6 +18,8 @@ class CustomCategory with _$CustomCategory {
     required DateTime createdAt,
     required DateTime updatedAt,
     @Default(false) bool isDefault, // Đánh dấu category mặc định
+    @Default('')
+    String groupId, // ID của CategoryGroup mà category này thuộc về
   }) = _CustomCategory;
 
   factory CustomCategory.fromJson(Map<String, dynamic> json) =>
@@ -45,6 +47,7 @@ class CustomCategory with _$CustomCategory {
       createdAt: customCategoryHive.createdAt,
       updatedAt: customCategoryHive.updatedAt,
       isDefault: customCategoryHive.isDefault,
+      groupId: customCategoryHive.groupId ?? '',
     );
   }
 }
@@ -60,6 +63,7 @@ extension CustomCategoryExtension on CustomCategory {
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDefault: isDefault,
+      groupId: groupId,
     );
   }
 
@@ -79,6 +83,7 @@ extension CustomCategoryExtension on CustomCategory {
     required IconData icon,
     required Color color,
     String? userId,
+    String? groupId,
   }) {
     return CustomCategory(
       uuid: '',
@@ -89,6 +94,7 @@ extension CustomCategoryExtension on CustomCategory {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       isDefault: true,
+      groupId: groupId ?? '',
     );
   }
 }

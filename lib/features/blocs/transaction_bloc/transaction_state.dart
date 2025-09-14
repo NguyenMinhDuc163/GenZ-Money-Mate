@@ -9,6 +9,7 @@ class TransactionState with _$TransactionState {
   const factory TransactionState.loadTransaction({
     Categorys? categorys, // Có thể null khi sử dụng custom category
     CustomCategory? customCategory, // Custom category được chọn
+    CategoryGroup? categoryGroup, // Category group được chọn
     required DateTime transactionDate,
     required Category transactionCategory,
   }) = LoadTransaction;

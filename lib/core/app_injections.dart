@@ -16,6 +16,7 @@ import '../features/blocs/state_bloc/state_cubit.dart';
 import '../features/blocs/themes_bloc/themes_cubit.dart';
 import '../features/blocs/transaction_bloc/transaction_cubit.dart';
 import '../features/blocs/custom_category_bloc/custom_category_cubit.dart';
+import '../features/blocs/category_group_bloc/category_group_cubit.dart';
 import '../features/home/data/main_repository/main_base_repository.dart';
 import '../features/home/data/main_repository/main_repository.dart';
 import '../features/home/data/state_repository/state_base_repository.dart';
@@ -30,8 +31,11 @@ import '../features/transaction/data/repository/transaction_base_repository.dart
 import '../features/transaction/data/repository/transaction_repository.dart';
 import '../features/transaction/data/repository/custom_category_base_repository.dart';
 import '../features/transaction/data/repository/custom_category_repository.dart';
+import '../features/transaction/data/repository/category_group_base_repository.dart';
+import '../features/transaction/data/repository/category_group_repository.dart';
 import 'firebase_options.dart';
 import 'models/transaction_hive_model.dart';
+import 'models/category_group_hive_model.dart';
 import 'service/network_info.dart';
 import '../features/blocs/language_bloc/language_cubit.dart';
 import '../features/settings/data/language_repository/language_base_repository.dart';
@@ -126,6 +130,21 @@ Future<void> initAppConfig() async {
   );
 
   //=>
+  // CategoryGroupBaseRepository (CategoryGroupRepository)
+  final CategoryGroupBaseRepository categoryGroupRepository =
+      CategoryGroupRepository(
+        dbFirestoreClient: getIt(),
+        dbHiveClient: getIt(),
+        authUser: getIt(),
+      );
+
+  //CategoryGroupBloc && CategoryGroupRepository
+  getIt.registerLazySingleton(() => categoryGroupRepository);
+  getIt.registerFactory(
+    () => CategoryGroupCubit(categoryGroupRepository: getIt()),
+  );
+
+  //=>
   //AuthProfileBaseRepository (AuthProfileRepository)
   final AuthBaseRepository authProfileRepository = AuthRepository(
     userService: getIt(),
@@ -189,6 +208,14 @@ Future<void> initAppConfig() async {
     onRegisterAdapter: () {
       Hive.registerAdapter(TransactionHiveAdapter());
       Hive.registerAdapter(CategoryHiveAdapter());
+    },
+  );
+
+  //Hive for CategoryGroup
+  await getIt<DbHiveClientBase>().initDb<CategoryGroupHive>(
+    boxName: 'category_groups',
+    onRegisterAdapter: () {
+      Hive.registerAdapter(CategoryGroupHiveAdapter());
     },
   );
 }

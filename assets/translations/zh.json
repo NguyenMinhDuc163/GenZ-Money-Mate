@@ -95,7 +95,21 @@
     "updated_success": "更新交易成功",
     "added_success": "新增交易成功",
     "deleted_success": "删除交易成功",
-    "select_category": "选择类别"
+    "select_category": "选择类别",
+    "select_group": "选择组",
+    "items": "项",
+    "ungrouped": "未分组"
+  },
+  "category_group": {
+    "create_new": "创建新组",
+    "name": "组名",
+    "name_hint": "输入组名",
+    "name_required": "请输入组名",
+    "select_icon": "选择图标",
+    "select_color": "选择颜色",
+    "created_success": "创建组成功",
+    "updated_success": "更新组成功",
+    "deleted_success": "删除组成功"
   },
   "router": {
     "no_route": "没有适用于 {{}} 的路由"

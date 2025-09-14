@@ -15,6 +15,7 @@ import '../features/blocs/state_bloc/state_cubit.dart';
 import '../features/blocs/themes_bloc/themes_cubit.dart';
 import '../features/blocs/transaction_bloc/transaction_cubit.dart';
 import '../features/blocs/custom_category_bloc/custom_category_cubit.dart';
+import '../features/blocs/category_group_bloc/category_group_cubit.dart';
 
 class DailyTrackerApp extends StatelessWidget {
   const DailyTrackerApp({super.key, required AppRouter appRoute})
@@ -35,6 +36,7 @@ class DailyTrackerApp extends StatelessWidget {
         BlocProvider(create: (_) => getIt<ThemesCubit>()),
         BlocProvider(create: (_) => getIt<LanguageCubit>()),
         BlocProvider(create: (_) => getIt<CustomCategoryCubit>()),
+        BlocProvider(create: (_) => getIt<CategoryGroupCubit>()),
       ],
       child: _CubitConnector(appRouter: _appRouter),
     );

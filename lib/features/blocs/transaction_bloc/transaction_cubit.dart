@@ -7,6 +7,7 @@ import '../../../../core/enum/enum.dart';
 import '../../../../core/extension/extension.dart';
 import '../../../../core/models/transaction_model.dart';
 import '../../../../core/models/custom_category_model.dart';
+import '../../../../core/models/category_group_model.dart';
 import '../../../../core/service/currency_service.dart';
 import '../../transaction/data/repository/transaction_base_repository.dart';
 
@@ -32,15 +33,20 @@ class TransactionCubit extends Cubit<TransactionState> {
   // Thêm biến để lưu custom category được chọn
   CustomCategory? _selectedCustomCategory;
 
+  // Thêm biến để lưu category group được chọn
+  CategoryGroup? _selectedCategoryGroup;
+
   void init() {
     if (_isEditing) {
       _amountController.text = _transaction.amount.toCurrencyString();
-      // Custom category sẽ được load từ UI khi custom categories đã sẵn sàng
+      // Custom category và group sẽ được load từ UI khi đã sẵn sàng
       _selectedCustomCategory = null;
+      _selectedCategoryGroup = null;
     } else {
       _amountController.clear();
       _transaction = Transaction.empty();
       _selectedCustomCategory = null;
+      _selectedCategoryGroup = null;
     }
     emit(_buildState());
   }
@@ -59,7 +65,14 @@ class TransactionCubit extends Cubit<TransactionState> {
     _transaction = _transaction.copyWith(
       categorysIndex: -1, // Đánh dấu là custom category
       customCategoryId: customCategory.uuid!,
+      groupId: customCategory.groupId, // Lưu groupId từ custom category
     );
+    emit(_buildState());
+  }
+
+  void onCategoryGroupChanged(CategoryGroup categoryGroup) {
+    _selectedCategoryGroup = categoryGroup;
+    _transaction = _transaction.copyWith(groupId: categoryGroup.uuid!);
     emit(_buildState());
   }
 
@@ -120,6 +133,10 @@ class TransactionCubit extends Cubit<TransactionState> {
       originalCurrency: currentCurrencyString, // Lưu loại tiền gốc
       customCategoryId:
           _selectedCustomCategory?.uuid ?? '', // Lưu custom category ID
+      groupId:
+          _selectedCategoryGroup?.uuid ??
+          _selectedCustomCategory?.groupId ??
+          '', // Lưu group ID
     );
 
     Future.delayed(const Duration(milliseconds: 300)).then((_) {
@@ -155,9 +172,11 @@ class TransactionCubit extends Cubit<TransactionState> {
   TransactionState _buildState() {
     debugPrint('_buildState called');
     debugPrint('_selectedCustomCategory: ${_selectedCustomCategory?.name}');
+    debugPrint('_selectedCategoryGroup: ${_selectedCategoryGroup?.name}');
     debugPrint(
       '_transaction.customCategoryId: ${_transaction.customCategoryId}',
     );
+    debugPrint('_transaction.groupId: ${_transaction.groupId}');
     debugPrint('_transaction.categorysIndex: ${_transaction.categorysIndex}');
 
     return TransactionState.loadTransaction(
@@ -166,6 +185,7 @@ class TransactionCubit extends Cubit<TransactionState> {
               ? null // Không sử dụng default category khi có custom category
               : Categorys.fromIndex(_transaction.categorysIndex),
       customCategory: _selectedCustomCategory,
+      categoryGroup: _selectedCategoryGroup,
       transactionCategory: _transaction.category,
       transactionDate: _transaction.date,
     );

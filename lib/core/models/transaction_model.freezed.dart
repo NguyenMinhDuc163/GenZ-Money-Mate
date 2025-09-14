@@ -29,7 +29,9 @@ mixin _$Transaction {
   Category get category => throw _privateConstructorUsedError;
   String get originalCurrency =>
       throw _privateConstructorUsedError; // Loại tiền gốc
-  String get customCategoryId => throw _privateConstructorUsedError;
+  String get customCategoryId =>
+      throw _privateConstructorUsedError; // ID của custom category (nếu có)
+  String get groupId => throw _privateConstructorUsedError;
 
   /// Serializes this Transaction to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +57,8 @@ abstract class $TransactionCopyWith<$Res> {
       int categorysIndex,
       Category category,
       String originalCurrency,
-      String customCategoryId});
+      String customCategoryId,
+      String groupId});
 }
 
 /// @nodoc
@@ -81,6 +84,7 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? category = null,
     Object? originalCurrency = null,
     Object? customCategoryId = null,
+    Object? groupId = null,
   }) {
     return _then(_value.copyWith(
       uuid: freezed == uuid
@@ -115,6 +119,10 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.customCategoryId
           : customCategoryId // ignore: cast_nullable_to_non_nullable
               as String,
+      groupId: null == groupId
+          ? _value.groupId
+          : groupId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -135,7 +143,8 @@ abstract class _$$TransactionImplCopyWith<$Res>
       int categorysIndex,
       Category category,
       String originalCurrency,
-      String customCategoryId});
+      String customCategoryId,
+      String groupId});
 }
 
 /// @nodoc
@@ -159,6 +168,7 @@ class __$$TransactionImplCopyWithImpl<$Res>
     Object? category = null,
     Object? originalCurrency = null,
     Object? customCategoryId = null,
+    Object? groupId = null,
   }) {
     return _then(_$TransactionImpl(
       uuid: freezed == uuid
@@ -193,6 +203,10 @@ class __$$TransactionImplCopyWithImpl<$Res>
           ? _value.customCategoryId
           : customCategoryId // ignore: cast_nullable_to_non_nullable
               as String,
+      groupId: null == groupId
+          ? _value.groupId
+          : groupId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -208,7 +222,8 @@ class _$TransactionImpl implements _Transaction {
       required this.categorysIndex,
       required this.category,
       this.originalCurrency = 'USD',
-      this.customCategoryId = ''});
+      this.customCategoryId = '',
+      this.groupId = ''});
 
   factory _$TransactionImpl.fromJson(Map<String, dynamic> json) =>
       _$$TransactionImplFromJson(json);
@@ -233,10 +248,14 @@ class _$TransactionImpl implements _Transaction {
   @override
   @JsonKey()
   final String customCategoryId;
+// ID của custom category (nếu có)
+  @override
+  @JsonKey()
+  final String groupId;
 
   @override
   String toString() {
-    return 'Transaction(uuid: $uuid, userId: $userId, amount: $amount, date: $date, categorysIndex: $categorysIndex, category: $category, originalCurrency: $originalCurrency, customCategoryId: $customCategoryId)';
+    return 'Transaction(uuid: $uuid, userId: $userId, amount: $amount, date: $date, categorysIndex: $categorysIndex, category: $category, originalCurrency: $originalCurrency, customCategoryId: $customCategoryId, groupId: $groupId)';
   }
 
   @override
@@ -255,13 +274,14 @@ class _$TransactionImpl implements _Transaction {
             (identical(other.originalCurrency, originalCurrency) ||
                 other.originalCurrency == originalCurrency) &&
             (identical(other.customCategoryId, customCategoryId) ||
-                other.customCategoryId == customCategoryId));
+                other.customCategoryId == customCategoryId) &&
+            (identical(other.groupId, groupId) || other.groupId == groupId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, uuid, userId, amount, date,
-      categorysIndex, category, originalCurrency, customCategoryId);
+      categorysIndex, category, originalCurrency, customCategoryId, groupId);
 
   /// Create a copy of Transaction
   /// with the given fields replaced by the non-null parameter values.
@@ -288,7 +308,8 @@ abstract class _Transaction implements Transaction {
       required final int categorysIndex,
       required final Category category,
       final String originalCurrency,
-      final String customCategoryId}) = _$TransactionImpl;
+      final String customCategoryId,
+      final String groupId}) = _$TransactionImpl;
 
   factory _Transaction.fromJson(Map<String, dynamic> json) =
       _$TransactionImpl.fromJson;
@@ -309,7 +330,9 @@ abstract class _Transaction implements Transaction {
   @override
   String get originalCurrency; // Loại tiền gốc
   @override
-  String get customCategoryId;
+  String get customCategoryId; // ID của custom category (nếu có)
+  @override
+  String get groupId;
 
   /// Create a copy of Transaction
   /// with the given fields replaced by the non-null parameter values.

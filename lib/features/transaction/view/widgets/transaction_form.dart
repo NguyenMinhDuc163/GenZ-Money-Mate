@@ -7,12 +7,15 @@ import 'package:intl/intl.dart';
 import '../../../../core/enum/enum.dart';
 import '../../../../core/extension/extension.dart';
 import '../../../../core/models/custom_category_model.dart';
+import '../../../../core/models/category_group_model.dart';
 import '../../../../core/router/router.dart';
 import '../../../../core/shared/shared.dart';
 import '../../../../core/utils/alerts/alerts.dart';
 import '../../../blocs/transaction_bloc/transaction_cubit.dart';
 import '../../../blocs/custom_category_bloc/custom_category_cubit.dart';
+import '../../../blocs/category_group_bloc/category_group_cubit.dart';
 import 'create_custom_category_dialog.dart';
+import 'create_category_group_dialog.dart';
 import 'custom_category_item.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -27,9 +30,10 @@ class _TransactionFormState extends State<TransactionForm> {
   void initState() {
     context.read<TransactionCubit>().init();
 
-    // Load custom categories và load custom category cho editing
+    // Load custom categories, groups và load custom category cho editing
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CustomCategoryCubit>().getAllCustomCategories();
+      context.read<CategoryGroupCubit>().getAllCategoryGroups();
     });
 
     super.initState();
@@ -81,6 +85,10 @@ class _TransactionFormState extends State<TransactionForm> {
           loadTransaction: (state) => state.customCategory,
         );
 
+        final categoryGroup = state.mapOrNull(
+          loadTransaction: (state) => state.categoryGroup,
+        );
+
         final transactionCategory = state.mapOrNull(
           loadTransaction: (state) => state.transactionCategory,
         );
@@ -97,6 +105,20 @@ class _TransactionFormState extends State<TransactionForm> {
             const SizedBox(height: 20),
             Column(
               children: [
+                // Chọn nhóm
+                CustomItemButton(
+                  text: categoryGroup?.name ?? 'transaction.select_group'.tr(),
+                  padding: padding,
+                  iconSize: iconSize,
+                  iconColor: Colors.white,
+                  iconItemWidth: iconItemWidth,
+                  iconItemHeight: iconItemHeight,
+                  backgroundIcon: categoryGroup?.color ?? Colors.blue,
+                  backgroundItem: backgroundItem,
+                  icon: categoryGroup?.icon ?? FontAwesomeIcons.folder,
+                  onPressed: () => _showModalSheetGroup(context),
+                ),
+                // Chọn danh mục
                 CustomItemButton(
                   text:
                       customCategory != null
@@ -182,6 +204,96 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showModalSheetGroup(BuildContext context) {
+    // Load category groups khi mở modal
+    context.read<CategoryGroupCubit>().getAllCategoryGroups();
+
+    Alerts.showSheet(
+      context: context,
+      child: BlocConsumer<CategoryGroupCubit, CategoryGroupState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            success: (message) {
+              Alerts.showToastMsg(context, message.tr());
+            },
+            error: (message) {
+              Alerts.showToastMsg(context, message);
+            },
+            orElse: () {},
+          );
+        },
+        builder: (context, groupState) {
+          final categoryGroups = groupState.maybeWhen(
+            loaded: (groups) => groups,
+            orElse: () => <CategoryGroup>[],
+          );
+
+          return Expanded(
+            child: Column(
+              children: [
+                // Header với nút tạo group mới
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'transaction.select_group'.tr(),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          context.pop();
+                          await showDialog(
+                            context: context,
+                            builder:
+                                (context) => const CreateCategoryGroupDialog(),
+                          );
+                        },
+                        icon: const Icon(Icons.add),
+                        tooltip: 'category_group.create_new'.tr(),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Danh sách groups
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ...categoryGroups.map((group) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: CustomItemButton(
+                            text: group.name,
+                            icon: group.icon,
+                            iconColor: Colors.white,
+                            backgroundItem: Colors.transparent,
+                            backgroundIcon: group.color,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
+                            onPressed: () {
+                              context
+                                  .read<TransactionCubit>()
+                                  .onCategoryGroupChanged(group);
+                              context.pop();
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

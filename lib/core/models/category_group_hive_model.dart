@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
-part 'custom_category_hive_model.g.dart';
+part 'category_group_hive_model.g.dart';
 
-@HiveType(typeId: 3)
-class CustomCategoryHive extends HiveObject {
+@HiveType(typeId: 4)
+class CategoryGroupHive extends HiveObject {
   @HiveField(0)
   String uuid;
 
@@ -26,12 +26,9 @@ class CustomCategoryHive extends HiveObject {
   DateTime updatedAt;
 
   @HiveField(7)
-  bool isDefault; // Đánh dấu category mặc định
+  bool isDefault; // Đánh dấu group mặc định
 
-  @HiveField(8)
-  String? groupId; // ID của CategoryGroup mà category này thuộc về
-
-  CustomCategoryHive({
+  CategoryGroupHive({
     required this.uuid,
     required this.userId,
     required this.name,
@@ -40,6 +37,5 @@ class CustomCategoryHive extends HiveObject {
     required this.createdAt,
     required this.updatedAt,
     required this.isDefault,
-    this.groupId,
   });
 }

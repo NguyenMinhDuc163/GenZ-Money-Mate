@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'custom_category_model.dart';
+part of 'category_group_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CustomCategory _$CustomCategoryFromJson(Map<String, dynamic> json) {
-  return _CustomCategory.fromJson(json);
+CategoryGroup _$CategoryGroupFromJson(Map<String, dynamic> json) {
+  return _CategoryGroup.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CustomCategory {
+mixin _$CategoryGroup {
   String? get uuid => throw _privateConstructorUsedError;
   String? get userId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
@@ -29,25 +29,23 @@ mixin _$CustomCategory {
       throw _privateConstructorUsedError; // Màu sắc dưới dạng int
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-  bool get isDefault =>
-      throw _privateConstructorUsedError; // Đánh dấu category mặc định
-  String get groupId => throw _privateConstructorUsedError;
+  bool get isDefault => throw _privateConstructorUsedError;
 
-  /// Serializes this CustomCategory to a JSON map.
+  /// Serializes this CategoryGroup to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of CustomCategory
+  /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CustomCategoryCopyWith<CustomCategory> get copyWith =>
+  $CategoryGroupCopyWith<CategoryGroup> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CustomCategoryCopyWith<$Res> {
-  factory $CustomCategoryCopyWith(
-          CustomCategory value, $Res Function(CustomCategory) then) =
-      _$CustomCategoryCopyWithImpl<$Res, CustomCategory>;
+abstract class $CategoryGroupCopyWith<$Res> {
+  factory $CategoryGroupCopyWith(
+          CategoryGroup value, $Res Function(CategoryGroup) then) =
+      _$CategoryGroupCopyWithImpl<$Res, CategoryGroup>;
   @useResult
   $Res call(
       {String? uuid,
@@ -57,21 +55,20 @@ abstract class $CustomCategoryCopyWith<$Res> {
       int colorValue,
       DateTime createdAt,
       DateTime updatedAt,
-      bool isDefault,
-      String groupId});
+      bool isDefault});
 }
 
 /// @nodoc
-class _$CustomCategoryCopyWithImpl<$Res, $Val extends CustomCategory>
-    implements $CustomCategoryCopyWith<$Res> {
-  _$CustomCategoryCopyWithImpl(this._value, this._then);
+class _$CategoryGroupCopyWithImpl<$Res, $Val extends CategoryGroup>
+    implements $CategoryGroupCopyWith<$Res> {
+  _$CategoryGroupCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CustomCategory
+  /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -84,7 +81,6 @@ class _$CustomCategoryCopyWithImpl<$Res, $Val extends CustomCategory>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? isDefault = null,
-    Object? groupId = null,
   }) {
     return _then(_value.copyWith(
       uuid: freezed == uuid
@@ -119,20 +115,16 @@ class _$CustomCategoryCopyWithImpl<$Res, $Val extends CustomCategory>
           ? _value.isDefault
           : isDefault // ignore: cast_nullable_to_non_nullable
               as bool,
-      groupId: null == groupId
-          ? _value.groupId
-          : groupId // ignore: cast_nullable_to_non_nullable
-              as String,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$CustomCategoryImplCopyWith<$Res>
-    implements $CustomCategoryCopyWith<$Res> {
-  factory _$$CustomCategoryImplCopyWith(_$CustomCategoryImpl value,
-          $Res Function(_$CustomCategoryImpl) then) =
-      __$$CustomCategoryImplCopyWithImpl<$Res>;
+abstract class _$$CategoryGroupImplCopyWith<$Res>
+    implements $CategoryGroupCopyWith<$Res> {
+  factory _$$CategoryGroupImplCopyWith(
+          _$CategoryGroupImpl value, $Res Function(_$CategoryGroupImpl) then) =
+      __$$CategoryGroupImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -143,19 +135,18 @@ abstract class _$$CustomCategoryImplCopyWith<$Res>
       int colorValue,
       DateTime createdAt,
       DateTime updatedAt,
-      bool isDefault,
-      String groupId});
+      bool isDefault});
 }
 
 /// @nodoc
-class __$$CustomCategoryImplCopyWithImpl<$Res>
-    extends _$CustomCategoryCopyWithImpl<$Res, _$CustomCategoryImpl>
-    implements _$$CustomCategoryImplCopyWith<$Res> {
-  __$$CustomCategoryImplCopyWithImpl(
-      _$CustomCategoryImpl _value, $Res Function(_$CustomCategoryImpl) _then)
+class __$$CategoryGroupImplCopyWithImpl<$Res>
+    extends _$CategoryGroupCopyWithImpl<$Res, _$CategoryGroupImpl>
+    implements _$$CategoryGroupImplCopyWith<$Res> {
+  __$$CategoryGroupImplCopyWithImpl(
+      _$CategoryGroupImpl _value, $Res Function(_$CategoryGroupImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CustomCategory
+  /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -168,9 +159,8 @@ class __$$CustomCategoryImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? isDefault = null,
-    Object? groupId = null,
   }) {
-    return _then(_$CustomCategoryImpl(
+    return _then(_$CategoryGroupImpl(
       uuid: freezed == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
@@ -203,18 +193,14 @@ class __$$CustomCategoryImplCopyWithImpl<$Res>
           ? _value.isDefault
           : isDefault // ignore: cast_nullable_to_non_nullable
               as bool,
-      groupId: null == groupId
-          ? _value.groupId
-          : groupId // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CustomCategoryImpl implements _CustomCategory {
-  const _$CustomCategoryImpl(
+class _$CategoryGroupImpl implements _CategoryGroup {
+  const _$CategoryGroupImpl(
       {required this.uuid,
       required this.userId,
       required this.name,
@@ -222,11 +208,10 @@ class _$CustomCategoryImpl implements _CustomCategory {
       required this.colorValue,
       required this.createdAt,
       required this.updatedAt,
-      this.isDefault = false,
-      this.groupId = ''});
+      this.isDefault = false});
 
-  factory _$CustomCategoryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CustomCategoryImplFromJson(json);
+  factory _$CategoryGroupImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CategoryGroupImplFromJson(json);
 
   @override
   final String? uuid;
@@ -247,21 +232,17 @@ class _$CustomCategoryImpl implements _CustomCategory {
   @override
   @JsonKey()
   final bool isDefault;
-// Đánh dấu category mặc định
-  @override
-  @JsonKey()
-  final String groupId;
 
   @override
   String toString() {
-    return 'CustomCategory(uuid: $uuid, userId: $userId, name: $name, iconName: $iconName, colorValue: $colorValue, createdAt: $createdAt, updatedAt: $updatedAt, isDefault: $isDefault, groupId: $groupId)';
+    return 'CategoryGroup(uuid: $uuid, userId: $userId, name: $name, iconName: $iconName, colorValue: $colorValue, createdAt: $createdAt, updatedAt: $updatedAt, isDefault: $isDefault)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CustomCategoryImpl &&
+            other is _$CategoryGroupImpl &&
             (identical(other.uuid, uuid) || other.uuid == uuid) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.name, name) || other.name == name) &&
@@ -274,34 +255,32 @@ class _$CustomCategoryImpl implements _CustomCategory {
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.isDefault, isDefault) ||
-                other.isDefault == isDefault) &&
-            (identical(other.groupId, groupId) || other.groupId == groupId));
+                other.isDefault == isDefault));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, uuid, userId, name, iconName,
-      colorValue, createdAt, updatedAt, isDefault, groupId);
+      colorValue, createdAt, updatedAt, isDefault);
 
-  /// Create a copy of CustomCategory
+  /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CustomCategoryImplCopyWith<_$CustomCategoryImpl> get copyWith =>
-      __$$CustomCategoryImplCopyWithImpl<_$CustomCategoryImpl>(
-          this, _$identity);
+  _$$CategoryGroupImplCopyWith<_$CategoryGroupImpl> get copyWith =>
+      __$$CategoryGroupImplCopyWithImpl<_$CategoryGroupImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CustomCategoryImplToJson(
+    return _$$CategoryGroupImplToJson(
       this,
     );
   }
 }
 
-abstract class _CustomCategory implements CustomCategory {
-  const factory _CustomCategory(
+abstract class _CategoryGroup implements CategoryGroup {
+  const factory _CategoryGroup(
       {required final String? uuid,
       required final String? userId,
       required final String name,
@@ -309,11 +288,10 @@ abstract class _CustomCategory implements CustomCategory {
       required final int colorValue,
       required final DateTime createdAt,
       required final DateTime updatedAt,
-      final bool isDefault,
-      final String groupId}) = _$CustomCategoryImpl;
+      final bool isDefault}) = _$CategoryGroupImpl;
 
-  factory _CustomCategory.fromJson(Map<String, dynamic> json) =
-      _$CustomCategoryImpl.fromJson;
+  factory _CategoryGroup.fromJson(Map<String, dynamic> json) =
+      _$CategoryGroupImpl.fromJson;
 
   @override
   String? get uuid;
@@ -330,14 +308,12 @@ abstract class _CustomCategory implements CustomCategory {
   @override
   DateTime get updatedAt;
   @override
-  bool get isDefault; // Đánh dấu category mặc định
-  @override
-  String get groupId;
+  bool get isDefault;
 
-  /// Create a copy of CustomCategory
+  /// Create a copy of CategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CustomCategoryImplCopyWith<_$CustomCategoryImpl> get copyWith =>
+  _$$CategoryGroupImplCopyWith<_$CategoryGroupImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
