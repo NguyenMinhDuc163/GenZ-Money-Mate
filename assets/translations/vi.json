@@ -69,7 +69,7 @@
     "gaming": "Trò chơi"
   },
   "common": {
-    "ok": "OK",
+    "ok": "Đồng ý",
     "cancel": "Hủy",
     "save": "Lưu",
     "edit": "Sửa",
@@ -96,6 +96,7 @@
     "updated_success": "Cập nhật giao dịch thành công",
     "added_success": "Thêm giao dịch thành công",
     "deleted_success": "Xóa giao dịch thành công",
+<<<<<<< HEAD
     "select_category": "Chọn danh mục",
     "select_group": "Chọn nhóm",
     "items": "mục",
@@ -142,6 +143,9 @@
     "delete_with_transactions_confirm": "Bạn có chắc chắn muốn xóa nhóm này và tất cả {count} giao dịch bên trong? Hành động này không thể hoàn tác.",
     "delete_with_transactions_success": "Đã xóa nhóm. {count} giao dịch đã được chuyển vào \"Không có nhóm\"",
     "delete_with_transactions_error": "Lỗi khi xóa nhóm"
+=======
+    "delete_confirm": "Bạn có chắc chắn muốn xóa giao dịch này không?"
+>>>>>>> 8844a4dd9c12810996752f88c58d10d26011d260
   },
   "router": {
     "no_route": "Không có route cho {{}}"
