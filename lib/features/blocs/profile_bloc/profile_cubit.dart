@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:user_service/user_service.dart';
@@ -15,9 +16,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({
     required ProfileBaseRepository profileRepository,
     required NetworkBaseInfo networkInfo,
-  })  : _profileRepository = profileRepository,
-        _networkInfo = networkInfo,
-        super(const ProfileState.initial());
+  }) : _profileRepository = profileRepository,
+       _networkInfo = networkInfo,
+       super(const ProfileState.initial());
 
   final NetworkBaseInfo _networkInfo;
   final ProfileBaseRepository _profileRepository;
@@ -52,9 +53,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(const ProfileState.loading());
 
       if (!await _networkInfo.isConnected) {
-        return emit(
-          const ProfileState.error('No internet connection available'),
-        );
+        return emit(ProfileState.error('profile.no_internet'.tr()));
       }
 
       try {
@@ -69,7 +68,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         await _profileRepository.updateProfile(user: updatedUser);
 
         selectedImage = null;
-        return emit(const ProfileState.success('Profile updated successfully'));
+        return emit(ProfileState.success('profile.updated_success'.tr()));
       } catch (err) {
         return emit(ProfileState.error(err.toString()));
       }

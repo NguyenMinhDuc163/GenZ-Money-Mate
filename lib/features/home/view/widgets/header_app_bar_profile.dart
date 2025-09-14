@@ -21,6 +21,11 @@ class HeaderAppBarProfile extends StatelessWidget {
         Row(
           children: [
             CustomIconBottom(
+              icon: FontAwesomeIcons.trophy,
+              onPressed: () => context.pushNamed(RoutesName.ranking),
+            ),
+            const SizedBox(width: 10),
+            CustomIconBottom(
               icon: FontAwesomeIcons.rotateLeft,
               onPressed: () {
                 context.read<MainCubit>().getAll(TypeShow.limit).then((_) {

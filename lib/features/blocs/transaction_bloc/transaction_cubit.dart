@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +7,8 @@ import 'package:intl/intl.dart';
 import '../../../../core/enum/enum.dart';
 import '../../../../core/extension/extension.dart';
 import '../../../../core/models/transaction_model.dart';
+import '../../../../core/models/custom_category_model.dart';
+import '../../../../core/models/category_group_model.dart';
 import '../../../../core/service/currency_service.dart';
 import '../../transaction/data/repository/transaction_base_repository.dart';
 
@@ -28,19 +31,75 @@ class TransactionCubit extends Cubit<TransactionState> {
   final TextEditingController _amountController = TextEditingController();
   TextEditingController get amountController => _amountController;
 
+  // Thêm biến để lưu custom category được chọn
+  CustomCategory? _selectedCustomCategory;
+
+  // Thêm biến để lưu category group được chọn
+  CategoryGroup? _selectedCategoryGroup;
+
   void init() {
     if (_isEditing) {
       _amountController.text = _transaction.amount.toCurrencyString();
+      // Custom category và group sẽ được load từ UI khi đã sẵn sàng
+      _selectedCustomCategory = null;
+      _selectedCategoryGroup = null;
     } else {
       _amountController.clear();
       _transaction = Transaction.empty();
+      _selectedCustomCategory = null;
+      _selectedCategoryGroup = null;
     }
     emit(_buildState());
   }
 
   void onCategorysChanged(Categorys categorys) {
-    _transaction = _transaction.copyWith(categorysIndex: categorys.index);
+    _transaction = _transaction.copyWith(
+      categorysIndex: categorys.index,
+      customCategoryId: '', // Reset custom category khi chọn default category
+    );
+    _selectedCustomCategory = null;
     emit(_buildState());
+  }
+
+  void onCustomCategoryChanged(CustomCategory customCategory) {
+    _selectedCustomCategory = customCategory;
+    _transaction = _transaction.copyWith(
+      categorysIndex: -1, // Đánh dấu là custom category
+      customCategoryId: customCategory.uuid!,
+      groupId: customCategory.groupId, // Lưu groupId từ custom category
+    );
+    emit(_buildState());
+  }
+
+  void onCategoryGroupChanged(CategoryGroup categoryGroup) {
+    _selectedCategoryGroup = categoryGroup;
+    _transaction = _transaction.copyWith(groupId: categoryGroup.uuid!);
+    emit(_buildState());
+  }
+
+  /// Load custom category khi edit transaction
+  void loadCustomCategoryForEditing(List<CustomCategory> customCategories) {
+    debugPrint('loadCustomCategoryForEditing called');
+    debugPrint('_isEditing: $_isEditing');
+    debugPrint(
+      '_transaction.customCategoryId: ${_transaction.customCategoryId}',
+    );
+    debugPrint('customCategories.length: ${customCategories.length}');
+
+    if (_isEditing && _transaction.customCategoryId.isNotEmpty) {
+      try {
+        _selectedCustomCategory = customCategories.firstWhere(
+          (cat) => cat.uuid == _transaction.customCategoryId,
+        );
+        debugPrint('Found custom category: ${_selectedCustomCategory?.name}');
+        emit(_buildState());
+      } catch (e) {
+        // Nếu không tìm thấy custom category, set null
+        debugPrint('Custom category not found: $e');
+        _selectedCustomCategory = null;
+        emit(_buildState());
+      }
+    }
   }
 
   void onTransactionCategoryChanged(Category category) {
@@ -56,12 +115,35 @@ class TransactionCubit extends Cubit<TransactionState> {
   void addOrUpdateTransaction() {
     debugPrint(_transaction.toString());
 
-    emit(const TransactionState.loading());
+    // Validation: Kiểm tra xem đã chọn nhóm chưa
+    final hasGroup =
+        _selectedCategoryGroup != null ||
+        (_selectedCustomCategory != null &&
+            _selectedCustomCategory!.groupId.isNotEmpty);
 
+    if (!hasGroup) {
+      emit(
+         TransactionState.error(
+          'transaction.validation.select_group_required'.tr(),
+        ),
+      );
+      return;
+    }
+
+    // Validation: Kiểm tra xem đã nhập số tiền chưa
     final amount =
         _amountController.text.isNotEmpty
             ? _amountController.text.toUnFormattedString().toDouble()
             : null;
+
+    if (amount == null || amount <= 0) {
+      emit(
+         TransactionState.error('transaction.validation.amount_required'.tr()),
+      );
+      return;
+    }
+
+    emit(const TransactionState.loading());
 
     // Lấy loại tiền hiện tại dựa trên locale
     final currentLocale = Intl.getCurrentLocale();
@@ -71,8 +153,14 @@ class TransactionCubit extends Cubit<TransactionState> {
     );
 
     final transactionUpdated = _transaction.copyWith(
-      amount: amount ?? 0.0,
+      amount: amount,
       originalCurrency: currentCurrencyString, // Lưu loại tiền gốc
+      customCategoryId:
+          _selectedCustomCategory?.uuid ?? '', // Lưu custom category ID
+      groupId:
+          _selectedCategoryGroup?.uuid ??
+          _selectedCustomCategory?.groupId ??
+          '', // Lưu group ID
     );
 
     Future.delayed(const Duration(milliseconds: 300)).then((_) {
@@ -106,8 +194,24 @@ class TransactionCubit extends Cubit<TransactionState> {
   }
 
   TransactionState _buildState() {
+    debugPrint('_buildState called');
+    debugPrint('_selectedCustomCategory: ${_selectedCustomCategory?.name}');
+    debugPrint(
+      '_selectedCategoryGroup: ${_selectedCategoryGroup?.getLocalizedName()}',
+    );
+    debugPrint(
+      '_transaction.customCategoryId: ${_transaction.customCategoryId}',
+    );
+    debugPrint('_transaction.groupId: ${_transaction.groupId}');
+    debugPrint('_transaction.categorysIndex: ${_transaction.categorysIndex}');
+
     return TransactionState.loadTransaction(
-      categorys: Categorys.fromIndex(_transaction.categorysIndex),
+      categorys:
+          _selectedCustomCategory != null
+              ? null // Không sử dụng default category khi có custom category
+              : Categorys.fromIndex(_transaction.categorysIndex),
+      customCategory: _selectedCustomCategory,
+      categoryGroup: _selectedCategoryGroup,
       transactionCategory: _transaction.category,
       transactionDate: _transaction.date,
     );

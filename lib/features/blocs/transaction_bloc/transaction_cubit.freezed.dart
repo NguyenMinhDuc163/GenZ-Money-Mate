@@ -22,7 +22,11 @@ mixin _$TransactionState {
     required TResult Function() loading,
     required TResult Function(String message) success,
     required TResult Function(String message) error,
-    required TResult Function(Categorys categorys, DateTime transactionDate,
+    required TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)
         loadTransaction,
   }) =>
@@ -33,7 +37,11 @@ mixin _$TransactionState {
     TResult? Function()? loading,
     TResult? Function(String message)? success,
     TResult? Function(String message)? error,
-    TResult? Function(Categorys categorys, DateTime transactionDate,
+    TResult? Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
   }) =>
@@ -44,7 +52,11 @@ mixin _$TransactionState {
     TResult Function()? loading,
     TResult Function(String message)? success,
     TResult Function(String message)? error,
-    TResult Function(Categorys categorys, DateTime transactionDate,
+    TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
     required TResult orElse(),
@@ -146,7 +158,11 @@ class _$InitialImpl implements _Initial {
     required TResult Function() loading,
     required TResult Function(String message) success,
     required TResult Function(String message) error,
-    required TResult Function(Categorys categorys, DateTime transactionDate,
+    required TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)
         loadTransaction,
   }) {
@@ -160,7 +176,11 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? loading,
     TResult? Function(String message)? success,
     TResult? Function(String message)? error,
-    TResult? Function(Categorys categorys, DateTime transactionDate,
+    TResult? Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
   }) {
@@ -174,7 +194,11 @@ class _$InitialImpl implements _Initial {
     TResult Function()? loading,
     TResult Function(String message)? success,
     TResult Function(String message)? error,
-    TResult Function(Categorys categorys, DateTime transactionDate,
+    TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
     required TResult orElse(),
@@ -275,7 +299,11 @@ class _$LoadingImpl implements Loading {
     required TResult Function() loading,
     required TResult Function(String message) success,
     required TResult Function(String message) error,
-    required TResult Function(Categorys categorys, DateTime transactionDate,
+    required TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)
         loadTransaction,
   }) {
@@ -289,7 +317,11 @@ class _$LoadingImpl implements Loading {
     TResult? Function()? loading,
     TResult? Function(String message)? success,
     TResult? Function(String message)? error,
-    TResult? Function(Categorys categorys, DateTime transactionDate,
+    TResult? Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
   }) {
@@ -303,7 +335,11 @@ class _$LoadingImpl implements Loading {
     TResult Function()? loading,
     TResult Function(String message)? success,
     TResult Function(String message)? error,
-    TResult Function(Categorys categorys, DateTime transactionDate,
+    TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
     required TResult orElse(),
@@ -431,7 +467,11 @@ class _$SuccessImpl implements Success {
     required TResult Function() loading,
     required TResult Function(String message) success,
     required TResult Function(String message) error,
-    required TResult Function(Categorys categorys, DateTime transactionDate,
+    required TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)
         loadTransaction,
   }) {
@@ -445,7 +485,11 @@ class _$SuccessImpl implements Success {
     TResult? Function()? loading,
     TResult? Function(String message)? success,
     TResult? Function(String message)? error,
-    TResult? Function(Categorys categorys, DateTime transactionDate,
+    TResult? Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
   }) {
@@ -459,7 +503,11 @@ class _$SuccessImpl implements Success {
     TResult Function()? loading,
     TResult Function(String message)? success,
     TResult Function(String message)? error,
-    TResult Function(Categorys categorys, DateTime transactionDate,
+    TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
     required TResult orElse(),
@@ -595,7 +643,11 @@ class _$ErrorImpl implements Error {
     required TResult Function() loading,
     required TResult Function(String message) success,
     required TResult Function(String message) error,
-    required TResult Function(Categorys categorys, DateTime transactionDate,
+    required TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)
         loadTransaction,
   }) {
@@ -609,7 +661,11 @@ class _$ErrorImpl implements Error {
     TResult? Function()? loading,
     TResult? Function(String message)? success,
     TResult? Function(String message)? error,
-    TResult? Function(Categorys categorys, DateTime transactionDate,
+    TResult? Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
   }) {
@@ -623,7 +679,11 @@ class _$ErrorImpl implements Error {
     TResult Function()? loading,
     TResult Function(String message)? success,
     TResult Function(String message)? error,
-    TResult Function(Categorys categorys, DateTime transactionDate,
+    TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
     required TResult orElse(),
@@ -694,9 +754,14 @@ abstract class _$$LoadTransactionImplCopyWith<$Res> {
       __$$LoadTransactionImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {Categorys categorys,
+      {Categorys? categorys,
+      CustomCategory? customCategory,
+      CategoryGroup? categoryGroup,
       DateTime transactionDate,
       Category transactionCategory});
+
+  $CustomCategoryCopyWith<$Res>? get customCategory;
+  $CategoryGroupCopyWith<$Res>? get categoryGroup;
 }
 
 /// @nodoc
@@ -712,15 +777,25 @@ class __$$LoadTransactionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? categorys = null,
+    Object? categorys = freezed,
+    Object? customCategory = freezed,
+    Object? categoryGroup = freezed,
     Object? transactionDate = null,
     Object? transactionCategory = null,
   }) {
     return _then(_$LoadTransactionImpl(
-      categorys: null == categorys
+      categorys: freezed == categorys
           ? _value.categorys
           : categorys // ignore: cast_nullable_to_non_nullable
-              as Categorys,
+              as Categorys?,
+      customCategory: freezed == customCategory
+          ? _value.customCategory
+          : customCategory // ignore: cast_nullable_to_non_nullable
+              as CustomCategory?,
+      categoryGroup: freezed == categoryGroup
+          ? _value.categoryGroup
+          : categoryGroup // ignore: cast_nullable_to_non_nullable
+              as CategoryGroup?,
       transactionDate: null == transactionDate
           ? _value.transactionDate
           : transactionDate // ignore: cast_nullable_to_non_nullable
@@ -731,18 +806,55 @@ class __$$LoadTransactionImplCopyWithImpl<$Res>
               as Category,
     ));
   }
+
+  /// Create a copy of TransactionState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CustomCategoryCopyWith<$Res>? get customCategory {
+    if (_value.customCategory == null) {
+      return null;
+    }
+
+    return $CustomCategoryCopyWith<$Res>(_value.customCategory!, (value) {
+      return _then(_value.copyWith(customCategory: value));
+    });
+  }
+
+  /// Create a copy of TransactionState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CategoryGroupCopyWith<$Res>? get categoryGroup {
+    if (_value.categoryGroup == null) {
+      return null;
+    }
+
+    return $CategoryGroupCopyWith<$Res>(_value.categoryGroup!, (value) {
+      return _then(_value.copyWith(categoryGroup: value));
+    });
+  }
 }
 
 /// @nodoc
 
 class _$LoadTransactionImpl implements LoadTransaction {
   const _$LoadTransactionImpl(
-      {required this.categorys,
+      {this.categorys,
+      this.customCategory,
+      this.categoryGroup,
       required this.transactionDate,
       required this.transactionCategory});
 
   @override
-  final Categorys categorys;
+  final Categorys? categorys;
+// Có thể null khi sử dụng custom category
+  @override
+  final CustomCategory? customCategory;
+// Custom category được chọn
+  @override
+  final CategoryGroup? categoryGroup;
+// Category group được chọn
   @override
   final DateTime transactionDate;
   @override
@@ -750,7 +862,7 @@ class _$LoadTransactionImpl implements LoadTransaction {
 
   @override
   String toString() {
-    return 'TransactionState.loadTransaction(categorys: $categorys, transactionDate: $transactionDate, transactionCategory: $transactionCategory)';
+    return 'TransactionState.loadTransaction(categorys: $categorys, customCategory: $customCategory, categoryGroup: $categoryGroup, transactionDate: $transactionDate, transactionCategory: $transactionCategory)';
   }
 
   @override
@@ -760,6 +872,10 @@ class _$LoadTransactionImpl implements LoadTransaction {
             other is _$LoadTransactionImpl &&
             (identical(other.categorys, categorys) ||
                 other.categorys == categorys) &&
+            (identical(other.customCategory, customCategory) ||
+                other.customCategory == customCategory) &&
+            (identical(other.categoryGroup, categoryGroup) ||
+                other.categoryGroup == categoryGroup) &&
             (identical(other.transactionDate, transactionDate) ||
                 other.transactionDate == transactionDate) &&
             (identical(other.transactionCategory, transactionCategory) ||
@@ -767,8 +883,8 @@ class _$LoadTransactionImpl implements LoadTransaction {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, categorys, transactionDate, transactionCategory);
+  int get hashCode => Object.hash(runtimeType, categorys, customCategory,
+      categoryGroup, transactionDate, transactionCategory);
 
   /// Create a copy of TransactionState
   /// with the given fields replaced by the non-null parameter values.
@@ -786,11 +902,16 @@ class _$LoadTransactionImpl implements LoadTransaction {
     required TResult Function() loading,
     required TResult Function(String message) success,
     required TResult Function(String message) error,
-    required TResult Function(Categorys categorys, DateTime transactionDate,
+    required TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)
         loadTransaction,
   }) {
-    return loadTransaction(categorys, transactionDate, transactionCategory);
+    return loadTransaction(categorys, customCategory, categoryGroup,
+        transactionDate, transactionCategory);
   }
 
   @override
@@ -800,12 +921,16 @@ class _$LoadTransactionImpl implements LoadTransaction {
     TResult? Function()? loading,
     TResult? Function(String message)? success,
     TResult? Function(String message)? error,
-    TResult? Function(Categorys categorys, DateTime transactionDate,
+    TResult? Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
   }) {
-    return loadTransaction?.call(
-        categorys, transactionDate, transactionCategory);
+    return loadTransaction?.call(categorys, customCategory, categoryGroup,
+        transactionDate, transactionCategory);
   }
 
   @override
@@ -815,13 +940,18 @@ class _$LoadTransactionImpl implements LoadTransaction {
     TResult Function()? loading,
     TResult Function(String message)? success,
     TResult Function(String message)? error,
-    TResult Function(Categorys categorys, DateTime transactionDate,
+    TResult Function(
+            Categorys? categorys,
+            CustomCategory? customCategory,
+            CategoryGroup? categoryGroup,
+            DateTime transactionDate,
             Category transactionCategory)?
         loadTransaction,
     required TResult orElse(),
   }) {
     if (loadTransaction != null) {
-      return loadTransaction(categorys, transactionDate, transactionCategory);
+      return loadTransaction(categorys, customCategory, categoryGroup,
+          transactionDate, transactionCategory);
     }
     return orElse();
   }
@@ -869,11 +999,15 @@ class _$LoadTransactionImpl implements LoadTransaction {
 
 abstract class LoadTransaction implements TransactionState {
   const factory LoadTransaction(
-      {required final Categorys categorys,
+      {final Categorys? categorys,
+      final CustomCategory? customCategory,
+      final CategoryGroup? categoryGroup,
       required final DateTime transactionDate,
       required final Category transactionCategory}) = _$LoadTransactionImpl;
 
-  Categorys get categorys;
+  Categorys? get categorys; // Có thể null khi sử dụng custom category
+  CustomCategory? get customCategory; // Custom category được chọn
+  CategoryGroup? get categoryGroup; // Category group được chọn
   DateTime get transactionDate;
   Category get transactionCategory;
 

@@ -44,7 +44,7 @@ class CustomItemButton extends StatelessWidget {
         color: backgroundItem,
         borderRadius: BorderRadius.circular(16),
         clipBehavior: Clip.antiAlias,
-        child: InkWell(
+        child: GestureDetector(
           onTap: onPressed,
           onLongPress: onLongPress,
           child: Container(
