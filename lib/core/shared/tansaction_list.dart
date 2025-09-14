@@ -78,7 +78,6 @@ class _TransactionListState extends State<TransactionList> {
                       // Nhóm transactions theo groupId
                       final Map<String, List<Transaction>> groupedTransactions =
                           {};
-                      final List<Transaction> ungroupedTransactions = [];
 
                       for (final transaction in widget.allTransactions) {
                         if (transaction.groupId.isNotEmpty) {
@@ -100,13 +99,10 @@ class _TransactionListState extends State<TransactionList> {
                                 transaction,
                               ];
                             }
-                          } else {
-                            // Nhóm không tồn tại, chuyển vào ungrouped
-                            ungroupedTransactions.add(transaction);
                           }
-                        } else {
-                          ungroupedTransactions.add(transaction);
+                          // Nếu nhóm không tồn tại, bỏ qua transaction này (không hiển thị)
                         }
+                        // Nếu transaction không có groupId, bỏ qua (không hiển thị)
                       }
 
                       return ListView(
@@ -127,13 +123,7 @@ class _TransactionListState extends State<TransactionList> {
                             );
                           }).toList(),
 
-                          // Hiển thị transactions không có nhóm
-                          if (ungroupedTransactions.isNotEmpty)
-                            _buildUngroupedSection(
-                              context,
-                              ungroupedTransactions,
-                              customCategories,
-                            ),
+                          // Không hiển thị transactions không có nhóm nữa
                         ],
                       );
                     },
@@ -238,89 +228,6 @@ class _TransactionListState extends State<TransactionList> {
     );
   }
 
-  Widget _buildUngroupedSection(
-    BuildContext context,
-    List<Transaction> transactions,
-    List<CustomCategory> customCategories,
-  ) {
-    const ungroupedId = 'ungrouped';
-    final isExpanded = _expandedGroups[ungroupedId] ?? false; // Mặc định đóng
-
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onLongPress: () => _showDeleteUngroupedDialog(context, transactions),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: ExpansionTile(
-          key: const ValueKey(ungroupedId),
-          initiallyExpanded: isExpanded,
-          onExpansionChanged: (expanded) {
-            setState(() {
-              _expandedGroups[ungroupedId] = expanded;
-            });
-          },
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          childrenPadding: const EdgeInsets.only(bottom: 8),
-          shape: const RoundedRectangleBorder(),
-          collapsedShape: const RoundedRectangleBorder(),
-          collapsedBackgroundColor: Colors.transparent,
-          leading: Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              FontAwesomeIcons.ellipsis,
-              size: 14,
-              color: Colors.white,
-            ),
-          ),
-          title: Text(
-            'transaction.ungrouped'.tr(),
-            style: AppTextStyle.subtitle.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colorScheme.onSurface,
-            ),
-          ),
-          subtitle: Text(
-            '${transactions.length} ${'transaction.items'.tr()}',
-            style: AppTextStyle.caption.copyWith(
-              color: context.colorScheme.outline,
-            ),
-          ),
-          trailing: Icon(
-            isExpanded ? Icons.expand_less : Icons.expand_more,
-            color: context.colorScheme.outline,
-          ),
-          children: [
-            // Danh sách transactions không có nhóm với padding thụt vào
-            ...transactions.map((transaction) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                  left: 32,
-                  right: 16,
-                  top: 2,
-                  bottom: 2,
-                ),
-                child: _buildTransactionItem(
-                  context,
-                  transaction,
-                  customCategories,
-                  isSmall: true, // Thêm tham số để làm nhỏ transaction
-                ),
-              );
-            }).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-
   CustomItemButton _buildTransactionItem(
     BuildContext context,
     Transaction transaction,
@@ -346,7 +253,8 @@ class _TransactionListState extends State<TransactionList> {
     final displayName =
         customCategory != null
             ? customCategory.name
-            : defaultCategory?.getLocalizedName() ?? 'Khác';
+            : defaultCategory?.getLocalizedName() ??
+                'transaction_list.others'.tr();
     final displayIcon =
         customCategory != null
             ? customCategory.icon
@@ -392,52 +300,6 @@ class _TransactionListState extends State<TransactionList> {
         ],
       ),
     );
-  }
-
-  void _showDeleteUngroupedDialog(
-    BuildContext context,
-    List<Transaction> transactions,
-  ) {
-    Alerts.showAlertDialog(
-      context: context,
-      title: 'Xóa tất cả giao dịch không có nhóm',
-      message:
-          'Bạn có chắc chắn muốn xóa tất cả ${transactions.length} giao dịch không có nhóm? Hành động này không thể hoàn tác.',
-      onOk: () {
-        _deleteUngroupedTransactions(context, transactions);
-      },
-      onCancel: () {},
-    );
-  }
-
-  void _deleteUngroupedTransactions(
-    BuildContext context,
-    List<Transaction> transactions,
-  ) async {
-    try {
-      // Xóa tất cả transactions không có nhóm
-      for (final transaction in transactions) {
-        context.read<TransactionCubit>().deleteTransaction(transaction.uuid!);
-      }
-
-      // Hiển thị thông báo thành công
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Đã xóa ${transactions.length} giao dịch không có nhóm',
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } catch (e) {
-      // Hiển thị thông báo lỗi
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi khi xóa giao dịch: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   CurrencyType _getCurrencyTypeFromString(String currencyString) {
@@ -539,7 +401,13 @@ class _TransactionListState extends State<TransactionList> {
         'Deleting group: ${group.getLocalizedName()} with ${transactions.length} transactions',
       );
 
-      // Chỉ xóa nhóm trước, transactions sẽ tự động chuyển vào ungrouped
+      // Xóa tất cả transactions trong nhóm trước
+      for (final transaction in transactions) {
+        print('Deleting transaction: ${transaction.uuid}');
+        context.read<TransactionCubit>().deleteTransaction(transaction.uuid!);
+      }
+
+      // Sau đó xóa nhóm
       print('Deleting group: ${group.uuid}');
       context.read<CategoryGroupCubit>().deleteCategoryGroup(group.uuid!);
 
@@ -547,9 +415,7 @@ class _TransactionListState extends State<TransactionList> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'category_group.delete_with_transactions_success'.tr(
-              namedArgs: {'count': transactions.length.toString()},
-            ),
+            'Đã xóa nhóm "${group.getLocalizedName()}" và ${transactions.length} giao dịch',
           ),
           backgroundColor: Colors.green,
         ),
@@ -559,7 +425,7 @@ class _TransactionListState extends State<TransactionList> {
       // Hiển thị thông báo lỗi
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('category_group.delete_with_transactions_error'.tr()),
+          content: Text('Lỗi khi xóa nhóm: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -624,7 +490,7 @@ class _TransactionListState extends State<TransactionList> {
     Alerts.showAlertDialog(
       context: context,
       title: 'transaction.delete_title'.tr(),
-      message: 'Are you sure you want to delete this transaction?',
+      message: 'transaction.delete_confirm'.tr(),
       onOk: () {
         debugPrint('transaction.uuid: ${transaction.uuid}');
         context.read<TransactionCubit>().deleteTransaction(transaction.uuid!);

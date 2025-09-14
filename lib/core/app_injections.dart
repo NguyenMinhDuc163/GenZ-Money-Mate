@@ -17,6 +17,7 @@ import '../features/blocs/themes_bloc/themes_cubit.dart';
 import '../features/blocs/transaction_bloc/transaction_cubit.dart';
 import '../features/blocs/custom_category_bloc/custom_category_cubit.dart';
 import '../features/blocs/category_group_bloc/category_group_cubit.dart';
+import '../features/ranking/bloc/ranking_cubit.dart';
 import '../features/home/data/main_repository/main_base_repository.dart';
 import '../features/home/data/main_repository/main_repository.dart';
 import '../features/home/data/state_repository/state_base_repository.dart';
@@ -36,6 +37,7 @@ import '../features/transaction/data/repository/category_group_repository.dart';
 import 'firebase_options.dart';
 import 'models/transaction_hive_model.dart';
 import 'models/category_group_hive_model.dart';
+import 'models/custom_category_hive_model.dart';
 import 'service/network_info.dart';
 import '../features/blocs/language_bloc/language_cubit.dart';
 import '../features/settings/data/language_repository/language_base_repository.dart';
@@ -144,6 +146,14 @@ Future<void> initAppConfig() async {
     () => CategoryGroupCubit(categoryGroupRepository: getIt()),
   );
 
+  //=> RankingCubit
+  getIt.registerFactory(
+    () => RankingCubit(
+      mainRepository: getIt<MainBaseRepository>(),
+      categoryGroupRepository: getIt<CategoryGroupBaseRepository>(),
+    ),
+  );
+
   //=>
   //AuthProfileBaseRepository (AuthProfileRepository)
   final AuthBaseRepository authProfileRepository = AuthRepository(
@@ -216,6 +226,14 @@ Future<void> initAppConfig() async {
     boxName: 'category_groups',
     onRegisterAdapter: () {
       Hive.registerAdapter(CategoryGroupHiveAdapter());
+    },
+  );
+
+  //Hive for CustomCategory
+  await getIt<DbHiveClientBase>().initDb<CustomCategoryHive>(
+    boxName: 'custom_categories',
+    onRegisterAdapter: () {
+      Hive.registerAdapter(CustomCategoryHiveAdapter());
     },
   );
 }

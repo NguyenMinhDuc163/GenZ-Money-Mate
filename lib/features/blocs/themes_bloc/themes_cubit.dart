@@ -11,8 +11,8 @@ class ThemesCubit extends Cubit<ThemesState> {
   final ThemesBaseRepository _themesRepository;
 
   ThemesCubit({required ThemesBaseRepository themesRepository})
-      : _themesRepository = themesRepository,
-        super(const ThemesState.loadedThemeMode(ThemeMode.system)) {
+    : _themesRepository = themesRepository,
+      super(const ThemesState.loadedThemeMode(ThemeMode.dark)) {
     getTheme();
   }
 

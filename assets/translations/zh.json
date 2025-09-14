@@ -92,33 +92,27 @@
   "transaction": {
     "amount_hint": "0.00",
     "delete_title": "删除交易",
+    "delete_confirm": "您确定要删除此交易吗？",
     "updated_success": "更新交易成功",
     "added_success": "新增交易成功",
     "deleted_success": "删除交易成功",
     "select_category": "选择类别",
     "select_group": "选择组",
     "items": "项",
-    "ungrouped": "未分组"
-  },
-  "category_group": {
-    "create_new": "创建新组",
-    "name": "组名",
-    "name_hint": "输入组名",
-    "name_required": "请输入组名",
-    "select_icon": "选择图标",
-    "select_color": "选择颜色",
-    "created_success": "创建组成功",
-    "updated_success": "更新组成功",
-    "deleted_success": "删除组成功"
+    "ungrouped": "未分组",
+    "validation": {
+      "select_group_required": "保存交易前请先选择组",
+      "amount_required": "请输入有效金额"
+    }
   },
   "router": {
     "no_route": "没有适用于 {{}} 的路由"
   },
   "date": {
-    "today_at": "今天，{{time}}",
-    "yesterday_at": "昨天，{{time}}",
-    "mmm_d_at": "{{date}}，{{time}}",
-    "y_mmm_d_at": "{{date}} {{time}}"
+    "today_at": "今天，{time}",
+    "yesterday_at": "昨天，{time}",
+    "mmm_d_at": "{date}，{time}",
+    "y_mmm_d_at": "{date} {time}"
   },
   "user": {
     "guest": "访客"
@@ -173,6 +167,48 @@
     "transport": "出行",
     "health": "健康",
     "education": "教育",
+    "others": "其他"
+  },
+  "ranking": {
+    "title": "储蓄排名",
+    "loading": "加载中...",
+    "error_title": "发生错误",
+    "no_data": "暂无数据",
+    "no_data_description": "添加一些交易记录来查看您的储蓄排名",
+    "total_savings": "总储蓄",
+    "total_points": "总积分",
+    "points": "积分",
+    "total_income": "总收入",
+    "total_expense": "总支出",
+    "group_savings": "分组储蓄",
+    "all_ranks": "所有等级",
+    "current": "当前",
+    "progress_to_next": "升级进度",
+    "progress": "进度",
+    "need_more": "还需 {amount}",
+    "need_more_points": "需要更多积分",
+    "no_savings_warning": "暂无储蓄",
+    "max_rank_achieved": "已达到最高等级！",
+    "max_rank_description": "您已达到最高排名。恭喜！",
+    "spent": "已花费",
+    "limit": "限额",
+    "remaining": "剩余",
+    "bronze_saver": "青铜储蓄者",
+    "silver_saver": "白银储蓄者",
+    "gold_saver": "黄金储蓄者",
+    "platinum_saver": "铂金储蓄者",
+    "diamond_saver": "钻石储蓄者",
+    "bronze_description": "开始您的储蓄之旅",
+    "silver_description": "有计划地储蓄",
+    "gold_description": "储蓄专家",
+    "platinum_description": "财务管理大师",
+    "diamond_description": "储蓄传奇"
+  },
+  "transaction_list": {
+    "delete_ungrouped_title": "删除所有未分组交易",
+    "delete_ungrouped_confirm": "您确定要删除所有 {count} 笔未分组交易吗？此操作无法撤销。",
+    "delete_ungrouped_success": "已删除 {count} 笔未分组交易",
+    "delete_error": "删除交易时出错：{error}",
     "others": "其他"
   }
 }

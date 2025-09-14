@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -114,12 +115,35 @@ class TransactionCubit extends Cubit<TransactionState> {
   void addOrUpdateTransaction() {
     debugPrint(_transaction.toString());
 
-    emit(const TransactionState.loading());
+    // Validation: Kiểm tra xem đã chọn nhóm chưa
+    final hasGroup =
+        _selectedCategoryGroup != null ||
+        (_selectedCustomCategory != null &&
+            _selectedCustomCategory!.groupId.isNotEmpty);
 
+    if (!hasGroup) {
+      emit(
+         TransactionState.error(
+          'transaction.validation.select_group_required'.tr(),
+        ),
+      );
+      return;
+    }
+
+    // Validation: Kiểm tra xem đã nhập số tiền chưa
     final amount =
         _amountController.text.isNotEmpty
             ? _amountController.text.toUnFormattedString().toDouble()
             : null;
+
+    if (amount == null || amount <= 0) {
+      emit(
+         TransactionState.error('transaction.validation.amount_required'.tr()),
+      );
+      return;
+    }
+
+    emit(const TransactionState.loading());
 
     // Lấy loại tiền hiện tại dựa trên locale
     final currentLocale = Intl.getCurrentLocale();
@@ -129,7 +153,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     );
 
     final transactionUpdated = _transaction.copyWith(
-      amount: amount ?? 0.0,
+      amount: amount,
       originalCurrency: currentCurrencyString, // Lưu loại tiền gốc
       customCategoryId:
           _selectedCustomCategory?.uuid ?? '', // Lưu custom category ID

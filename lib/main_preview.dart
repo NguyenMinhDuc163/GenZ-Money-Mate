@@ -58,7 +58,7 @@ class DailyTrackerApp extends StatelessWidget {
         buildWhen: (previous, current) => current is LoadedThemeMode,
         builder: (context, state) {
           final themeMode = context.read<ThemesCubit>().state.maybeMap(
-            orElse: () => ThemeMode.system,
+            orElse: () => ThemeMode.dark,
             loadedThemeMode: (state) => state.themeMode,
           );
           Intl.defaultLocale = context.locale.toLanguageTag();

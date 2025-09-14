@@ -92,13 +92,18 @@
   "transaction": {
     "amount_hint": "0.00",
     "delete_title": "Xóa giao dịch",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa giao dịch này?",
     "updated_success": "Cập nhật giao dịch thành công",
     "added_success": "Thêm giao dịch thành công",
     "deleted_success": "Xóa giao dịch thành công",
     "select_category": "Chọn danh mục",
     "select_group": "Chọn nhóm",
     "items": "mục",
-    "ungrouped": "Không có nhóm"
+    "ungrouped": "Không có nhóm",
+    "validation": {
+      "select_group_required": "Vui lòng chọn nhóm trước khi lưu giao dịch",
+      "amount_required": "Vui lòng nhập số tiền hợp lệ"
+    }
   },
   "custom_category": {
     "create_new": "Tạo danh mục mới",
@@ -162,6 +167,48 @@
     "transport": "Giao thông",
     "health": "Y tế",
     "education": "Giáo dục",
+    "others": "Khác"
+  },
+  "ranking": {
+    "title": "Xếp hạng tiết kiệm",
+    "loading": "Đang tải...",
+    "error_title": "Có lỗi xảy ra",
+    "no_data": "Chưa có dữ liệu",
+    "no_data_description": "Hãy thêm giao dịch để xem xếp hạng tiết kiệm của bạn",
+    "total_savings": "Tổng tiết kiệm",
+    "total_points": "Tổng điểm",
+    "points": "điểm",
+    "total_income": "Tổng thu nhập",
+    "total_expense": "Tổng chi tiêu",
+    "group_savings": "Tiết kiệm theo nhóm",
+    "all_ranks": "Tất cả hạng",
+    "current": "Hiện tại",
+    "progress_to_next": "Tiến độ lên hạng",
+    "progress": "Tiến độ",
+    "need_more": "Cần thêm {amount}",
+    "need_more_points": "Cần thêm điểm",
+    "no_savings_warning": "Chưa có tiết kiệm",
+    "max_rank_achieved": "Đã đạt hạng cao nhất!",
+    "max_rank_description": "Bạn đã đạt được hạng xếp hạng cao nhất. Chúc mừng!",
+    "spent": "Đã chi",
+    "limit": "Hạn mức",
+    "remaining": "Còn lại",
+    "bronze_saver": "Hạng Đồng",
+    "silver_saver": "Hạng Bạc",
+    "gold_saver": "Hạng Vàng",
+    "platinum_saver": "Hạng Bạch kim",
+    "diamond_saver": "Hạng Kim cương",
+    "bronze_description": "Bắt đầu hành trình tiết kiệm",
+    "silver_description": "Tiết kiệm có kế hoạch",
+    "gold_description": "Chuyên gia tiết kiệm",
+    "platinum_description": "Bậc thầy quản lý tài chính",
+    "diamond_description": "Huyền thoại tiết kiệm"
+  },
+  "transaction_list": {
+    "delete_ungrouped_title": "Xóa tất cả giao dịch không có nhóm",
+    "delete_ungrouped_confirm": "Bạn có chắc chắn muốn xóa tất cả {count} giao dịch không có nhóm? Hành động này không thể hoàn tác.",
+    "delete_ungrouped_success": "Đã xóa {count} giao dịch không có nhóm",
+    "delete_error": "Lỗi khi xóa giao dịch: {error}",
     "others": "Khác"
   }
 
