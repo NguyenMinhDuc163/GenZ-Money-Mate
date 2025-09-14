@@ -19,6 +19,7 @@ class Transaction with _$Transaction {
     required int categorysIndex,
     required Category category,
     @Default('USD') String originalCurrency, // Loại tiền gốc
+    @Default('') String customCategoryId, // ID của custom category (nếu có)
   }) = _Transaction;
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>
@@ -47,6 +48,7 @@ class Transaction with _$Transaction {
               ? Category.expense
               : Category.income,
       originalCurrency: transactionHive.originalCurrency ?? 'USD',
+      customCategoryId: transactionHive.customCategoryId ?? '',
     );
   }
 }
@@ -136,6 +138,7 @@ extension TransactionExtension on Transaction {
               ? CategoryHive.expense
               : CategoryHive.income,
       originalCurrency: originalCurrency,
+      customCategoryId: customCategoryId,
     );
   }
 }

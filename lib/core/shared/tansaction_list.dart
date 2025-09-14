@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../features/blocs/transaction_bloc/transaction_cubit.dart';
+import '../../features/blocs/custom_category_bloc/custom_category_cubit.dart';
 import '../enum/enum.dart';
 import '../extension/extension.dart';
 import '../models/transaction_model.dart';
+import '../models/custom_category_model.dart';
 import '../router/app_route.dart';
 import '../router/router.dart';
 import '../styles/app_text_style.dart';
@@ -36,14 +38,24 @@ class TransactionList extends StatelessWidget {
                   ),
                 ),
               )
-              : ListView.builder(
-                itemCount: allTransactions.length,
-                itemBuilder: (_, index) {
-                  final transaction = allTransactions[index];
-                  final category = Categorys.fromIndex(
-                    transaction.categorysIndex,
+              : BlocBuilder<CustomCategoryCubit, CustomCategoryState>(
+                builder: (context, customCategoryState) {
+                  final customCategories = customCategoryState.maybeWhen(
+                    loaded: (categories) => categories,
+                    orElse: () => <CustomCategory>[],
                   );
-                  return _buildTransactionItem(context, transaction, category);
+
+                  return ListView.builder(
+                    itemCount: allTransactions.length,
+                    itemBuilder: (_, index) {
+                      final transaction = allTransactions[index];
+                      return _buildTransactionItem(
+                        context,
+                        transaction,
+                        customCategories,
+                      );
+                    },
+                  );
                 },
               ),
     );
@@ -52,14 +64,43 @@ class TransactionList extends StatelessWidget {
   CustomItemButton _buildTransactionItem(
     BuildContext context,
     Transaction transaction,
-    Categorys category,
+    List<CustomCategory> customCategories,
   ) {
+    // Kiểm tra xem có custom category không
+    CustomCategory? customCategory;
+    Categorys? defaultCategory;
+
+    if (transaction.customCategoryId.isNotEmpty) {
+      // Tìm custom category
+      customCategory = customCategories.firstWhere(
+        (cat) => cat.uuid == transaction.customCategoryId,
+        orElse: () => CustomCategory.empty(),
+      );
+    } else {
+      // Sử dụng default category
+      defaultCategory = Categorys.fromIndex(transaction.categorysIndex);
+    }
+
+    // Xác định thông tin hiển thị
+    final displayName =
+        customCategory != null
+            ? customCategory.name
+            : defaultCategory?.getLocalizedName() ?? 'Khác';
+    final displayIcon =
+        customCategory != null
+            ? customCategory.icon
+            : defaultCategory?.icon ?? FontAwesomeIcons.ellipsis;
+    final displayColor =
+        customCategory != null
+            ? customCategory.color
+            : defaultCategory?.backgroundIcon ?? Colors.grey;
+
     return CustomItemButton(
-      text: category.getLocalizedName(),
-      icon: category.icon,
+      text: displayName,
+      icon: displayIcon,
       iconColor: Colors.white,
       backgroundItem: context.colorScheme.surface,
-      backgroundIcon: category.backgroundIcon,
+      backgroundIcon: displayColor,
       onLongPress:
           () => isViewOnly ? null : _showModalSheet(context, transaction),
       trailing: Column(
@@ -134,6 +175,9 @@ class TransactionList extends StatelessWidget {
     context.pop();
     context.read<TransactionCubit>().isEditing = true;
     context.read<TransactionCubit>().transaction = transaction;
+    context
+        .read<TransactionCubit>()
+        .init(); // Gọi init() sau khi set transaction
     context.pushNamed(RoutesName.transaction);
   }
 

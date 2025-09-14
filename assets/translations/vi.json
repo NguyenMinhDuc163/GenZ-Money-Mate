@@ -23,7 +23,9 @@
     "full_name_required": "Họ và tên không được để trống",
     "full_name_hint": "vd: Nguyễn Văn A",
     "title": "Hồ sơ",
-    "save": "Lưu"
+    "save": "Lưu",
+    "no_internet": "Không có kết nối internet",
+    "updated_success": "Cập nhật hồ sơ thành công"
   },
   "category": {
     "food": "Ăn uống",
@@ -74,7 +76,8 @@
     "delete": "Xóa",
     "done": "Hoàn thành",
     "start_date": "Ngày bắt đầu",
-    "end_date": "Ngày kết thúc"
+    "end_date": "Ngày kết thúc",
+    "create": "Tạo"
   },
   "app": {
     "title": "Daily Tracker",
@@ -91,7 +94,25 @@
     "delete_title": "Xóa giao dịch",
     "updated_success": "Cập nhật giao dịch thành công",
     "added_success": "Thêm giao dịch thành công",
-    "deleted_success": "Xóa giao dịch thành công"
+    "deleted_success": "Xóa giao dịch thành công",
+    "select_category": "Chọn danh mục"
+  },
+  "custom_category": {
+    "create_new": "Tạo danh mục mới",
+    "name": "Tên danh mục",
+    "name_hint": "Nhập tên danh mục",
+    "name_required": "Vui lòng nhập tên danh mục",
+    "select_icon": "Chọn biểu tượng",
+    "select_color": "Chọn màu sắc",
+    "my_categories": "Danh mục của tôi",
+    "default_categories": "Danh mục mặc định",
+    "created_success": "Tạo danh mục thành công",
+    "updated_success": "Cập nhật danh mục thành công",
+    "deleted_success": "Xóa danh mục thành công",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa danh mục này?",
+    "delete_confirm_title": "Xác nhận xóa",
+    "delete": "Xóa",
+    "cancel": "Hủy"
   },
   "router": {
     "no_route": "Không có route cho {{}}"
@@ -104,6 +125,11 @@
   },
   "user": {
     "guest": "Khách"
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Tiếng Việt",
+    "chinese": "中文"
   }
 
 }

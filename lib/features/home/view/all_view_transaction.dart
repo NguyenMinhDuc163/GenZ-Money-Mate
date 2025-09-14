@@ -8,6 +8,7 @@ import '../../../core/shared/shared.dart';
 import '../../blocs/main_bloc/main_cubit.dart';
 import '../../blocs/transaction_bloc/transaction_cubit.dart';
 import '../../blocs/language_bloc/language_cubit.dart';
+import '../../blocs/custom_category_bloc/custom_category_cubit.dart';
 
 class AllViewTransaction extends StatefulWidget {
   const AllViewTransaction({super.key});
@@ -21,6 +22,8 @@ class _AllViewTransactionState extends State<AllViewTransaction> {
   void initState() {
     super.initState();
     context.read<MainCubit>().getAll(TypeShow.all);
+    // Load custom categories để hiển thị đúng trong transaction list
+    context.read<CustomCategoryCubit>().getAllCustomCategories();
   }
 
   @override

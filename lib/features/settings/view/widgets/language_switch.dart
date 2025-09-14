@@ -17,13 +17,13 @@ class LanguageSwitch extends StatelessWidget {
         String title;
         switch (current.languageCode) {
           case 'vi':
-            title = 'Tiếng Việt';
+            title = 'language.vietnamese'.tr();
             break;
           case 'zh':
-            title = '中文';
+            title = 'language.chinese'.tr();
             break;
           default:
-            title = 'English';
+            title = 'language.english'.tr();
         }
         return ItemSettings(
           title: title,
@@ -32,10 +32,19 @@ class LanguageSwitch extends StatelessWidget {
           trailing: DropdownButton<Locale>(
             value: current,
             underline: const SizedBox.shrink(),
-            items: const [
-              DropdownMenuItem(value: Locale('en'), child: Text('English')),
-              DropdownMenuItem(value: Locale('vi'), child: Text('Tiếng Việt')),
-              DropdownMenuItem(value: Locale('zh'), child: Text('中文')),
+            items: [
+              DropdownMenuItem(
+                value: Locale('en'),
+                child: Text('language.english'.tr()),
+              ),
+              DropdownMenuItem(
+                value: Locale('vi'),
+                child: Text('language.vietnamese'.tr()),
+              ),
+              DropdownMenuItem(
+                value: Locale('zh'),
+                child: Text('language.chinese'.tr()),
+              ),
             ],
             onChanged: (locale) async {
               if (locale == null) return;

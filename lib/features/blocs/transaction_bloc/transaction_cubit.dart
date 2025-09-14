@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/enum/enum.dart';
 import '../../../../core/extension/extension.dart';
 import '../../../../core/models/transaction_model.dart';
+import '../../../../core/models/custom_category_model.dart';
 import '../../../../core/service/currency_service.dart';
 import '../../transaction/data/repository/transaction_base_repository.dart';
 
@@ -28,19 +29,63 @@ class TransactionCubit extends Cubit<TransactionState> {
   final TextEditingController _amountController = TextEditingController();
   TextEditingController get amountController => _amountController;
 
+  // Thêm biến để lưu custom category được chọn
+  CustomCategory? _selectedCustomCategory;
+
   void init() {
     if (_isEditing) {
       _amountController.text = _transaction.amount.toCurrencyString();
+      // Custom category sẽ được load từ UI khi custom categories đã sẵn sàng
+      _selectedCustomCategory = null;
     } else {
       _amountController.clear();
       _transaction = Transaction.empty();
+      _selectedCustomCategory = null;
     }
     emit(_buildState());
   }
 
   void onCategorysChanged(Categorys categorys) {
-    _transaction = _transaction.copyWith(categorysIndex: categorys.index);
+    _transaction = _transaction.copyWith(
+      categorysIndex: categorys.index,
+      customCategoryId: '', // Reset custom category khi chọn default category
+    );
+    _selectedCustomCategory = null;
     emit(_buildState());
+  }
+
+  void onCustomCategoryChanged(CustomCategory customCategory) {
+    _selectedCustomCategory = customCategory;
+    _transaction = _transaction.copyWith(
+      categorysIndex: -1, // Đánh dấu là custom category
+      customCategoryId: customCategory.uuid!,
+    );
+    emit(_buildState());
+  }
+
+  /// Load custom category khi edit transaction
+  void loadCustomCategoryForEditing(List<CustomCategory> customCategories) {
+    debugPrint('loadCustomCategoryForEditing called');
+    debugPrint('_isEditing: $_isEditing');
+    debugPrint(
+      '_transaction.customCategoryId: ${_transaction.customCategoryId}',
+    );
+    debugPrint('customCategories.length: ${customCategories.length}');
+
+    if (_isEditing && _transaction.customCategoryId.isNotEmpty) {
+      try {
+        _selectedCustomCategory = customCategories.firstWhere(
+          (cat) => cat.uuid == _transaction.customCategoryId,
+        );
+        debugPrint('Found custom category: ${_selectedCustomCategory?.name}');
+        emit(_buildState());
+      } catch (e) {
+        // Nếu không tìm thấy custom category, set null
+        debugPrint('Custom category not found: $e');
+        _selectedCustomCategory = null;
+        emit(_buildState());
+      }
+    }
   }
 
   void onTransactionCategoryChanged(Category category) {
@@ -73,6 +118,8 @@ class TransactionCubit extends Cubit<TransactionState> {
     final transactionUpdated = _transaction.copyWith(
       amount: amount ?? 0.0,
       originalCurrency: currentCurrencyString, // Lưu loại tiền gốc
+      customCategoryId:
+          _selectedCustomCategory?.uuid ?? '', // Lưu custom category ID
     );
 
     Future.delayed(const Duration(milliseconds: 300)).then((_) {
@@ -106,8 +153,19 @@ class TransactionCubit extends Cubit<TransactionState> {
   }
 
   TransactionState _buildState() {
+    debugPrint('_buildState called');
+    debugPrint('_selectedCustomCategory: ${_selectedCustomCategory?.name}');
+    debugPrint(
+      '_transaction.customCategoryId: ${_transaction.customCategoryId}',
+    );
+    debugPrint('_transaction.categorysIndex: ${_transaction.categorysIndex}');
+
     return TransactionState.loadTransaction(
-      categorys: Categorys.fromIndex(_transaction.categorysIndex),
+      categorys:
+          _selectedCustomCategory != null
+              ? null // Không sử dụng default category khi có custom category
+              : Categorys.fromIndex(_transaction.categorysIndex),
+      customCategory: _selectedCustomCategory,
       transactionCategory: _transaction.category,
       transactionDate: _transaction.date,
     );

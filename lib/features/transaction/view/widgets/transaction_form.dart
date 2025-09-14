@@ -6,10 +6,14 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/enum/enum.dart';
 import '../../../../core/extension/extension.dart';
+import '../../../../core/models/custom_category_model.dart';
 import '../../../../core/router/router.dart';
 import '../../../../core/shared/shared.dart';
 import '../../../../core/utils/alerts/alerts.dart';
 import '../../../blocs/transaction_bloc/transaction_cubit.dart';
+import '../../../blocs/custom_category_bloc/custom_category_cubit.dart';
+import 'create_custom_category_dialog.dart';
+import 'custom_category_item.dart';
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({super.key});
@@ -22,6 +26,12 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   void initState() {
     context.read<TransactionCubit>().init();
+
+    // Load custom categories và load custom category cho editing
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CustomCategoryCubit>().getAllCustomCategories();
+    });
+
     super.initState();
   }
 
@@ -29,6 +39,33 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     const iconSize = 16.0;
     const iconItemHeight = 35.0;
+
+    // Lắng nghe khi custom categories được load để load custom category cho editing
+    return BlocListener<CustomCategoryCubit, CustomCategoryState>(
+      listener: (context, state) {
+        debugPrint('CustomCategoryCubit state changed: $state');
+        state.maybeWhen(
+          loaded: (customCategories) {
+            // Load custom category cho transaction đang edit
+            debugPrint('Custom categories loaded: ${customCategories.length}');
+            context.read<TransactionCubit>().loadCustomCategoryForEditing(
+              customCategories,
+            );
+          },
+          orElse: () {
+            debugPrint('CustomCategoryCubit state: $state');
+          },
+        );
+      },
+      child: _buildForm(context, iconSize, iconItemHeight),
+    );
+  }
+
+  Widget _buildForm(
+    BuildContext context,
+    double iconSize,
+    double iconItemHeight,
+  ) {
     const iconItemWidth = 35.0;
     const padding = EdgeInsets.symmetric(horizontal: 12, vertical: 15);
     final backgroundItem = context.colorScheme.surface;
@@ -38,6 +75,10 @@ class _TransactionFormState extends State<TransactionForm> {
       builder: (context, state) {
         final categorys = state.mapOrNull(
           loadTransaction: (state) => state.categorys,
+        );
+
+        final customCategory = state.mapOrNull(
+          loadTransaction: (state) => state.customCategory,
         );
 
         final transactionCategory = state.mapOrNull(
@@ -57,15 +98,25 @@ class _TransactionFormState extends State<TransactionForm> {
             Column(
               children: [
                 CustomItemButton(
-                  text: categorys!.getLocalizedName(),
+                  text:
+                      customCategory != null
+                          ? customCategory.name
+                          : categorys?.getLocalizedName() ??
+                              'transaction.select_category'.tr(),
                   padding: padding,
                   iconSize: iconSize,
                   iconColor: Colors.white,
                   iconItemWidth: iconItemWidth,
                   iconItemHeight: iconItemHeight,
-                  backgroundIcon: categorys.backgroundIcon,
+                  backgroundIcon:
+                      customCategory?.color ??
+                      categorys?.backgroundIcon ??
+                      Colors.grey,
                   backgroundItem: backgroundItem,
-                  icon: categorys.icon,
+                  icon:
+                      customCategory?.icon ??
+                      categorys?.icon ??
+                      FontAwesomeIcons.ellipsis,
                   onPressed: () => _showModalSheetCategory(context),
                 ),
                 CustomItemButton(
@@ -136,34 +187,132 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void _showModalSheetCategory(BuildContext context) {
+    // Load custom categories khi mở modal
+    context.read<CustomCategoryCubit>().getAllCustomCategories();
+
     Alerts.showSheet(
       context: context,
-      child: Expanded(
-        child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: categorys.length,
-          itemBuilder: (context, index) {
-            final Categorys category = categorys[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: CustomItemButton(
-                text: category.getLocalizedName(),
-                icon: category.icon,
-                iconColor: Colors.white,
-                backgroundItem: Colors.transparent,
-                backgroundIcon: category.backgroundIcon,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10,
+      child: BlocConsumer<CustomCategoryCubit, CustomCategoryState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            success: (message) {
+              Alerts.showToastMsg(context, message.tr());
+            },
+            error: (message) {
+              Alerts.showToastMsg(context, message);
+            },
+            orElse: () {},
+          );
+        },
+        builder: (context, customCategoryState) {
+          final customCategories = customCategoryState.maybeWhen(
+            loaded: (categories) => categories,
+            orElse: () => <CustomCategory>[],
+          );
+
+          return Expanded(
+            child: Column(
+              children: [
+                // Header với nút tạo category mới
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'transaction.select_category'.tr(),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          context.pop();
+                          await showDialog(
+                            context: context,
+                            builder:
+                                (context) => const CreateCustomCategoryDialog(),
+                          );
+                        },
+                        icon: const Icon(Icons.add),
+                        tooltip: 'custom_category.create_new'.tr(),
+                      ),
+                    ],
+                  ),
                 ),
-                onPressed: () {
-                  context.read<TransactionCubit>().onCategorysChanged(category);
-                  context.pop();
-                },
-              ),
-            );
-          },
-        ),
+
+                // Danh sách categories
+                Expanded(
+                  child: ListView(
+                    children: [
+                      // Custom Categories
+                      if (customCategories.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Text(
+                            'custom_category.my_categories'.tr(),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ...customCategories.map((customCategory) {
+                          return CustomCategoryItem(
+                            customCategory: customCategory,
+                            onTap: () {
+                              context
+                                  .read<TransactionCubit>()
+                                  .onCustomCategoryChanged(customCategory);
+                              context.pop();
+                            },
+                          );
+                        }).toList(),
+
+                        const Divider(),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Text(
+                            'custom_category.default_categories'.tr(),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+
+                      // Default Categories
+                      ...categorys.map((category) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: CustomItemButton(
+                            text: category.getLocalizedName(),
+                            icon: category.icon,
+                            iconColor: Colors.white,
+                            backgroundItem: Colors.transparent,
+                            backgroundIcon: category.backgroundIcon,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
+                            onPressed: () {
+                              context
+                                  .read<TransactionCubit>()
+                                  .onCategorysChanged(category);
+                              context.pop();
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

@@ -23,7 +23,9 @@
     "full_name_required": "姓名不能为空",
     "full_name_hint": "例如：Nguyễn Văn A",
     "title": "个人资料",
-    "save": "保存"
+    "save": "保存",
+    "no_internet": "无网络连接",
+    "updated_success": "个人资料更新成功"
   },
   "category": {
     "food": "饮食",
@@ -74,7 +76,8 @@
     "delete": "删除",
     "done": "完成",
     "start_date": "开始日期",
-    "end_date": "结束日期"
+    "end_date": "结束日期",
+    "create": "创建"
   },
   "app": {
     "title": "每日追踪",
@@ -91,7 +94,8 @@
     "delete_title": "删除交易",
     "updated_success": "更新交易成功",
     "added_success": "新增交易成功",
-    "deleted_success": "删除交易成功"
+    "deleted_success": "删除交易成功",
+    "select_category": "选择类别"
   },
   "router": {
     "no_route": "没有适用于 {{}} 的路由"
@@ -104,5 +108,27 @@
   },
   "user": {
     "guest": "访客"
+  },
+  "custom_category": {
+    "create_new": "创建新类别",
+    "name": "类别名称",
+    "name_hint": "输入类别名称",
+    "name_required": "请输入类别名称",
+    "select_icon": "选择图标",
+    "select_color": "选择颜色",
+    "my_categories": "我的类别",
+    "default_categories": "默认类别",
+    "created_success": "类别创建成功",
+    "updated_success": "类别更新成功",
+    "deleted_success": "类别删除成功",
+    "delete_confirm": "您确定要删除此类别吗？",
+    "delete_confirm_title": "确认删除",
+    "delete": "删除",
+    "cancel": "取消"
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Tiếng Việt",
+    "chinese": "中文"
   }
 }

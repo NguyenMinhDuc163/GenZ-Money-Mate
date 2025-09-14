@@ -15,6 +15,7 @@ _$TransactionImpl _$$TransactionImplFromJson(Map<String, dynamic> json) =>
       categorysIndex: (json['categorysIndex'] as num).toInt(),
       category: $enumDecode(_$CategoryEnumMap, json['category']),
       originalCurrency: json['originalCurrency'] as String? ?? 'USD',
+      customCategoryId: json['customCategoryId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$TransactionImplToJson(_$TransactionImpl instance) =>
@@ -26,6 +27,7 @@ Map<String, dynamic> _$$TransactionImplToJson(_$TransactionImpl instance) =>
       'categorysIndex': instance.categorysIndex,
       'category': _$CategoryEnumMap[instance.category]!,
       'originalCurrency': instance.originalCurrency,
+      'customCategoryId': instance.customCategoryId,
     };
 
 const _$CategoryEnumMap = {

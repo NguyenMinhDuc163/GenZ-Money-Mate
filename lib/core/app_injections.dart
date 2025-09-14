@@ -15,6 +15,7 @@ import '../features/blocs/profile_bloc/profile_cubit.dart';
 import '../features/blocs/state_bloc/state_cubit.dart';
 import '../features/blocs/themes_bloc/themes_cubit.dart';
 import '../features/blocs/transaction_bloc/transaction_cubit.dart';
+import '../features/blocs/custom_category_bloc/custom_category_cubit.dart';
 import '../features/home/data/main_repository/main_base_repository.dart';
 import '../features/home/data/main_repository/main_repository.dart';
 import '../features/home/data/state_repository/state_base_repository.dart';
@@ -27,6 +28,8 @@ import '../features/settings/data/themes_repository/themes_base_repository.dart'
 import '../features/settings/data/themes_repository/themes_repository.dart';
 import '../features/transaction/data/repository/transaction_base_repository.dart';
 import '../features/transaction/data/repository/transaction_repository.dart';
+import '../features/transaction/data/repository/custom_category_base_repository.dart';
+import '../features/transaction/data/repository/custom_category_repository.dart';
 import 'firebase_options.dart';
 import 'models/transaction_hive_model.dart';
 import 'service/network_info.dart';
@@ -106,6 +109,21 @@ Future<void> initAppConfig() async {
   //TransactionBloc && TransactionRepository
   getIt.registerLazySingleton(() => transactionRepository);
   getIt.registerFactory(() => TransactionCubit(transactionRepository: getIt()));
+
+  //=>
+  // CustomCategoryBaseRepository (CustomCategoryRepository)
+  final CustomCategoryBaseRepository customCategoryRepository =
+      CustomCategoryRepository(
+        dbFirestoreClient: getIt(),
+        dbHiveClient: getIt(),
+        authUser: getIt(),
+      );
+
+  //CustomCategoryBloc && CustomCategoryRepository
+  getIt.registerLazySingleton(() => customCategoryRepository);
+  getIt.registerFactory(
+    () => CustomCategoryCubit(customCategoryRepository: getIt()),
+  );
 
   //=>
   //AuthProfileBaseRepository (AuthProfileRepository)

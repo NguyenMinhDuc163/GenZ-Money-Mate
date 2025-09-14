@@ -23,7 +23,9 @@
     "full_name_required": "Full name cannot be empty",
     "full_name_hint": "exp: John Doe",
     "title": "Profile",
-    "save": "Save"
+    "save": "Save",
+    "no_internet": "No internet connection available",
+    "updated_success": "Profile updated successfully"
   },
   "category": {
     "food": "Food",
@@ -74,7 +76,8 @@
     "delete": "Delete",
     "done": "Done",
     "start_date": "Start Date",
-    "end_date": "End Date"
+    "end_date": "End Date",
+    "create": "Create"
   },
   "app": {
     "title": "Daily Tracker",
@@ -91,7 +94,25 @@
     "delete_title": "Delete Transaction",
     "updated_success": "Transaction updated successfully",
     "added_success": "Transaction added successfully",
-    "deleted_success": "Transaction deleted successfully"
+    "deleted_success": "Transaction deleted successfully",
+    "select_category": "Select Category"
+  },
+  "custom_category": {
+    "create_new": "Create New Category",
+    "name": "Category Name",
+    "name_hint": "Enter category name",
+    "name_required": "Please enter category name",
+    "select_icon": "Select Icon",
+    "select_color": "Select Color",
+    "my_categories": "My Categories",
+    "default_categories": "Default Categories",
+    "created_success": "Category created successfully",
+    "updated_success": "Category updated successfully",
+    "deleted_success": "Category deleted successfully",
+    "delete_confirm": "Are you sure you want to delete this category?",
+    "delete_confirm_title": "Confirm Delete",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "router": {
     "no_route": "No route defined for {{}}"
@@ -104,6 +125,11 @@
   },
   "user": {
     "guest": "Guest"
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Tiếng Việt",
+    "chinese": "中文"
   }
 
 }
