@@ -11,6 +11,8 @@ import '../../../core/utils/alerts/alerts.dart';
 import '../../blocs/main_bloc/main_cubit.dart';
 import '../../blocs/transaction_bloc/transaction_cubit.dart';
 import '../../blocs/language_bloc/language_cubit.dart';
+import '../../blocs/custom_category_bloc/custom_category_cubit.dart';
+import '../../blocs/category_group_bloc/category_group_cubit.dart';
 import 'widgets/widgets.dart';
 
 class MainView extends StatefulWidget {
@@ -27,6 +29,10 @@ class _MainViewState extends State<MainView> {
         .read<MainCubit>()
         .getAll(TypeShow.limit)
         .then((_) => context.read<MainCubit>().getTotals());
+
+    // Load custom categories và category groups để hiển thị đúng trong transaction list
+    context.read<CustomCategoryCubit>().getAllCustomCategories();
+    context.read<CategoryGroupCubit>().getAllCategoryGroups();
 
     super.initState();
   }

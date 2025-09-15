@@ -96,9 +96,13 @@ class ExpenseCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildExpenseItem('Income', totals.totalIncome, isIncome: true),
               _buildExpenseItem(
-                'Expense',
+                'home.income'.tr(),
+                totals.totalIncome,
+                isIncome: true,
+              ),
+              _buildExpenseItem(
+                'home.expense'.tr(),
                 totals.totalExpense,
                 isIncome: false,
               ),

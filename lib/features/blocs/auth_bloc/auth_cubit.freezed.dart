@@ -115,12 +115,18 @@ class __$$InitialImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$InitialImpl implements _Initial {
+class _$InitialImpl with DiagnosticableTreeMixin implements _Initial {
   const _$InitialImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'AuthState.initial()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'AuthState.initial'));
   }
 
   @override
@@ -273,7 +279,7 @@ class __$$AuthChangedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AuthChangedImpl implements AuthChanged {
+class _$AuthChangedImpl with DiagnosticableTreeMixin implements AuthChanged {
   const _$AuthChangedImpl({required this.authStatus, this.user});
 
   @override
@@ -282,8 +288,17 @@ class _$AuthChangedImpl implements AuthChanged {
   final User? user;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'AuthState.authChanged(authStatus: $authStatus, user: $user)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'AuthState.authChanged'))
+      ..add(DiagnosticsProperty('authStatus', authStatus))
+      ..add(DiagnosticsProperty('user', user));
   }
 
   @override
@@ -424,12 +439,18 @@ class __$$LoadingImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadingImpl implements Loading {
+class _$LoadingImpl with DiagnosticableTreeMixin implements Loading {
   const _$LoadingImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'AuthState.loading()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'AuthState.loading'));
   }
 
   @override
@@ -573,15 +594,23 @@ class __$$LoadedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadedImpl implements Loaded {
+class _$LoadedImpl with DiagnosticableTreeMixin implements Loaded {
   const _$LoadedImpl(this.user);
 
   @override
   final User user;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'AuthState.loaded(user: $user)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'AuthState.loaded'))
+      ..add(DiagnosticsProperty('user', user));
   }
 
   @override
@@ -731,15 +760,23 @@ class __$$ErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ErrorImpl implements Error {
+class _$ErrorImpl with DiagnosticableTreeMixin implements Error {
   const _$ErrorImpl(this.message);
 
   @override
   final String message;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'AuthState.error(message: $message)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'AuthState.error'))
+      ..add(DiagnosticsProperty('message', message));
   }
 
   @override

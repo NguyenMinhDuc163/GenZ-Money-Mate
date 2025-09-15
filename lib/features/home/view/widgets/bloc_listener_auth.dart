@@ -14,11 +14,9 @@ class BlocListenerAuth extends StatelessWidget {
       listener: (context, state) {
         state.maybeWhen(
           authChanged: (_, __) {
-            return context.read<MainCubit>().getAll(TypeShow.limit).then(
-              (_) {
-                return context.read<MainCubit>().getTotals();
-              },
-            );
+            return context.read<MainCubit>().getAll(TypeShow.limit).then((_) {
+              return context.read<MainCubit>().getTotals();
+            });
           },
           orElse: () {},
         );

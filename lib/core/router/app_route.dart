@@ -8,6 +8,7 @@ import '../../features/home/view/home_view.dart';
 import '../../features/profile/view/profile_view.dart';
 import '../../features/settings/view/settings_view.dart';
 import '../../features/transaction/view/transaction_view.dart';
+import '../../features/ranking/view/ranking_view.dart';
 
 @immutable
 class RoutesName {
@@ -17,6 +18,7 @@ class RoutesName {
   static const String profile = '/profile';
   static const String transaction = '/transaction';
   static const String allViewTransaction = '/allViewTransaction';
+  static const String ranking = '/ranking';
 }
 
 @immutable
@@ -51,6 +53,12 @@ class AppRouter {
         return _getPageRoute(
           routeName: settings.name,
           viewToShow: const AllViewTransaction(),
+        );
+
+      case RoutesName.ranking:
+        return _getPageRoute(
+          routeName: settings.name,
+          viewToShow: const RankingView(),
         );
 
       default:

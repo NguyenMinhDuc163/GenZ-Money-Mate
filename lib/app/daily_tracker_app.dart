@@ -14,6 +14,9 @@ import '../features/blocs/language_bloc/language_cubit.dart';
 import '../features/blocs/state_bloc/state_cubit.dart';
 import '../features/blocs/themes_bloc/themes_cubit.dart';
 import '../features/blocs/transaction_bloc/transaction_cubit.dart';
+import '../features/blocs/custom_category_bloc/custom_category_cubit.dart';
+import '../features/blocs/category_group_bloc/category_group_cubit.dart';
+import '../features/ranking/bloc/ranking_cubit.dart';
 
 class DailyTrackerApp extends StatelessWidget {
   const DailyTrackerApp({super.key, required AppRouter appRoute})
@@ -33,6 +36,9 @@ class DailyTrackerApp extends StatelessWidget {
         BlocProvider(create: (_) => getIt<AuthCubit>()),
         BlocProvider(create: (_) => getIt<ThemesCubit>()),
         BlocProvider(create: (_) => getIt<LanguageCubit>()),
+        BlocProvider(create: (_) => getIt<CustomCategoryCubit>()),
+        BlocProvider(create: (_) => getIt<CategoryGroupCubit>()),
+        BlocProvider(create: (_) => getIt<RankingCubit>()),
       ],
       child: _CubitConnector(appRouter: _appRouter),
     );
@@ -55,7 +61,7 @@ class _CubitConnector extends StatelessWidget {
       buildWhen: (previous, current) => current is LoadedThemeMode,
       builder: (context, state) {
         final themeMode = context.read<ThemesCubit>().state.maybeMap(
-          orElse: () => ThemeMode.system,
+          orElse: () => ThemeMode.dark,
           loadedThemeMode: (state) => state.themeMode,
         );
         Intl.defaultLocale = context.locale.toLanguageTag();
