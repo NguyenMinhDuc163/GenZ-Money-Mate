@@ -96,7 +96,6 @@
     "updated_success": "更新交易成功",
     "added_success": "新增交易成功",
     "deleted_success": "删除交易成功",
-<<<<<<< HEAD
     "select_category": "选择类别",
     "select_group": "选择组",
     "items": "项",
@@ -105,9 +104,6 @@
       "select_group_required": "保存交易前请先选择组",
       "amount_required": "请输入有效金额"
     }
-=======
-    "delete_confirm": "您确定要删除此交易吗？"
->>>>>>> 8844a4dd9c12810996752f88c58d10d26011d260
   },
   "router": {
     "no_route": "没有适用于 {{}} 的路由"
