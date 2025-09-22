@@ -20,6 +20,12 @@ import 'core/app_injections.dart';
 import 'core/router/app_route.dart';
 import 'package:device_preview/device_preview.dart';
 
+// Cho phép bật DevicePreview khi build release qua --dart-define=ENABLE_DEVICE_PREVIEW=true
+const bool kEnableDevicePreview = bool.fromEnvironment(
+  'ENABLE_DEVICE_PREVIEW',
+  defaultValue: false,
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Future.wait([initAppConfig()]);
@@ -33,7 +39,7 @@ void main() async {
       fallbackLocale: const Locale('en'),
       saveLocale: true,
       child: DevicePreview(
-        enabled: !kReleaseMode,
+        enabled: kEnableDevicePreview || !kReleaseMode,
         builder: (context) => DailyTrackerApp(appRoute: AppRouter()),
       ),
     ),
