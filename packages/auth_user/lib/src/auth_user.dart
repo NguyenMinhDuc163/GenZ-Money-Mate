@@ -11,13 +11,14 @@ class AuthUser implements AuthUserBase {
     auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
   })  : _firebaseAuth = firebaseAuth ?? auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? _createGoogleSignInForPlatform();
+        _googleSignIn = googleSignIn;
 
   /// The [firebaseAuth] is used to create an instance of [FirebaseAuth].
   final auth.FirebaseAuth _firebaseAuth;
 
   /// The [googleSignIn] is used to create an instance of [GoogleSignIn].
-  final GoogleSignIn _googleSignIn;
+  /// Lazily initialized to avoid web assertion when clientId is missing.
+  GoogleSignIn? _googleSignIn;
 
   /// The [user] method is used to get user.
   @override
@@ -36,7 +37,13 @@ class AuthUser implements AuthUserBase {
   @override
   Future<auth.User?> signInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
+      _googleSignIn ??= _createGoogleSignInForPlatformOrNull();
+      if (_googleSignIn == null) {
+        // Web without clientId: gracefully fail with a typed error
+        throw const SignInWithGoogleFailure();
+      }
+
+      final googleUser = await _googleSignIn!.signIn();
       final googleAuth = await googleUser!.authentication;
 
       final credential = auth.GoogleAuthProvider.credential(
@@ -63,18 +70,20 @@ class AuthUser implements AuthUserBase {
   @override
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    await _googleSignIn.signOut();
+    await _googleSignIn?.signOut();
   }
 }
 
 /// Creates a GoogleSignIn instance depending on platform.
-GoogleSignIn _createGoogleSignInForPlatform() {
+/// Returns null on Web if no clientId is provided (to avoid plugin assertion).
+GoogleSignIn? _createGoogleSignInForPlatformOrNull() {
   if (kIsWeb) {
-    // Read from --dart-define=GOOGLE_CLIENT_ID=... when running/building for web
     const String clientId = String.fromEnvironment('GOOGLE_CLIENT_ID');
-    return GoogleSignIn(
-      clientId: clientId.isNotEmpty ? clientId : null,
-    );
+    if (clientId.isEmpty) {
+      debugPrint('GoogleSignIn Web clientId is missing. Skipping init.');
+      return null;
+    }
+    return GoogleSignIn(clientId: clientId);
   }
   return GoogleSignIn.standard();
 }
