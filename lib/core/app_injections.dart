@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_service/user_service.dart';
 
@@ -84,13 +85,16 @@ Future<void> initAppConfig() async {
   final dbHiveClient = DbHiveClient();
   getIt.registerLazySingleton<DbHiveClientBase>(() => dbHiveClient);
 
-  //InternetConnectionChecker
-  final internetConnectionChecker = InternetConnectionChecker();
-  getIt.registerLazySingleton(() => internetConnectionChecker);
-
-  //networkInfo
-  final networkInfo = NetworkInfo(getIt());
-  getIt.registerLazySingleton<NetworkBaseInfo>(() => networkInfo);
+  //InternetConnectionChecker / NetworkInfo
+  if (kIsWeb) {
+    // On Web, avoid creating InternetConnectionChecker (uses InternetAddress -> unsupported on Web)
+    getIt.registerLazySingleton<NetworkBaseInfo>(() => WebNetworkInfo());
+  } else {
+    final internetConnectionChecker = InternetConnectionChecker();
+    getIt.registerLazySingleton(() => internetConnectionChecker);
+    final networkInfo = NetworkInfo(getIt());
+    getIt.registerLazySingleton<NetworkBaseInfo>(() => networkInfo);
+  }
 
   //=>
   // MainBaseRepository (MainRepository)

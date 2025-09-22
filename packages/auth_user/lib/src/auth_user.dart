@@ -1,7 +1,7 @@
 import 'package:auth_user/src/auth_user_base.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'core/exception/exception.dart';
@@ -11,7 +11,7 @@ class AuthUser implements AuthUserBase {
     auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
   })  : _firebaseAuth = firebaseAuth ?? auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+        _googleSignIn = googleSignIn ?? _createGoogleSignInForPlatform();
 
   /// The [firebaseAuth] is used to create an instance of [FirebaseAuth].
   final auth.FirebaseAuth _firebaseAuth;
@@ -65,4 +65,16 @@ class AuthUser implements AuthUserBase {
     await _firebaseAuth.signOut();
     await _googleSignIn.signOut();
   }
+}
+
+/// Creates a GoogleSignIn instance depending on platform.
+GoogleSignIn _createGoogleSignInForPlatform() {
+  if (kIsWeb) {
+    // Read from --dart-define=GOOGLE_CLIENT_ID=... when running/building for web
+    const String clientId = String.fromEnvironment('GOOGLE_CLIENT_ID');
+    return GoogleSignIn(
+      clientId: clientId.isNotEmpty ? clientId : null,
+    );
+  }
+  return GoogleSignIn.standard();
 }
