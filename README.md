@@ -14,17 +14,21 @@
 
 <table>
 <tr>
-<td width="30%" style="padding-right: 10px;">
+<td width="25%" style="padding-right: 10px;">
 <img src="image/home.jpg" alt="Home Screen" width="100%">
 <br><em>Màn hình chính</em>
 </td>
-<td width="30%" style="padding: 0 10px;">
+<td width="25%" style="padding: 0 10px;">
 <img src="image/detail.jpg" alt="Detail Screen" width="100%">
 <br><em>Chi tiết giao dịch</em>
 </td>
-<td width="30%" style="padding-left: 10px;">
+<td width="25%" style="padding-left: 10px;">
 <img src="image/income.jpg" alt="Income Screen" width="100%">
 <br><em>Thêm thu nhập</em>
+</td>
+<td width="25%" style="padding-left: 10px;">
+<img src="image/ranking.png" alt="Ranking Screen" width="100%">
+<br><em>Bảng xếp hạng</em>
 </td>
 </tr>
 </table>
