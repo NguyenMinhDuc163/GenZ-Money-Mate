@@ -11,6 +11,10 @@ import '../features/blocs/profile_bloc/profile_cubit.dart';
 import '../features/blocs/state_bloc/state_cubit.dart';
 import '../features/blocs/themes_bloc/themes_cubit.dart';
 import '../features/blocs/transaction_bloc/transaction_cubit.dart';
+import '../features/blocs/language_bloc/language_cubit.dart';
+import '../features/blocs/custom_category_bloc/custom_category_cubit.dart';
+import '../features/blocs/category_group_bloc/category_group_cubit.dart';
+import '../features/ranking/bloc/ranking_cubit.dart';
 import 'bloc_observer.dart';
 import 'core/app_injections.dart';
 import 'core/router/app_route.dart';
@@ -53,6 +57,10 @@ class DailyTrackerApp extends StatelessWidget {
         BlocProvider(create: (_) => getIt<StateCubit>()),
         BlocProvider(create: (_) => getIt<AuthCubit>()),
         BlocProvider(create: (_) => getIt<ThemesCubit>()),
+        BlocProvider(create: (_) => getIt<LanguageCubit>()),
+        BlocProvider(create: (_) => getIt<CustomCategoryCubit>()),
+        BlocProvider(create: (_) => getIt<CategoryGroupCubit>()),
+        BlocProvider(create: (_) => getIt<RankingCubit>()),
       ],
       child: BlocBuilder<ThemesCubit, ThemesState>(
         buildWhen: (previous, current) => current is LoadedThemeMode,
@@ -61,12 +69,18 @@ class DailyTrackerApp extends StatelessWidget {
             orElse: () => ThemeMode.dark,
             loadedThemeMode: (state) => state.themeMode,
           );
+          // Thiết lập MainCubit vào LanguageCubit như app chính
+          final mainCubit = context.read<MainCubit>();
+          final languageCubit = context.read<LanguageCubit>();
+          languageCubit.setMainCubit(mainCubit);
           Intl.defaultLocale = context.locale.toLanguageTag();
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'app.title'.tr(),
             useInheritedMediaQuery: true,
             locale: context.locale,
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
             builder: DevicePreview.appBuilder,
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),

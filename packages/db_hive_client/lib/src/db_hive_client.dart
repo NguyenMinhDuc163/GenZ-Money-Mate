@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../db_hive_client.dart';
-import 'package:path_provider/path_provider.dart';
+// Removed path_provider; Hive.initFlutter() handles platform-specific init incl. Web
 
 class DbHiveClient implements DbHiveClientBase {
   @override
@@ -11,8 +11,7 @@ class DbHiveClient implements DbHiveClientBase {
     required VoidCallback onRegisterAdapter,
   }) async {
     try {
-      final appDocumentDir = await getApplicationDocumentsDirectory();
-      Hive.init(appDocumentDir.path);
+      await Hive.initFlutter();
       onRegisterAdapter();
       await Hive.openBox<T>(boxName);
       return true;
