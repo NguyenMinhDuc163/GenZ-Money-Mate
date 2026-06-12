@@ -1,0 +1,98 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '12.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks! :linkage => :static
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+    end
+
+    if target.name == 'BoringSSL-GRPC'
+      target.source_build_phase.files.each do |file|
+        next unless file.settings && file.settings['COMPILER_FLAGS']
+
+        flags = file.settings['COMPILER_FLAGS'].split
+        flags.reject! { |flag| flag == '-GCC_WARN_INHIBIT_ALL_WARNINGS' }
+        file.settings['COMPILER_FLAGS'] = flags.join(' ')
+      end
+    end
+  end
+
+  ['gRPC-Core', 'gRPC-C++'].each do |grpc_pod|
+    grpc_basic_seq = File.join(
+      installer.sandbox.root,
+      grpc_pod,
+      'src/core/lib/promise/detail/basic_seq.h',
+    )
+    next unless File.exist?(grpc_basic_seq)
+
+    File.chmod(0o644, grpc_basic_seq)
+    text = File.read(grpc_basic_seq)
+    File.write(
+      grpc_basic_seq,
+      text.gsub('Traits::template CallSeqFactory', 'Traits::CallSeqFactory'),
+    )
+  end
+
+  firebase_import_patches = {
+    '.symlinks/plugins/firebase_auth/ios/Classes' => [
+      '#import <FirebaseCore/FirebaseCore.h>',
+      '#import <FirebaseAuth/FirebaseAuth.h>',
+    ],
+    '.symlinks/plugins/firebase_storage/ios/Classes' => [
+      '@import FirebaseCore;',
+      '@import FirebaseStorage;',
+    ],
+  }
+
+  firebase_import_patches.each do |relative_dir, replacement_imports|
+    Dir.glob(File.join(__dir__, relative_dir, '**/*.{h,m}')).each do |source_file|
+      text = File.read(source_file)
+      next unless text.include?('#import <Firebase/Firebase.h>')
+
+      File.chmod(0o644, source_file)
+      File.write(
+        source_file,
+        text.gsub('#import <Firebase/Firebase.h>', replacement_imports.join("\n")),
+      )
+    end
+  end
+end

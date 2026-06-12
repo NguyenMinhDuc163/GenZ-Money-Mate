@@ -85,6 +85,9 @@ dependencies:
   device_preview: ^1.1.0
   easy_localization: ^3.0.8
 
+dependency_overrides:
+  google_sign_in_ios: 5.8.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
