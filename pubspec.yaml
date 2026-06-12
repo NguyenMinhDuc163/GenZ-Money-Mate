@@ -111,6 +111,7 @@ flutter_launcher_icons:
   android: "app_icon"
   ios: true
   image_path: "assets/icons/app_icon.png"
+  remove_alpha_ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
