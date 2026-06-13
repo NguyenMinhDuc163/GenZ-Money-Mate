@@ -129,6 +129,17 @@ The Android workflow should:
 - Run on `ubuntu-24.04`.
 - Checkout `inputs.commit_sha`.
 - Set up Java 17, Flutter from `.fvmrc`, and Ruby/Bundler in `android`.
+- When using `ruby/setup-ruby@v1`, always specify `ruby-version` unless the repo has a committed `.ruby-version` or `.tool-versions` file. Without one of these, GitHub Actions fails before Bundler runs:
+
+```yaml
+- name: Set up Ruby
+  uses: ruby/setup-ruby@v1
+  with:
+    ruby-version: "3.3"
+    working-directory: android
+    bundler-cache: true
+```
+
 - Cache Android SDK packages that Gradle downloads during `flutter build`, especially NDK and SDK platforms shown in the logs.
 - Recreate local-only release files on the runner:
   - `android/key.properties`
@@ -273,6 +284,17 @@ The iOS workflow should:
 - Recreate App Store Connect API key and Apple signing assets from secrets.
 - Read Flutter version from `.fvmrc`.
 - Set up Flutter and Ruby/Bundler in `ios`.
+- When using `ruby/setup-ruby@v1`, always specify `ruby-version` unless the repo has a committed `.ruby-version` or `.tool-versions` file. Without one of these, GitHub Actions fails before Bundler runs:
+
+```yaml
+- name: Set up Ruby
+  uses: ruby/setup-ruby@v1
+  with:
+    ruby-version: "3.3"
+    working-directory: ios
+    bundler-cache: true
+```
+
 - Run:
 
 ```bash
