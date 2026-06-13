@@ -3,9 +3,9 @@ default_platform(:ios)
 require "rbconfig"
 require "shellwords"
 
-APP_IDENTIFIER = "com.nguyenduc.bookBrain"
+APP_IDENTIFIER = "com.nguyenduc.genzMoneyMate"
 TEAM_ID = "Q236Z72BGN"
-APP_ARTIFACT_NAME = "BookBrain"
+APP_ARTIFACT_NAME = "GenZ-Money-Mate"
 
 def bundle_command
   ENV["BUNDLE_BIN"] || File.join(File.dirname(RbConfig.ruby), "bundle")

@@ -1,2 +1,2 @@
 json_key_file("fastlane/play-store-credentials.json")
-package_name("com.nguyenduc.book_brain")
+package_name("com.nguyenduc.genz_money_mate")
