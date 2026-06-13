@@ -40,7 +40,7 @@ concurrency:
 
 env:
   RUN_IOS: "true"
-  RUN_ANDROID: "true"
+  RUN_ANDROID: "false"
   ANDROID_TRACK: "internal"
   ANDROID_RELEASE_STATUS: "completed"
 
