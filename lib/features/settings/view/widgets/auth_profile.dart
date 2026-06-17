@@ -70,10 +70,11 @@ class _AuthProfileState extends State<AuthProfile> {
     required User user,
   }) {
     return InkWell(
-      onTap:
-          authStatus == AuthStatus.authenticated
-              ? () => context.pushNamed(RoutesName.profile, arguments: user)
-              : null, // Perform Sign-in action
+      // onTap:
+      //     authStatus == AuthStatus.authenticated
+      //         ? () => context.pushNamed(RoutesName.profile, arguments: user)
+      //         : null, // Perform Sign-in action
+      onTap: null,
       child: Row(
         children: [
           Container(
@@ -110,32 +111,32 @@ class _AuthProfileState extends State<AuthProfile> {
               const SizedBox(height: 5),
               Text(user.fullName, style: AppTextStyle.title),
               const SizedBox(height: 5),
-              OutlinedButton.icon(
-                icon: const FaIcon(FontAwesomeIcons.google, size: 16),
-                label: Text(
-                  authStatus == AuthStatus.authenticated
-                      ? 'setting.sign_out'.tr()
-                      : 'setting.sign_in'.tr(),
-                  style: AppTextStyle.caption,
-                ),
-                onPressed:
-                    authStatus == AuthStatus.authenticated
-                        ? () {
-                          // Perform Sign-out action
-                          context.read<AuthCubit>().signOut();
-                        }
-                        : () {
-                          // Perform Sign-in action
-                          context.read<AuthCubit>().signInWithGoogle();
-                        },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: context.colorScheme.onSurface,
-                  side: BorderSide(color: context.colorScheme.onSurface),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-              ),
+              // OutlinedButton.icon(
+              //   icon: const FaIcon(FontAwesomeIcons.google, size: 16),
+              //   label: Text(
+              //     authStatus == AuthStatus.authenticated
+              //         ? 'setting.sign_out'.tr()
+              //         : 'setting.sign_in'.tr(),
+              //     style: AppTextStyle.caption,
+              //   ),
+              //   onPressed:
+              //       authStatus == AuthStatus.authenticated
+              //           ? () {
+              //             // Perform Sign-out action
+              //             context.read<AuthCubit>().signOut();
+              //           }
+              //           : () {
+              //             // Perform Sign-in action
+              //             context.read<AuthCubit>().signInWithGoogle();
+              //           },
+              //   style: OutlinedButton.styleFrom(
+              //     foregroundColor: context.colorScheme.onSurface,
+              //     side: BorderSide(color: context.colorScheme.onSurface),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(16),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           if (authStatus == AuthStatus.authenticated) ...[
