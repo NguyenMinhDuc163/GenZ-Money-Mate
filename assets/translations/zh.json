@@ -202,7 +202,18 @@
     "silver_description": "有计划地储蓄",
     "gold_description": "储蓄专家",
     "platinum_description": "财务管理大师",
-    "diamond_description": "储蓄传奇"
+    "diamond_description": "储蓄传奇",
+    "rewarded_title": "高级储蓄分析",
+    "rewarded_description": "自愿观看一则广告，以根据您当前的财务数据解锁建议。",
+    "rewarded_button": "观看广告并解锁分析",
+    "rewarded_prepare": "准备广告",
+    "rewarded_unavailable": "广告尚未准备好，请稍后重试。",
+    "insight_title": "您的储蓄建议",
+    "insight_over_budget": "{group} 分组超出预算约 {amount}。请优先检查该分组中的交易。",
+    "insight_expense_high": "您当前的总支出高于总收入。请先为最灵活的支出分组设置一个较小的限额。",
+    "insight_focus_group": "{group} 分组的储蓄率最低（{percent}%）。这是最适合开始优化的地方。",
+    "insight_positive": "您当前的现金流控制良好。请保持预算限制，并将结余用于长期储蓄目标。",
+    "insight_close": "知道了"
   },
   "transaction_list": {
     "delete_ungrouped_title": "删除所有未分组交易",

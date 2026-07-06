@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
+import '../ads/native_ad_placement_policy.dart';
+import '../ads/widgets/native_transaction_ad_widget.dart';
 import '../service/currency_service.dart';
 
 import '../../features/blocs/transaction_bloc/transaction_cubit.dart';
@@ -25,10 +27,12 @@ class TransactionList extends StatefulWidget {
     Key? key,
     required this.allTransactions,
     this.isViewOnly = false,
+    this.showNativeAds = false,
   }) : super(key: key);
 
   final List<Transaction> allTransactions;
   final bool isViewOnly;
+  final bool showNativeAds;
 
   @override
   State<TransactionList> createState() => _TransactionListState();
@@ -105,6 +109,7 @@ class _TransactionListState extends State<TransactionList> {
                         // Nếu transaction không có groupId, bỏ qua (không hiển thị)
                       }
 
+                      var displayedTransactionCount = 0;
                       return ListView(
                         children: [
                           // Hiển thị transactions theo nhóm
@@ -114,12 +119,16 @@ class _TransactionListState extends State<TransactionList> {
                             final group = categoryGroups.firstWhere(
                               (g) => g.uuid == groupId,
                             );
+                            final startingTransactionIndex =
+                                displayedTransactionCount;
+                            displayedTransactionCount += transactions.length;
 
                             return _buildGroupSection(
                               context,
                               group,
                               transactions,
                               customCategories,
+                              startingTransactionIndex,
                             );
                           }).toList(),
 
@@ -138,6 +147,7 @@ class _TransactionListState extends State<TransactionList> {
     CategoryGroup group,
     List<Transaction> transactions,
     List<CustomCategory> customCategories,
+    int startingTransactionIndex,
   ) {
     final groupId = group.uuid ?? '';
     final isExpanded = _expandedGroups[groupId] ?? false; // Mặc định đóng
@@ -206,26 +216,62 @@ class _TransactionListState extends State<TransactionList> {
           ),
           children: [
             // Danh sách transactions trong nhóm với padding thụt vào
-            ...transactions.map((transaction) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                  left: 32,
-                  right: 16,
-                  top: 2,
-                  bottom: 2,
-                ),
-                child: _buildTransactionItem(
-                  context,
-                  transaction,
-                  customCategories,
-                  isSmall: true, // Thêm tham số để làm nhỏ transaction
-                ),
-              );
-            }).toList(),
+            ..._buildTransactionChildren(
+              context,
+              transactions,
+              customCategories,
+              startingTransactionIndex,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildTransactionChildren(
+    BuildContext context,
+    List<Transaction> transactions,
+    List<CustomCategory> customCategories,
+    int startingTransactionIndex,
+  ) {
+    final children = <Widget>[];
+
+    for (var index = 0; index < transactions.length; index++) {
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 32,
+            right: 16,
+            top: 2,
+            bottom: 2,
+          ),
+          child: _buildTransactionItem(
+            context,
+            transactions[index],
+            customCategories,
+            isSmall: true,
+          ),
+        ),
+      );
+
+      final displayedCount = startingTransactionIndex + index + 1;
+      final shouldInsertNativeAd = NativeAdPlacementPolicy.shouldInsertAfter(
+        displayedTransactionCount: displayedCount,
+        totalTransactionCount: widget.allTransactions.length,
+      );
+      if (widget.showNativeAds && shouldInsertNativeAd) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: NativeTransactionAdWidget(
+              key: ValueKey('transaction-native-$displayedCount'),
+            ),
+          ),
+        );
+      }
+    }
+
+    return children;
   }
 
   CustomItemButton _buildTransactionItem(

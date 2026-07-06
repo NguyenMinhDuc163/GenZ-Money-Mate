@@ -10,6 +10,7 @@ import '../../ranking/bloc/ranking_cubit.dart';
 import 'widgets/ranking_card.dart';
 import 'widgets/group_savings_card.dart';
 import 'widgets/ranking_progress_card.dart';
+import 'widgets/rewarded_insight_card.dart';
 
 class RankingView extends StatefulWidget {
   const RankingView({super.key});
@@ -136,6 +137,9 @@ class _RankingViewState extends State<RankingView> {
 
           // Progress to Next Rank
           RankingProgressCard(userRanking: userRanking),
+          const SizedBox(height: 16),
+
+          RewardedInsightCard(userRanking: userRanking),
           const SizedBox(height: 16),
 
           // Group Savings

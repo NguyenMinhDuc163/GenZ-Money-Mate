@@ -71,8 +71,10 @@ class _AllViewTransactionState extends State<AllViewTransaction> {
                 builder:
                     (_, state) => state.maybeWhen(
                       loadedAll:
-                          (transactions) =>
-                              TransactionList(allTransactions: transactions),
+                          (transactions) => TransactionList(
+                            allTransactions: transactions,
+                            showNativeAds: true,
+                          ),
                       orElse:
                           () =>
                               const Center(child: CircularProgressIndicator()),

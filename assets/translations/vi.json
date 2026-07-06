@@ -202,7 +202,18 @@
     "silver_description": "Tiết kiệm có kế hoạch",
     "gold_description": "Chuyên gia tiết kiệm",
     "platinum_description": "Bậc thầy quản lý tài chính",
-    "diamond_description": "Huyền thoại tiết kiệm"
+    "diamond_description": "Huyền thoại tiết kiệm",
+    "rewarded_title": "Phân tích tiết kiệm nâng cao",
+    "rewarded_description": "Xem một quảng cáo tự nguyện để mở gợi ý dựa trên dữ liệu tài chính hiện tại của bạn.",
+    "rewarded_button": "Xem quảng cáo và mở phân tích",
+    "rewarded_prepare": "Chuẩn bị quảng cáo",
+    "rewarded_unavailable": "Quảng cáo chưa sẵn sàng. Vui lòng thử lại sau.",
+    "insight_title": "Gợi ý tiết kiệm của bạn",
+    "insight_over_budget": "Nhóm {group} đang vượt hạn mức khoảng {amount}. Hãy ưu tiên rà soát các giao dịch trong nhóm này.",
+    "insight_expense_high": "Tổng chi tiêu hiện cao hơn tổng thu nhập. Hãy đặt một hạn mức nhỏ cho nhóm chi tiêu linh hoạt nhất trước.",
+    "insight_focus_group": "Nhóm {group} đang có tỷ lệ tiết kiệm thấp nhất ({percent}%). Đây là nơi phù hợp nhất để bắt đầu tối ưu.",
+    "insight_positive": "Dòng tiền hiện tại đang được kiểm soát tốt. Hãy duy trì hạn mức và dành phần dư cho mục tiêu tiết kiệm dài hạn.",
+    "insight_close": "Đã hiểu"
   },
   "transaction_list": {
     "delete_ungrouped_title": "Xóa tất cả giao dịch không có nhóm",

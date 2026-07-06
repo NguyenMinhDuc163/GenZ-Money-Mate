@@ -25,7 +25,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
+      extendBody: false,
       appBar: _buildAppBar(context),
       floatingActionButton: const AppFloatingButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
