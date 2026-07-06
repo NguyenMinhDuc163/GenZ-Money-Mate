@@ -202,7 +202,18 @@
     "silver_description": "Planned savings",
     "gold_description": "Savings expert",
     "platinum_description": "Financial management master",
-    "diamond_description": "Savings legend"
+    "diamond_description": "Savings legend",
+    "rewarded_title": "Advanced savings insight",
+    "rewarded_description": "Opt in to one ad to unlock a suggestion based on your current financial data.",
+    "rewarded_button": "Watch ad and unlock insight",
+    "rewarded_prepare": "Prepare ad",
+    "rewarded_unavailable": "The ad is not ready yet. Please try again shortly.",
+    "insight_title": "Your savings insight",
+    "insight_over_budget": "The {group} group is about {amount} over budget. Review this group's transactions first.",
+    "insight_expense_high": "Your total spending is currently higher than your income. Start by setting a small limit for your most flexible spending group.",
+    "insight_focus_group": "The {group} group has your lowest savings rate ({percent}%). This is the best place to start optimizing.",
+    "insight_positive": "Your current cash flow is under control. Keep your limits and direct the surplus toward a long-term savings goal.",
+    "insight_close": "Got it"
   },
   "transaction_list": {
     "delete_ungrouped_title": "Delete All Ungrouped Transactions",

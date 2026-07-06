@@ -6,6 +6,10 @@
         android:label="GenZ Finquest"
         android:name="${applicationName}"
         android:icon="@mipmap/app_icon">
+        <!-- Production Android AdMob App ID. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4649011658078977~3869351991" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

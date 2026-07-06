@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/ads/ad_placement.dart';
+import '../../../core/ads/widgets/ad_banner_widget.dart';
 import '../../../core/enum/enum.dart';
 import '../../../core/shared/shared.dart';
 import '../../blocs/language_bloc/language_cubit.dart';
@@ -43,6 +45,8 @@ class StateView extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 8),
+            const AdBannerWidget(placement: AdPlacement.stats),
           ],
         ),
       ),

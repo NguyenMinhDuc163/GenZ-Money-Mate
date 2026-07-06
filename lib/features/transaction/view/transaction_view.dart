@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/ads/ad_service.dart';
+import '../../../core/app_injections.dart';
 import '../../../core/router/router.dart';
 import '../../../core/shared/custom_material_button.dart';
 import '../../../core/shared/shared.dart';
@@ -72,9 +74,13 @@ class TransactionView extends StatelessWidget {
     );
   }
 
-  _success(BuildContext context, String message) {
+  void _success(BuildContext context, String message) {
     Alerts.hideLoaderDialog(context);
     Alerts.showToastMsg(context, message.tr());
     context.pop();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getIt<AdService>().onTransactionSavedSuccessfully();
+    });
   }
 }

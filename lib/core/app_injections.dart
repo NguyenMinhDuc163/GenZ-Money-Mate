@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_service/user_service.dart';
 
+import 'ads/ad_service.dart';
 import '../features/blocs/auth_bloc/auth_cubit.dart';
 import '../features/blocs/main_bloc/main_cubit.dart';
 import '../features/blocs/profile_bloc/profile_cubit.dart';
@@ -72,6 +73,11 @@ Future<void> initAppConfig() async {
   //sharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => sharedPreferences);
+
+  // AdMob failures must never prevent the core app from starting.
+  final adService = AdService(sharedPreferences: sharedPreferences);
+  await adService.initialize();
+  getIt.registerLazySingleton<AdService>(() => adService);
 
   //AuthUser
   final authUser = AuthUser();

@@ -22,6 +22,9 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<!-- Production iOS AdMob App ID. -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-4649011658078977~2861743260</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
