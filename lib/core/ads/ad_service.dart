@@ -11,16 +11,17 @@ class InterstitialFrequencyCap {
   InterstitialFrequencyCap({
     required SharedPreferences sharedPreferences,
     DateTime Function()? now,
+    this.successThreshold = 4,
+    this.cooldown = const Duration(minutes: 3),
   }) : _sharedPreferences = sharedPreferences,
        _now = now ?? DateTime.now;
 
   static const successCountKey = 'ad_interstitial_success_transaction_count';
   static const lastShownAtKey = 'ad_last_interstitial_shown_at';
-  static const successThreshold = 4;
-  static const cooldown = Duration(minutes: 3);
-
   final SharedPreferences _sharedPreferences;
   final DateTime Function() _now;
+  final int successThreshold;
+  final Duration cooldown;
 
   int get successCount => _sharedPreferences.getInt(successCountKey) ?? 0;
 
@@ -254,10 +255,10 @@ class AdService {
     await _showTransactionSuccessInterstitial();
   }
 
-  Future<void> _showTransactionSuccessInterstitial() async {
+  Future<bool> _showTransactionSuccessInterstitial() async {
     final ad = _transactionSuccessInterstitial;
     if (ad == null || _isShowingInterstitial) {
-      return;
+      return false;
     }
 
     _transactionSuccessInterstitial = null;
@@ -282,11 +283,13 @@ class AdService {
 
     try {
       await ad.show();
+      return true;
     } catch (error) {
       ad.dispose();
       _isShowingInterstitial = false;
       _debugLog('Interstitial show threw: $error');
       unawaited(preloadTransactionSuccessInterstitial());
+      return false;
     }
   }
 

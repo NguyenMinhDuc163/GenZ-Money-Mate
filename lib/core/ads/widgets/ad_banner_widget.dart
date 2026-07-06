@@ -51,6 +51,7 @@ class _LoadedAdaptiveBanner extends StatefulWidget {
 
 class _LoadedAdaptiveBannerState extends State<_LoadedAdaptiveBanner> {
   BannerAd? _bannerAd;
+  Key? _adWidgetKey;
 
   @override
   void initState() {
@@ -78,7 +79,10 @@ class _LoadedAdaptiveBannerState extends State<_LoadedAdaptiveBanner> {
               loadedAd.dispose();
               return;
             }
-            setState(() => _bannerAd = loadedAd as BannerAd);
+            setState(() {
+              _bannerAd = loadedAd as BannerAd;
+              _adWidgetKey = UniqueKey();
+            });
             _debugLog('Banner loaded: ${widget.placement.name}');
           },
           onAdFailedToLoad: (failedAd, error) {
@@ -105,7 +109,7 @@ class _LoadedAdaptiveBannerState extends State<_LoadedAdaptiveBanner> {
       child: SizedBox(
         width: ad.size.width.toDouble(),
         height: ad.size.height.toDouble(),
-        child: AdWidget(ad: ad),
+        child: AdWidget(key: _adWidgetKey, ad: ad),
       ),
     );
   }

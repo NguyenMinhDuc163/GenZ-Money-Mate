@@ -46,7 +46,10 @@ class StateView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const AdBannerWidget(placement: AdPlacement.stats),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 40),
+              child: AdBannerWidget(placement: AdPlacement.stats),
+            ),
           ],
         ),
       ),

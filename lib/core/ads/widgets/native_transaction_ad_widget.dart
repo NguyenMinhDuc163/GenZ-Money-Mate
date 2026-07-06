@@ -17,6 +17,7 @@ class NativeTransactionAdWidget extends StatefulWidget {
 
 class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
   NativeAd? _nativeAd;
+  Key? _adWidgetKey;
   bool _isLoaded = false;
   bool _didStartLoading = false;
 
@@ -67,7 +68,10 @@ class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
             loadedAd.dispose();
             return;
           }
-          setState(() => _isLoaded = true);
+          setState(() {
+            _isLoaded = true;
+            _adWidgetKey = UniqueKey();
+          });
           _debugLog('Transaction native ad loaded');
         },
         onAdFailedToLoad: (failedAd, error) {
@@ -98,7 +102,7 @@ class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: AdWidget(ad: ad),
+      child: AdWidget(key: _adWidgetKey, ad: ad),
     );
   }
 

@@ -255,11 +255,11 @@ class _TransactionListState extends State<TransactionList> {
       );
 
       final displayedCount = startingTransactionIndex + index + 1;
-      if (widget.showNativeAds &&
-          NativeAdPlacementPolicy.shouldInsertAfter(
-            displayedTransactionCount: displayedCount,
-            totalTransactionCount: widget.allTransactions.length,
-          )) {
+      final shouldInsertNativeAd = NativeAdPlacementPolicy.shouldInsertAfter(
+        displayedTransactionCount: displayedCount,
+        totalTransactionCount: widget.allTransactions.length,
+      );
+      if (widget.showNativeAds && shouldInsertNativeAd) {
         children.add(
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),

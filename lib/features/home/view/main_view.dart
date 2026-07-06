@@ -92,7 +92,10 @@ class _MainViewState extends State<MainView> {
                         ),
                   ),
                   const SizedBox(height: 8),
-                  const AdBannerWidget(placement: AdPlacement.home),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 40),
+                    child: AdBannerWidget(placement: AdPlacement.home),
+                  ),
                 ],
               ),
             ),
