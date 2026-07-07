@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auth_user/auth_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:db_firestore_client/db_firestore_client.dart';
@@ -76,8 +78,8 @@ Future<void> initAppConfig() async {
 
   // AdMob failures must never prevent the core app from starting.
   final adService = AdService(sharedPreferences: sharedPreferences);
-  await adService.initialize();
   getIt.registerLazySingleton<AdService>(() => adService);
+  unawaited(adService.initialize());
 
   //AuthUser
   final authUser = AuthUser();

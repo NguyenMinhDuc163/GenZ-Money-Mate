@@ -17,7 +17,8 @@ class NativeTransactionAdWidget extends StatefulWidget {
 
 class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
   NativeAd? _nativeAd;
-  Key? _adWidgetKey;
+  Widget? _adWidget;
+  Timer? _retryTimer;
   bool _isLoaded = false;
   bool _didStartLoading = false;
 
@@ -68,14 +69,21 @@ class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
             loadedAd.dispose();
             return;
           }
+          _retryTimer?.cancel();
+          final nativeAd = loadedAd as NativeAd;
           setState(() {
+            _nativeAd = nativeAd;
+            _adWidget = AdWidget(key: UniqueKey(), ad: nativeAd);
             _isLoaded = true;
-            _adWidgetKey = UniqueKey();
           });
           _debugLog('Transaction native ad loaded');
         },
         onAdFailedToLoad: (failedAd, error) {
           failedAd.dispose();
+          if (identical(_nativeAd, failedAd)) {
+            _nativeAd = null;
+          }
+          _scheduleRetry();
           _debugLog('Transaction native ad failed: $error');
         },
       ),
@@ -84,15 +92,32 @@ class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
     unawaited(
       ad.load().catchError((Object error) {
         ad.dispose();
+        if (identical(_nativeAd, ad)) {
+          _nativeAd = null;
+        }
+        _scheduleRetry();
         _debugLog('Transaction native ad load threw: $error');
       }),
     );
   }
 
+  void _scheduleRetry() {
+    if (!mounted || _isLoaded) {
+      return;
+    }
+
+    _retryTimer?.cancel();
+    _retryTimer = Timer(const Duration(seconds: 30), () {
+      if (mounted && !_isLoaded) {
+        _loadAd();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ad = _nativeAd;
-    if (!_isLoaded || ad == null) {
+    final adWidget = _adWidget;
+    if (!_isLoaded || adWidget == null) {
       return const SizedBox.shrink();
     }
 
@@ -102,12 +127,13 @@ class _NativeTransactionAdWidgetState extends State<NativeTransactionAdWidget> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: AdWidget(key: _adWidgetKey, ad: ad),
+      child: adWidget,
     );
   }
 
   @override
   void dispose() {
+    _retryTimer?.cancel();
     _nativeAd?.dispose();
     super.dispose();
   }

@@ -72,25 +72,34 @@ class AdService {
   bool _isLoadingRankingRewarded = false;
   bool _isShowingInterstitial = false;
   bool _isDisposed = false;
+  Future<void>? _initializeFuture;
+  Timer? _interstitialRetryTimer;
+  Timer? _rankingRewardedRetryTimer;
   Future<void> _saveSequence = Future<void>.value();
 
   ValueListenable<bool> get rankingRewardedReady => _rankingRewardedReady;
 
-  Future<void> initialize() async {
+  Future<void> initialize() {
     if (!AdIds.isSupportedPlatform || _isInitialized || _isDisposed) {
-      return;
+      return Future<void>.value();
     }
 
+    return _initializeFuture ??= _initialize();
+  }
+
+  Future<void> _initialize() async {
     try {
       await MobileAds.instance.initialize();
       _isInitialized = true;
       _debugLog('AdMob initialized');
-      await Future.wait([
-        preloadTransactionSuccessInterstitial(),
-        preloadRankingRewarded(),
-      ]);
+      unawaited(preloadTransactionSuccessInterstitial());
+      unawaited(preloadRankingRewarded());
     } catch (error) {
       _debugLog('AdMob initialization failed: $error');
+    } finally {
+      if (!_isInitialized) {
+        _initializeFuture = null;
+      }
     }
   }
 
@@ -100,9 +109,13 @@ class AdService {
         _isLoadingRankingRewarded ||
         _rankingRewardedAd != null ||
         _rankingRewardedReady.value) {
+      if (!_isInitialized && !_isDisposed) {
+        unawaited(initialize());
+      }
       return;
     }
 
+    _rankingRewardedRetryTimer?.cancel();
     _isLoadingRankingRewarded = true;
     try {
       await RewardedAd.load(
@@ -123,6 +136,7 @@ class AdService {
             _isLoadingRankingRewarded = false;
             if (!_isDisposed) {
               _rankingRewardedReady.value = false;
+              _scheduleRankingRewardedRetry();
             }
             _debugLog('Ranking rewarded failed to load: $error');
           },
@@ -132,6 +146,7 @@ class AdService {
       _isLoadingRankingRewarded = false;
       if (!_isDisposed) {
         _rankingRewardedReady.value = false;
+        _scheduleRankingRewardedRetry();
       }
       _debugLog('Ranking rewarded load threw: $error');
     }
@@ -143,6 +158,9 @@ class AdService {
     final ad = _rankingRewardedAd;
     if (_isDisposed || ad == null) {
       _debugLog('Ranking rewarded skipped: not ready');
+      if (!_isInitialized) {
+        unawaited(initialize());
+      }
       unawaited(preloadRankingRewarded());
       return false;
     }
@@ -192,9 +210,13 @@ class AdService {
         _isLoadingInterstitial ||
         _isShowingInterstitial ||
         _transactionSuccessInterstitial != null) {
+      if (!_isInitialized && !_isDisposed) {
+        unawaited(initialize());
+      }
       return;
     }
 
+    _interstitialRetryTimer?.cancel();
     _isLoadingInterstitial = true;
     try {
       await InterstitialAd.load(
@@ -212,14 +234,43 @@ class AdService {
           },
           onAdFailedToLoad: (error) {
             _isLoadingInterstitial = false;
+            _scheduleInterstitialRetry();
             _debugLog('Interstitial failed to load: $error');
           },
         ),
       );
     } catch (error) {
       _isLoadingInterstitial = false;
+      _scheduleInterstitialRetry();
       _debugLog('Interstitial load threw: $error');
     }
+  }
+
+  void _scheduleInterstitialRetry() {
+    if (_isDisposed ||
+        !_isInitialized ||
+        _transactionSuccessInterstitial != null) {
+      return;
+    }
+
+    _interstitialRetryTimer?.cancel();
+    _interstitialRetryTimer = Timer(const Duration(seconds: 30), () {
+      unawaited(preloadTransactionSuccessInterstitial());
+    });
+  }
+
+  void _scheduleRankingRewardedRetry() {
+    if (_isDisposed ||
+        !_isInitialized ||
+        _rankingRewardedAd != null ||
+        _rankingRewardedReady.value) {
+      return;
+    }
+
+    _rankingRewardedRetryTimer?.cancel();
+    _rankingRewardedRetryTimer = Timer(const Duration(seconds: 30), () {
+      unawaited(preloadRankingRewarded());
+    });
   }
 
   Future<void> onTransactionSavedSuccessfully() {
@@ -298,6 +349,8 @@ class AdService {
       return;
     }
     _isDisposed = true;
+    _interstitialRetryTimer?.cancel();
+    _rankingRewardedRetryTimer?.cancel();
     _transactionSuccessInterstitial?.dispose();
     _transactionSuccessInterstitial = null;
     _rankingRewardedAd?.dispose();

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -51,7 +53,8 @@ class _LoadedAdaptiveBanner extends StatefulWidget {
 
 class _LoadedAdaptiveBannerState extends State<_LoadedAdaptiveBanner> {
   BannerAd? _bannerAd;
-  Key? _adWidgetKey;
+  Widget? _adWidget;
+  Timer? _retryTimer;
 
   @override
   void initState() {
@@ -79,28 +82,46 @@ class _LoadedAdaptiveBannerState extends State<_LoadedAdaptiveBanner> {
               loadedAd.dispose();
               return;
             }
+            _retryTimer?.cancel();
+            final bannerAd = loadedAd as BannerAd;
             setState(() {
-              _bannerAd = loadedAd as BannerAd;
-              _adWidgetKey = UniqueKey();
+              _bannerAd = bannerAd;
+              _adWidget = AdWidget(key: UniqueKey(), ad: bannerAd);
             });
             _debugLog('Banner loaded: ${widget.placement.name}');
           },
           onAdFailedToLoad: (failedAd, error) {
             failedAd.dispose();
+            _scheduleRetry();
             _debugLog('Banner failed: ${widget.placement.name}, error=$error');
           },
         ),
       );
       await ad.load();
     } catch (error) {
+      _scheduleRetry();
       _debugLog('Banner failed: ${widget.placement.name}, error=$error');
     }
+  }
+
+  void _scheduleRetry() {
+    if (!mounted || _bannerAd != null) {
+      return;
+    }
+
+    _retryTimer?.cancel();
+    _retryTimer = Timer(const Duration(seconds: 30), () {
+      if (mounted && _bannerAd == null) {
+        unawaited(_loadAd());
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final ad = _bannerAd;
-    if (ad == null) {
+    final adWidget = _adWidget;
+    if (ad == null || adWidget == null) {
       return const SizedBox.shrink();
     }
 
@@ -109,13 +130,14 @@ class _LoadedAdaptiveBannerState extends State<_LoadedAdaptiveBanner> {
       child: SizedBox(
         width: ad.size.width.toDouble(),
         height: ad.size.height.toDouble(),
-        child: AdWidget(key: _adWidgetKey, ad: ad),
+        child: adWidget,
       ),
     );
   }
 
   @override
   void dispose() {
+    _retryTimer?.cancel();
     _bannerAd?.dispose();
     super.dispose();
   }
