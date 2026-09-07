@@ -36,12 +36,14 @@ GitHub Actions secrets:
 APP_STORE_CONNECT_KEY_ID
 APP_STORE_CONNECT_ISSUER_ID
 APP_STORE_CONNECT_API_KEY_P8
-IOS_DISTRIBUTION_CERTIFICATE_P12_BASE64
-IOS_DISTRIBUTION_CERTIFICATE_PASSWORD
-IOS_APPSTORE_PROVISIONING_PROFILE_BASE64
+IOS_TEAM_ID
+MATCH_GIT_URL
+MATCH_PASSWORD
+MATCH_GIT_BASIC_AUTHORIZATION
 ```
 
-The App Store provisioning profile must match:
+GitHub Actions uses Fastlane Match in read-only mode. The Match repository must
+contain an App Store provisioning profile matching:
 
 ```text
 com.nguyenduc.genzMoneyMate

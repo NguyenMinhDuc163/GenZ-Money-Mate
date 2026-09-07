@@ -1,163 +1,409 @@
-Bạn hãy sửa lỗi Google Play Console cho Flutter Android app.
+# SPEC: MIGRATE GENZ-MONEY-MATE TO FASTLANE MATCH + PRE-RELEASE VALIDATION
 
-Hiện Play Console báo 2 lỗi:
+Repository:
+NguyenMinhDuc163/GenZ-Money-Mate
 
-1. Advertising ID declaration trong Play Console đang khai báo app có dùng Advertising ID, nhưng manifest trong active artifact không có permission:
-com.google.android.gms.permission.AD_ID
+Signing repository:
+NguyenMinhDuc163/apple-signing
 
-2. Release mới không còn hỗ trợ 916 thiết bị so với release trước.
+Bundle ID:
+com.nguyenduc.genzMoneyMate
 
-Yêu cầu sửa:
+Team ID:
+Q236Z72BGN
 
-I. Sửa lỗi Advertising ID
+==================================================
+1. GOAL
+==================================================
 
-Mở file:
+Replace old manual iOS signing:
 
-android/app/src/main/AndroidManifest.xml
+IOS_DISTRIBUTION_CERTIFICATE_P12_BASE64
+IOS_DISTRIBUTION_CERTIFICATE_PASSWORD
+IOS_APPSTORE_PROVISIONING_PROFILE_BASE64
 
-Thêm permission sau vào trong thẻ <manifest>, nằm bên ngoài thẻ <application>:
+with:
 
-<uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+Fastlane Match readonly
+→ NguyenMinhDuc163/apple-signing
 
-Ví dụ cấu trúc đúng:
+Also add pre-release validation BEFORE version bump.
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+Do not redesign existing release architecture.
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+==================================================
+2. SIGNING ASSETS ALREADY EXIST
+==================================================
 
-    <application>
-        ...
-    </application>
+Use existing Match assets:
 
-</manifest>
+certs/distribution/
+  Certificates.cer
+  Certificates.p12
 
-Không được thêm permission này bên trong <application>.
+profiles/appstore/
+  AppStore_com.nguyenduc.genzMoneyMate.mobileprovision
 
-II. Đảm bảo AdMob App ID vẫn đúng
+Do NOT:
+- create certificate
+- regenerate profile
+- revoke anything
+- modify apple-signing
+- match nuke
+- readonly:false
 
-Trong AndroidManifest.xml, bên trong <application> phải có meta-data AdMob App ID:
+==================================================
+3. FILES
+==================================================
 
-<meta-data
-    android:name="com.google.android.gms.ads.APPLICATION_ID"
-    android:value="ANDROID_ADMOB_APP_ID" />
+Add:
 
-Không được dùng nhầm iOS AdMob App ID.
-Android AdMob App ID có dạng:
+ios/fastlane/Matchfile
+.github/workflows/reusable-validate-project.yml
 
-ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy
+Modify:
 
-III. Kiểm tra lỗi mất 916 thiết bị hỗ trợ
+ios/fastlane/Fastfile
+ios/fastlane/Appfile
+.github/workflows/reusable-ios-testflight.yml
+.github/workflows/mobile-store-release.yml
 
-Hãy kiểm tra các file cấu hình Android để tìm nguyên nhân làm giảm số thiết bị hỗ trợ.
+Update stale signing docs if present.
 
-Cần kiểm tra các mục sau:
+Do not modify Android release logic.
 
-1. minSdkVersion
+==================================================
+4. MATCHFILE
+==================================================
 
-Mở:
+Create:
 
-android/app/build.gradle
-hoặc
-android/app/build.gradle.kts
+git_url(ENV.fetch("MATCH_GIT_URL"))
+storage_mode("git")
+git_branch("main")
 
-Kiểm tra defaultConfig:
+app_identifier([
+  "com.nguyenduc.genzMoneyMate"
+])
 
-defaultConfig {
-    minSdkVersion ...
-    targetSdkVersion ...
-}
+type("appstore")
 
-Không được tự ý tăng minSdkVersion nếu không có dependency bắt buộc.
+team_id(ENV["IOS_TEAM_ID"]) unless ENV["IOS_TEAM_ID"].to_s.strip.empty?
 
-Với app này, ưu tiên giữ minSdkVersion giống release trước. Nếu không biết release trước là bao nhiêu, kiểm tra git history.
+==================================================
+5. FASTFILE
+==================================================
 
-Không tự tăng minSdk lên 26/28/30 nếu không cần.
+Keep existing build logic.
 
-2. ABI filters
+In lane :beta:
 
-Kiểm tra trong build.gradle/build.gradle.kts có đoạn kiểu:
+setup_ci
 
-ndk {
-    abiFilters 'arm64-v8a'
-}
+api_key = app_store_connect_api_key(...)
 
-hoặc:
+match(
+  type: "appstore",
+  platform: "ios",
+  app_identifier: APP_IDENTIFIER,
+  readonly: true,
+  api_key: api_key
+)
 
-abiFilters += listOf("arm64-v8a")
+Read:
 
-Nếu có cấu hình chỉ build arm64-v8a thì app sẽ mất thiết bị 32-bit.
+Actions.lane_context[
+  SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING
+]
 
-Yêu cầu:
-- Không giới hạn ABI nếu không cần.
-- Nếu cần khai báo ABI thì phải hỗ trợ ít nhất:
-  armeabi-v7a
-  arm64-v8a
+Require mapping for:
 
-Không được chỉ để arm64-v8a.
+com.nguyenduc.genzMoneyMate
 
-3. uses-feature trong AndroidManifest.xml
+Set:
 
-Kiểm tra AndroidManifest.xml có các dòng như:
+ENV["IOS_PROVISIONING_PROFILE_NAME"] = matched_profile_name
 
-<uses-feature android:name="android.hardware.camera" android:required="true" />
-<uses-feature android:name="android.hardware.location.gps" android:required="true" />
-<uses-feature android:name="android.hardware.bluetooth" android:required="true" />
+Then reuse existing:
 
-Nếu app không bắt buộc cần phần cứng đó để chạy, đổi required thành false:
+configure_ci_code_signing
+build_export_options
+build
+upload_to_testflight
 
-<uses-feature
-    android:name="android.hardware.camera"
-    android:required="false" />
+==================================================
+6. REMOVE MANUAL SIGNING
+==================================================
 
-Không được để required=true cho camera, GPS, bluetooth, NFC, telephony hoặc sensor nếu app không bắt buộc phải có.
+From reusable-ios-testflight.yml remove:
 
-4. Permissions mới
+IOS_DISTRIBUTION_CERTIFICATE_P12_BASE64
+IOS_DISTRIBUTION_CERTIFICATE_PASSWORD
+IOS_APPSTORE_PROVISIONING_PROFILE_BASE64
 
-Kiểm tra manifest có thêm permission nào không cần thiết làm Play giới hạn thiết bị không, ví dụ:
+Delete manual:
 
-android.permission.CAMERA
-android.permission.ACCESS_FINE_LOCATION
-android.permission.ACCESS_COARSE_LOCATION
-android.permission.BLUETOOTH
-android.permission.NFC
-android.permission.CALL_PHONE
-android.permission.READ_PHONE_STATE
+- base64 decode P12
+- base64 decode provisioning profile
+- security create-keychain
+- security import
+- manual profile installation
+- manual IOS_PROVISIONING_PROFILE_NAME extraction
 
-App quản lý chi tiêu này hiện không cần các quyền trên. Nếu không dùng thật thì loại bỏ.
+Use setup_ci + Match only.
 
-IV. Build lại
+==================================================
+7. NEW MATCH SECRETS
+==================================================
 
-Sau khi sửa, chạy:
+Add:
 
-flutter clean
-flutter pub get
-flutter build appbundle --release
+IOS_TEAM_ID
+MATCH_GIT_URL
+MATCH_PASSWORD
+MATCH_GIT_BASIC_AUTHORIZATION
 
-Sau đó kiểm tra file AAB mới được tạo tại:
+Keep:
 
-build/app/outputs/bundle/release/app-release.aab
+APP_STORE_CONNECT_KEY_ID
+APP_STORE_CONNECT_ISSUER_ID
+APP_STORE_CONNECT_API_KEY_P8
 
-V. Kiểm tra sau build
+Expected:
 
-Sau khi build xong, kiểm tra merged manifest để đảm bảo có permission AD_ID.
+IOS_TEAM_ID =
+Q236Z72BGN
 
-Có thể kiểm tra bằng cách search trong thư mục build:
+MATCH_GIT_URL =
+https://github.com/NguyenMinhDuc163/apple-signing.git
 
-com.google.android.gms.permission.AD_ID
+MATCH values should be the same already proven by the working NRO,
+Edtech and Fire Guard pipelines.
 
-Kết quả mong muốn:
-- AndroidManifest merged có permission AD_ID.
-- Không có uses-feature required=true không cần thiết.
-- Không có abiFilters chỉ giới hạn arm64-v8a.
-- minSdkVersion không bị tăng bất thường.
-- Build release thành công.
+==================================================
+8. APPFILE
+==================================================
 
-VI. Không được làm
+Remove personal Apple ID:
 
-- Không đổi package name/applicationId.
-- Không đổi signing config.
-- Không đổi versionCode/versionName nếu không được yêu cầu.
-- Không xóa AdMob meta-data.
-- Không dùng iOS AdMob App ID cho Android.
-- Không tick/bỏ qua lỗi Advertising ID trong Play Console bằng cách thay đổi declaration. App có dùng AdMob nên phải thêm AD_ID permission.
+apple_id("ngminhduc1603@icloud.com")
+
+Keep:
+
+app_identifier("com.nguyenduc.genzMoneyMate")
+team_id("Q236Z72BGN")
+
+==================================================
+9. VERSIONING - DO NOT BREAK IT
+==================================================
+
+This project already uses Flutter build version correctly.
+
+Main Runner must remain:
+
+MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)"
+CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)"
+
+Do not replace these with hardcoded values.
+
+Do not blindly modify RunnerTests.
+
+==================================================
+10. USE ONE ARCHIVE PATH
+==================================================
+
+Avoid the previous Edu-Tech path bug.
+
+Do not construct separate archive paths for build and validation.
+
+Define one absolute path using GITHUB_WORKSPACE or repo root:
+
+IOS_ARCHIVE_PATH =
+<repo>/build/ios/archive/Runner.xcarchive
+
+Use the SAME path for:
+
+build_app
+archive validation
+
+Never hardcode:
+
+/Users/runner/work/<repo>/<repo>
+
+Repository rename must not break CI.
+
+==================================================
+11. VALIDATE BUILT ARCHIVE
+==================================================
+
+After build_app and BEFORE TestFlight upload:
+
+Read:
+
+Runner.xcarchive/
+Products/Applications/Runner.app/Info.plist
+
+Validate:
+
+CFBundleShortVersionString
+==
+pubspec version
+
+CFBundleVersion
+==
+pubspec build number
+
+Fail before upload if mismatch.
+
+Do not trust IPA filename alone.
+
+==================================================
+12. PRE-RELEASE VALIDATION WORKFLOW
+==================================================
+
+Create:
+
+.github/workflows/reusable-validate-project.yml
+
+Prefer same proven structure used in Fire Guard.
+
+Run before bump_version.
+
+Validate:
+
+APP_STORE_CONNECT_KEY_ID
+APP_STORE_CONNECT_ISSUER_ID
+APP_STORE_CONNECT_API_KEY_P8
+
+IOS_TEAM_ID
+MATCH_GIT_URL
+MATCH_PASSWORD
+MATCH_GIT_BASIC_AUTHORIZATION
+
+Checks:
+
+- all secrets present
+- IOS_TEAM_ID == Q236Z72BGN
+- MATCH_GIT_URL points to apple-signing
+- P8 has BEGIN/END PRIVATE KEY
+- Match Git auth is valid
+- apple-signing can be read
+- MATCH_PASSWORD can decrypt signing repo
+- App Store profile exists for com.nguyenduc.genzMoneyMate
+- profile Team ID == Q236Z72BGN
+- App Store Connect authentication succeeds
+
+Validation is read-only.
+
+Do not upload anything.
+
+Do not create signing assets.
+
+Do not print secret values.
+
+IMPORTANT:
+Do NOT invent ENV_FILE_CONTENTS for this project unless repository
+inspection proves the application actually requires it.
+
+==================================================
+13. RELEASE ORDER
+==================================================
+
+Modify mobile-store-release.yml:
+
+validate_project
+      ↓
+bump_version
+      ↓
+build_testflight / build_google_play
+
+bump_version must depend on validation success.
+
+If validation fails:
+
+- no version bump
+- no macOS runner
+- no TestFlight build
+
+Keep existing Android behavior after validation succeeds.
+
+==================================================
+14. APP STORE CONNECT P8
+==================================================
+
+Keep temporary:
+
+$RUNNER_TEMP/AuthKey.p8
+
+Write with:
+
+printf '%s' "$APP_STORE_CONNECT_API_KEY_P8"
+
+Never log P8 contents.
+
+Cleanup with if: always().
+
+==================================================
+15. IMPORTANT LESSONS FROM PREVIOUS MIGRATIONS
+==================================================
+
+Do NOT:
+
+- create custom Match keychain paths
+- manually use ~/Library/Keychains/fastlane_tmp_keychain
+- hardcode GitHub runner repo paths
+- regenerate Match password
+- use raw PAT as MATCH_GIT_BASIC_AUTHORIZATION
+- assume repository GITHUB_TOKEN can read private apple-signing
+- update Fastlane/Gemfile.lock unnecessarily
+- trust IPA filename as actual CFBundleVersion
+
+MATCH_GIT_BASIC_AUTHORIZATION must be Base64 of:
+
+NguyenMinhDuc163:PAT
+
+with read access to apple-signing.
+
+==================================================
+16. OLD SECRETS
+==================================================
+
+Agent must NOT delete GitHub secrets.
+
+After one real TestFlight build succeeds, user can delete:
+
+IOS_DISTRIBUTION_CERTIFICATE_P12_BASE64
+IOS_DISTRIBUTION_CERTIFICATE_PASSWORD
+IOS_APPSTORE_PROVISIONING_PROFILE_BASE64
+
+==================================================
+17. ACCEPTANCE
+==================================================
+
+Complete when:
+
+[ ] Matchfile added
+[ ] setup_ci runs before Match
+[ ] Match uses appstore + readonly:true
+[ ] correct profile mapping is obtained
+[ ] manual P12/profile install removed
+[ ] no custom signing keychain
+[ ] personal Apple ID removed
+[ ] Flutter version propagation remains intact
+[ ] archive path is shared and absolute
+[ ] archive version/build validated
+[ ] validation runs before bump_version
+[ ] Match repo/decryption/profile validated
+[ ] ASC authentication validated
+[ ] Android logic unchanged
+[ ] apple-signing unchanged
+[ ] no secrets printed
+
+Final report only:
+- changed files
+- validation result
+- Match configuration
+- old secrets no longer referenced
+- confirm apple-signing not modified
+- confirm no certificate/profile created
+- confirm no TestFlight run unless explicitly requested
